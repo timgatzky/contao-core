@@ -176,7 +176,7 @@ abstract class Backend extends \Controller
 			$this->redirect('contao/main.php?act=error');
 		}
 
-		$strTable = \Input::get('table') ?: $arrModule['tables'][0];
+		$strTable = \Input::get('table') ?: (isset($arrModule['tables'][0]) ? $arrModule['tables'][0] : null);
 		$id = (!\Input::get('act') && \Input::get('id')) ? \Input::get('id') : $this->Session->get('CURRENT_ID');
 
 		// Store the current ID in the current session
@@ -227,7 +227,7 @@ abstract class Backend extends \Controller
 			{
 				foreach ($GLOBALS['TL_DCA'][$strTable]['fields'] as $k=>$v)
 				{
-					if ($v['exclude'])
+					if (isset($v['exclude']) && $v['exclude'])
 					{
 						if ($this->User->hasAccess($strTable.'::'.$k, 'alexf'))
 						{
@@ -260,7 +260,7 @@ abstract class Backend extends \Controller
 		}
 
 		// Trigger the module callback
-		elseif (class_exists($arrModule['callback']))
+		elseif (isset($arrModule['callback']) && class_exists($arrModule['callback']))
 		{
 			$objCallback = new $arrModule['callback']($dc);
 			$this->Template->main .= $objCallback->generate();
@@ -409,7 +409,7 @@ abstract class Backend extends \Controller
 			{
 				$this->Template->headline .= ' » ' . $GLOBALS['TL_LANG']['MSC']['all_override'][0];
 			}
-			elseif (is_array($GLOBALS['TL_LANG'][$strTable][$act]) && \Input::get('id'))
+			elseif (isset($GLOBALS['TL_LANG'][$strTable][$act]) && is_array($GLOBALS['TL_LANG'][$strTable][$act]) && \Input::get('id'))
 			{
 				if (\Input::get('do') == 'files')
 				{

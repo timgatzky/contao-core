@@ -159,7 +159,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		$this->blnIsDbAssisted = $GLOBALS['TL_DCA'][$strTable]['config']['databaseAssisted'];
 
 		// Check for valid file types
-		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['validFileTypes'])
+		if (isset($GLOBALS['TL_DCA'][$this->strTable]['config']['validFileTypes']) && $GLOBALS['TL_DCA'][$this->strTable]['config']['validFileTypes'])
 		{
 			$this->arrValidFileTypes = trimsplit(',', $GLOBALS['TL_DCA'][$this->strTable]['config']['validFileTypes']);
 		}
@@ -178,7 +178,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		}
 
 		// Get all filemounts (root folders)
-		if (is_array($GLOBALS['TL_DCA'][$strTable]['list']['sorting']['root']))
+		if (isset($GLOBALS['TL_DCA'][$strTable]['list']['sorting']['root']) && is_array($GLOBALS['TL_DCA'][$strTable]['list']['sorting']['root']))
 		{
 			$this->arrFilemounts = $this->eliminateNestedPaths($GLOBALS['TL_DCA'][$strTable]['list']['sorting']['root']);
 		}
@@ -279,7 +279,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		$this->import('Files');
 
 		// Call recursive function tree()
-		if (empty($this->arrFilemounts) && !is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root']) && $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] !== false)
+		if (empty($this->arrFilemounts) && (!isset($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root']) || !is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root']) && $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] !== false))
 		{
 			$return .= $this->generateTree(TL_ROOT . '/' . $GLOBALS['TL_CONFIG']['uploadPath'], 0, false, false, ($blnClipboard ? $arrClipboard : false));
 		}
@@ -314,7 +314,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 		$return = '
 <div id="tl_buttons">'.((\Input::get('act') == 'select') ? '
 <a href="'.$this->getReferer(true).'" class="header_back" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b" onclick="Backend.getScrollOffset()">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a> ' : '') . ((\Input::get('act') != 'select' && !$blnClipboard) ? '
-<a href="'.$this->addToUrl($hrfNew).'" class="'.$clsNew.'" title="'.specialchars($ttlNew).'" accesskey="n" onclick="Backend.getScrollOffset()">'.$lblNew.'</a> ' . (!$GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ? '<a href="'.$this->addToUrl('&amp;act=paste&amp;mode=move').'" class="header_new" title="'.specialchars($GLOBALS['TL_LANG'][$this->strTable]['move'][1]).'" onclick="Backend.getScrollOffset()">'.$GLOBALS['TL_LANG'][$this->strTable]['move'][0].'</a> ' : '') . $this->generateGlobalButtons(true) : '') . ($blnClipboard ? '<a href="'.$this->addToUrl('clipboard=1').'" class="header_clipboard" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['clearClipboard']).'" accesskey="x">'.$GLOBALS['TL_LANG']['MSC']['clearClipboard'].'</a> ' : '') . '
+<a href="'.$this->addToUrl($hrfNew).'" class="'.$clsNew.'" title="'.specialchars($ttlNew).'" accesskey="n" onclick="Backend.getScrollOffset()">'.$lblNew.'</a> ' . ((!isset($GLOBALS['TL_DCA'][$this->strTable]['config']['closed']) || !$GLOBALS['TL_DCA'][$this->strTable]['config']['closed']) ? '<a href="'.$this->addToUrl('&amp;act=paste&amp;mode=move').'" class="header_new" title="'.specialchars($GLOBALS['TL_LANG'][$this->strTable]['move'][1]).'" onclick="Backend.getScrollOffset()">'.$GLOBALS['TL_LANG'][$this->strTable]['move'][0].'</a> ' : '') . $this->generateGlobalButtons(true) : '') . ($blnClipboard ? '<a href="'.$this->addToUrl('clipboard=1').'" class="header_clipboard" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['clearClipboard']).'" accesskey="x">'.$GLOBALS['TL_LANG']['MSC']['clearClipboard'].'</a> ' : '') . '
 </div>' . \Message::generate(true) . ((\Input::get('act') == 'select') ? '
 
 <form action="'.ampersand(\Environment::get('request'), true).'" id="tl_select" class="tl_form" method="post">
@@ -2674,7 +2674,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			$md5 = substr(md5($folders[$f]), 0, 8);
 			$content = scan($folders[$f]);
 			$currentFolder = str_replace(TL_ROOT.'/', '', $folders[$f]);
-			$session['filetree'][$md5] = is_numeric($session['filetree'][$md5]) ? $session['filetree'][$md5] : 0;
+			$session['filetree'][$md5] = (isset($session['filetree'][$md5]) && is_numeric($session['filetree'][$md5])) ? $session['filetree'][$md5] : 0;
 			$currentEncoded = $this->urlEncode($currentFolder);
 			$countFiles = count($content);
 
@@ -2728,7 +2728,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 				$return .= (\Input::get('act') == 'select') ? '<input type="checkbox" name="IDS[]" id="ids_'.md5($currentEncoded).'" class="tl_tree_checkbox" value="'.$currentEncoded.'">' : $this->generateButtons(array('id'=>$currentEncoded), $this->strTable);
 
 				// Create new button
-				if (!$GLOBALS['TL_DCA'][$this->strTable]['config']['closed'])
+				if (!isset($GLOBALS['TL_DCA'][$this->strTable]['config']['closed']) || !$GLOBALS['TL_DCA'][$this->strTable]['config']['closed'])
 				{
 					$return .= ' <a href="'.$this->addToUrl('&amp;act=move&amp;mode=2&amp;pid='.$currentEncoded).'" title="'.specialchars(sprintf($GLOBALS['TL_LANG']['tl_files']['uploadFF'], $currentEncoded)).'">'.\Image::getHtml('new.gif', $GLOBALS['TL_LANG'][$this->strTable]['move'][0]).'</a>';
 				}

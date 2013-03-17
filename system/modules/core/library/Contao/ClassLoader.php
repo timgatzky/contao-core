@@ -144,7 +144,7 @@ class ClassLoader
 		// The class file is set in the mapper
 		if (isset(self::$classes[$class]))
 		{
-			if ($GLOBALS['TL_CONFIG']['debugMode'])
+			if (isset($GLOBALS['TL_CONFIG']['debugMode']) && $GLOBALS['TL_CONFIG']['debugMode'])
 			{
 				$GLOBALS['TL_DEBUG']['classes_set'][] = $class;
 			}
@@ -155,7 +155,7 @@ class ClassLoader
 		// Find the class in the registered namespaces
 		elseif (($namespaced = self::findClass($class)) != false)
 		{
-			if ($GLOBALS['TL_CONFIG']['debugMode'])
+			if (isset($GLOBALS['TL_CONFIG']['debugMode']) && $GLOBALS['TL_CONFIG']['debugMode'])
 			{
 				$GLOBALS['TL_DEBUG']['classes_aliased'][] = $class . ' <span style="color:#999">(' . $namespaced . ')</span>';
 			}
@@ -207,7 +207,7 @@ class ClassLoader
 		$strCacheFile = 'system/cache/config/autoload.php';
 
 		// Try to load from cache
-		if (!$GLOBALS['TL_CONFIG']['bypassCache'] && file_exists(TL_ROOT . '/' . $strCacheFile))
+		if (isset($GLOBALS['TL_CONFIG']['bypassCache']) && $GLOBALS['TL_CONFIG']['bypassCache'] && file_exists(TL_ROOT . '/' . $strCacheFile))
 		{
 			include TL_ROOT . '/' . $strCacheFile;
 		}

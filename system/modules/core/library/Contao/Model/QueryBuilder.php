@@ -50,7 +50,7 @@ class QueryBuilder
 			foreach ($objBase->getRelations() as $strKey=>$arrConfig)
 			{
 				// Automatically join the single-relation records
-				if ($arrConfig['load'] == 'eager' || $arrOptions['eager'])
+				if (isset($arrConfig['load']) && $arrConfig['load'] == 'eager' || isset($arrOptions['eager']) && $arrOptions['eager'])
 				{
 					if ($arrConfig['type'] == 'hasOne' || $arrConfig['type'] == 'belongsTo')
 					{
@@ -72,19 +72,19 @@ class QueryBuilder
 		}
 
 		// Where condition
-		if ($arrOptions['column'] !== null)
+		if (isset($arrOptions['column']) && $arrOptions['column'] !== null)
 		{
 			$strQuery .= " WHERE " . (is_array($arrOptions['column']) ? implode(" AND ", $arrOptions['column']) : $arrOptions['table'] . '.' . $arrOptions['column'] . "=?");
 		}
 
 		// Group by
-		if ($arrOptions['group'] !== null)
+		if (isset($arrOptions['group']) && $arrOptions['group'] !== null)
 		{
 			$strQuery .= " GROUP BY " . $arrOptions['group'];
 		}
 
 		// Order by
-		if ($arrOptions['order'] !== null)
+		if (isset($arrOptions['order']) && $arrOptions['order'] !== null)
 		{
 			$strQuery .= " ORDER BY " . $arrOptions['order'];
 		}

@@ -132,7 +132,7 @@ class Message
 		// Regular messages
 		foreach (static::getTypes() as $strType)
 		{
-			if (!is_array($_SESSION[$strType]))
+			if (!isset($_SESSION[$strType]) || !is_array($_SESSION[$strType]))
 			{
 				continue;
 			}

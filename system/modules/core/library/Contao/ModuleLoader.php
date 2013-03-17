@@ -86,7 +86,7 @@ class ModuleLoader
 		$strCacheFile = 'system/cache/config/modules.php';
 
 		// Try to load from cache
-		if (!$GLOBALS['TL_CONFIG']['bypassCache'] && file_exists(TL_ROOT . '/' . $strCacheFile))
+		if (isset($GLOBALS['TL_CONFIG']['bypassCache']) && $GLOBALS['TL_CONFIG']['bypassCache'] && file_exists(TL_ROOT . '/' . $strCacheFile))
 		{
 			include TL_ROOT . '/' . $strCacheFile;
 		}
@@ -101,7 +101,7 @@ class ModuleLoader
 			$modules = array('core', 'calendar', 'comments', 'devtools', 'faq', 'listing', 'news', 'newsletter', 'repository');
 
 			// Ignore non-core modules if the system runs in safe mode
-			if (!$GLOBALS['TL_CONFIG']['coreOnlyMode'])
+			if (isset($GLOBALS['TL_CONFIG']['coreOnlyMode']) && $GLOBALS['TL_CONFIG']['coreOnlyMode'])
 			{
 				$modules = array_unique(array_merge($modules, scan(TL_ROOT . '/system/modules')));
 			}
@@ -135,7 +135,11 @@ class ModuleLoader
 				if (file_exists($path . '/config/autoload.ini'))
 				{
 					$config = parse_ini_file($path . '/config/autoload.ini', true);
-					$load[$file] = $config['requires'];
+
+					if (isset($config['requires']))
+					{
+						$load[$file] = $config['requires'];
+					}
 				}
 			}
 

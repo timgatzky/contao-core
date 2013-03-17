@@ -512,7 +512,15 @@ EOT
 					continue;
 				}
 
-				list($strFirst, $strRest) = explode('\\', $strNamespace, 2);
+				if (strpos($strNamespace, '\\') !== false)
+				{
+					list($strFirst, $strRest) = explode('\\', $strNamespace, 2);
+				}
+				else
+				{
+					$strFirst = $strNamespace;
+					$strRest = null;
+				}
 
 				// Add the ide_compat information
 				$arrCompat[$strModule][$strRest][] = array

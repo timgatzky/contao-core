@@ -148,7 +148,7 @@ class DataContainer extends \Backend
 		$arrData = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField];
 
 		// Redirect if the field is excluded
-		if ($arrData['exclude'])
+		if (isset($arrData['exclude']) && $arrData['exclude'])
 		{
 			$this->log('Field "'.$this->strField.'" of table "'.$this->strTable.'" was excluded from being edited', 'DataContainer row()', TL_ERROR);
 			$this->redirect('contao/main.php?act=error');
@@ -157,26 +157,26 @@ class DataContainer extends \Backend
 		$xlabel = '';
 
 		// Toggle line wrap (textarea)
-		if ($arrData['inputType'] == 'textarea' && $arrData['eval']['rte'] == '')
+		if (isset($arrData['inputType']) && $arrData['inputType'] == 'textarea' && empty($arrData['eval']['rte']))
 		{
 			$xlabel .= ' ' . \Image::getHtml('wrap.gif', $GLOBALS['TL_LANG']['MSC']['wordWrap'], 'title="' . specialchars($GLOBALS['TL_LANG']['MSC']['wordWrap']) . '" class="toggleWrap" onclick="Backend.toggleWrap(\'ctrl_'.$this->strInputName.'\')"');
 		}
 
 		// Add the help wizard
-		if ($arrData['eval']['helpwizard'])
+		if (isset($arrData['eval']['helpwizard']) && $arrData['eval']['helpwizard'])
 		{
 			$xlabel .= ' <a href="contao/help.php?table='.$this->strTable.'&amp;field='.$this->strField.'" title="' . specialchars($GLOBALS['TL_LANG']['MSC']['helpWizard']) . '" onclick="Backend.openModalIframe({\'width\':735,\'height\':405,\'title\':\''.specialchars(str_replace("'", "\\'", $arrData['label'][0])).'\',\'url\':this.href});return false">'.\Image::getHtml('about.gif', $GLOBALS['TL_LANG']['MSC']['helpWizard'], 'style="vertical-align:text-bottom"').'</a>';
 		}
 
 		// Add the popup file manager
-		if ($arrData['inputType'] == 'fileTree' && $this->strTable .'.'. $this->strField != 'tl_theme.templates')
+		if (isset($arrData['inputType']) && $arrData['inputType'] == 'fileTree' && $this->strTable .'.'. $this->strField != 'tl_theme.templates')
 		{
 			$path = isset($arrData['eval']['path']) ? '?node=' . $arrData['eval']['path'] : '';
 			$xlabel .= ' <a href="contao/files.php' . $path . '" title="' . specialchars($GLOBALS['TL_LANG']['MSC']['fileManager']) . '" onclick="Backend.openModalIframe({\'width\':765,\'title\':\''.specialchars(str_replace("'", "\\'", $GLOBALS['TL_LANG']['MSC']['filetree'])).'\',\'url\':this.href});return false">' . \Image::getHtml('filemanager.gif', $GLOBALS['TL_LANG']['MSC']['fileManager'], 'style="vertical-align:text-bottom"') . '</a>';
 		}
 
 		// Add a custom xlabel
-		if (is_array($arrData['xlabel']))
+		if (isset($arrData['xlabel']) && is_array($arrData['xlabel']))
 		{
 			foreach ($arrData['xlabel'] as $callback)
 			{
@@ -186,7 +186,7 @@ class DataContainer extends \Backend
 		}
 
 		// Input field callback
-		if (is_array($arrData['input_field_callback']))
+		if (isset($arrData['input_field_callback']) && is_array($arrData['input_field_callback']))
 		{
 			if (!is_object($this->$arrData['input_field_callback'][0]))
 			{
@@ -208,7 +208,7 @@ class DataContainer extends \Backend
 		$arrData['activeRecord'] = $this->activeRecord;
 
 		// Use strlen() here (see #3277)
-		if ($arrData['eval']['mandatory'])
+		if (isset($arrData['eval']['mandatory']) && $arrData['eval']['mandatory'])
 		{
 			if (is_array($this->varValue))
 			{
@@ -321,7 +321,7 @@ class DataContainer extends \Backend
 		$strHelpClass = '';
 
 		// Date picker
-		if ($arrData['eval']['datepicker'])
+		if (isset($arrData['eval']['datepicker']) && $arrData['eval']['datepicker'])
 		{
 			$rgxp = $arrData['eval']['rgxp'];
 			$format = \Date::formatToJs($GLOBALS['TL_CONFIG'][$rgxp.'Format']);
@@ -359,7 +359,7 @@ class DataContainer extends \Backend
 		}
 
 		// Color picker
-		if ($arrData['eval']['colorpicker'])
+		if (isset($arrData['eval']['colorpicker']) && $arrData['eval']['colorpicker'])
 		{
 			// Support single fields as well (see #5240)
 			$strKey = $arrData['eval']['multiple'] ? $this->strField . '_0' : $this->strField;
@@ -380,7 +380,7 @@ class DataContainer extends \Backend
 		}
 
 		// Add a custom wizard
-		if (is_array($arrData['wizard']))
+		if (isset($arrData['wizard']) && is_array($arrData['wizard']))
 		{
 			foreach ($arrData['wizard'] as $callback)
 			{
@@ -398,11 +398,11 @@ class DataContainer extends \Backend
 		}
 
 		// Mark floated single checkboxes
-		if ($arrData['inputType'] == 'checkbox' && !$arrData['eval']['multiple'] && strpos($arrData['eval']['tl_class'], 'w50') !== false)
+		if ($arrData['inputType'] == 'checkbox' && (!isset($arrData['eval']['multiple']) || !$arrData['eval']['multiple']) && isset($arrData['eval']['tl_class']) && strpos($arrData['eval']['tl_class'], 'w50') !== false)
 		{
 			$arrData['eval']['tl_class'] .= ' cbx';
 		}
-		elseif ($arrData['inputType'] == 'text' && $arrData['eval']['multiple'] && strpos($arrData['eval']['tl_class'], 'wizard') !== false)
+		elseif ($arrData['inputType'] == 'text' && isset($arrData['eval']['multiple']) && $arrData['eval']['multiple'] && isset($arrData['eval']['tl_class']) && strpos($arrData['eval']['tl_class'], 'wizard') !== false)
 		{
 			$arrData['eval']['tl_class'] .= ' inline';
 		}
@@ -436,7 +436,7 @@ class DataContainer extends \Backend
 		}
 
 		return '
-<div' . ($arrData['eval']['tl_class'] ? ' class="' . $arrData['eval']['tl_class'] . '"' : '') . '>' . $objWidget->parse() . $updateMode . (!$objWidget->hasErrors() ? $this->help($strHelpClass) : '') . '
+<div' . (!empty($arrData['eval']['tl_class']) ? ' class="' . $arrData['eval']['tl_class'] . '"' : '') . '>' . $objWidget->parse() . $updateMode . (!$objWidget->hasErrors() ? $this->help($strHelpClass) : '') . '
 </div>';
 	}
 
@@ -450,7 +450,7 @@ class DataContainer extends \Backend
 	{
 		$return = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['label'][1];
 
-		if (!$GLOBALS['TL_CONFIG']['showHelp'] || $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['inputType'] == 'password' || $return == '')
+		if (!$GLOBALS['TL_CONFIG']['showHelp'] || (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['inputType']) && $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['inputType'] == 'password') || $return == '')
 		{
 			return '';
 		}
@@ -537,13 +537,13 @@ class DataContainer extends \Backend
 			$v = is_array($v) ? $v : array($v);
 			$label = $v['label'][0] ?: $k;
 			$title = sprintf($v['label'][1] ?: $k, $arrRow['id']);
-			$attributes = ($v['attributes'] != '') ? ' ' . ltrim(sprintf($v['attributes'], $arrRow['id'], $arrRow['id'])) : '';
+			$attributes = !empty($v['attributes']) ? ' ' . ltrim(sprintf($v['attributes'], $arrRow['id'], $arrRow['id'])) : '';
 
 			// Call a custom function instead of using the default button
-			if (is_array($v['button_callback']))
+			if (isset($v['button_callback']) && is_array($v['button_callback']))
 			{
 				$this->import($v['button_callback'][0]);
-				$return .= $this->$v['button_callback'][0]->$v['button_callback'][1]($arrRow, $v['href'], $label, $title, $v['icon'], $attributes, $strTable, $arrRootIds, $arrChildRecordIds, $blnCircularReference, $strPrevious, $strNext);
+				$return .= $this->$v['button_callback'][0]->$v['button_callback'][1]($arrRow, (isset($v['href']) ? $v['href'] : ''), $label, $title, (isset($v['icon']) ? $v['icon'] : ''), $attributes, $strTable, $arrRootIds, $arrChildRecordIds, $blnCircularReference, $strPrevious, $strNext);
 				continue;
 			}
 
@@ -605,7 +605,7 @@ class DataContainer extends \Backend
 			$v = is_array($v) ? $v : array($v);
 			$label = is_array($v['label']) ? $v['label'][0] : $v['label'];
 			$title = is_array($v['label']) ? $v['label'][1] : $v['label'];
-			$attributes = ($v['attributes'] != '') ? ' ' . ltrim($v['attributes']) : '';
+			$attributes = !empty($v['attributes']) ? ' ' . ltrim($v['attributes']) : '';
 
 			if ($label == '')
 			{
@@ -617,7 +617,7 @@ class DataContainer extends \Backend
 			}
 
 			// Call a custom function instead of using the default button
-			if (is_array($v['button_callback']))
+			if (isset($v['button_callback']) && is_array($v['button_callback']))
 			{
 				$this->import($v['button_callback'][0]);
 				$return .= $this->$v['button_callback'][0]->$v['button_callback'][1]($v['href'], $label, $title, $v['class'], $attributes, $this->strTable, $this->root);

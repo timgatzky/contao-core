@@ -93,7 +93,7 @@ class BackendUser extends \User
 
 			if ($key !== null)
 			{
-				if (!is_array($session[$key]) || !is_array($session[$key][TL_REFERER_ID]))
+				if (!isset($session[$key]) || !is_array($session[$key]) || !isset($session[$key][TL_REFERER_ID]) || !is_array($session[$key][TL_REFERER_ID]))
 				{
 					$session[$key][TL_REFERER_ID]['last'] = '';
 				}
@@ -464,17 +464,18 @@ class BackendUser extends \User
 		{
 			if (!empty($arrGroupModules) && ($strGroupName == 'system' || $this->hasAccess(array_keys($arrGroupModules), 'modules')))
 			{
-				$arrModules[$strGroupName]['icon'] = 'modMinus.gif';
 				$arrModules[$strGroupName]['title'] = specialchars($GLOBALS['TL_LANG']['MSC']['collapseNode']);
 				$arrModules[$strGroupName]['label'] = (($label = is_array($GLOBALS['TL_LANG']['MOD'][$strGroupName]) ? $GLOBALS['TL_LANG']['MOD'][$strGroupName][0] : $GLOBALS['TL_LANG']['MOD'][$strGroupName]) != false) ? $label : $strGroupName;
-				$arrModules[$strGroupName]['href'] = $this->addToUrl('mtg=' . $strGroupName);
+				$arrModules[$strGroupName]['icon']  = 'modMinus.gif';
+				$arrModules[$strGroupName]['class'] = '';
+				$arrModules[$strGroupName]['href']  = $this->addToUrl('mtg=' . $strGroupName);
 
 				// Do not show the modules if the group is closed
 				if (!$blnShowAll && isset($session['backend_modules'][$strGroupName]) && $session['backend_modules'][$strGroupName] < 1)
 				{
 					$arrModules[$strGroupName]['modules'] = false;
-					$arrModules[$strGroupName]['icon'] = 'modPlus.gif';
-					$arrModules[$strGroupName]['title'] = specialchars($GLOBALS['TL_LANG']['MSC']['expandNode']);
+					$arrModules[$strGroupName]['title']   = specialchars($GLOBALS['TL_LANG']['MSC']['expandNode']);
+					$arrModules[$strGroupName]['icon']    = 'modPlus.gif';
 				}
 				else
 				{
@@ -489,10 +490,10 @@ class BackendUser extends \User
 						// Check access
 						if ($strModuleName == 'undo' || $this->hasAccess($strModuleName, 'modules'))
 						{
-							$arrModules[$strGroupName]['modules'][$strModuleName] = $arrModuleConfig;
+							$arrModules[$strGroupName]['modules'][$strModuleName]          = $arrModuleConfig;
 							$arrModules[$strGroupName]['modules'][$strModuleName]['title'] = specialchars($GLOBALS['TL_LANG']['MOD'][$strModuleName][1]);
 							$arrModules[$strGroupName]['modules'][$strModuleName]['label'] = (($label = is_array($GLOBALS['TL_LANG']['MOD'][$strModuleName]) ? $GLOBALS['TL_LANG']['MOD'][$strModuleName][0] : $GLOBALS['TL_LANG']['MOD'][$strModuleName]) != false) ? $label : $strModuleName;
-							$arrModules[$strGroupName]['modules'][$strModuleName]['icon'] = ($arrModuleConfig['icon'] != '') ? sprintf(' style="background-image:url(\'%s%s\')"', TL_ASSETS_URL, $arrModuleConfig['icon']) : '';
+							$arrModules[$strGroupName]['modules'][$strModuleName]['icon']  = !empty($arrModuleConfig['icon']) ? sprintf(' style="background-image:url(\'%s%s\')"', TL_ASSETS_URL, $arrModuleConfig['icon']) : '';
 							$arrModules[$strGroupName]['modules'][$strModuleName]['class'] = 'navigation ' . $strModuleName;
 							$arrModules[$strGroupName]['modules'][$strModuleName]['href']  = \Environment::get('script') . '?do=' . $strModuleName . '&amp;ref=' . TL_REFERER_ID;
 

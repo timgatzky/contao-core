@@ -53,11 +53,11 @@ class Session
 		switch (TL_MODE)
 		{
 			case 'BE':
-				$this->arrSession = $_SESSION['BE_DATA'];
+				$this->arrSession = isset($_SESSION['BE_DATA']) ? $_SESSION['BE_DATA'] : array();
 				break;
 
 			case 'FE':
-				$this->arrSession = $_SESSION['FE_DATA'];
+				$this->arrSession = isset($_SESSION['FE_DATA']) ? $_SESSION['FE_DATA'] : array();
 				break;
 
 			default:
@@ -120,7 +120,7 @@ class Session
 	 */
 	public function get($strKey)
 	{
-		return $this->arrSession[$strKey];
+		return isset($this->arrSession[$strKey]) ? $this->arrSession[$strKey] : null;
 	}
 
 
