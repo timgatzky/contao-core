@@ -104,8 +104,10 @@ class Image
 
         // No resizing required
         if ($objFile->width == $width && $objFile->height == $height) {
+
             // Return the target image (thanks to Tristan Lins) (see #4166)
             if ($target) {
+
                 // Copy the source image if the target image does not exist or is older than the source image
                 if (!file_exists(TL_ROOT . '/' . $target) || $objFile->mtime > filemtime(TL_ROOT . '/' . $target)) {
                     \Files::getInstance()->copy($image, $target);
@@ -119,6 +121,7 @@ class Image
 
         // No mode given
         if ($mode == '') {
+
             // Backwards compatibility
             if ($width && $height) {
                 $mode = 'center_top';
@@ -137,6 +140,7 @@ class Image
 
         // Check whether the image exists already
         if (!\Config::get('debugMode')) {
+
             // Custom target (thanks to Tristan Lins) (see #4166)
             if ($target && !$force) {
                 if (file_exists(TL_ROOT . '/' . $target) && $objFile->mtime <= filemtime(TL_ROOT . '/' . $target)) {
@@ -146,6 +150,7 @@ class Image
 
             // Regular cache file
             if (file_exists(TL_ROOT . '/' . $strCacheName)) {
+
                 // Copy the cached file if it exists
                 if ($target) {
                     \Files::getInstance()->copy($strCacheName, $target);
@@ -347,6 +352,7 @@ class Image
             case 'png':
                 // Optimize non-truecolor images (see #2426)
                 if (version_compare($strGdVersion, '2.0', '>=') && function_exists('imagecolormatch') && !imageistruecolor($strSourceImage)) {
+
                     // TODO: make it work with transparent images, too
                     if (imagecolortransparent($strSourceImage) == -1) {
                         $intColors = imagecolorstotal($strSourceImage);

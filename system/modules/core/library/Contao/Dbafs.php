@@ -100,6 +100,7 @@ class Dbafs
 
         // If the resource is a folder, also add its contents
         if (is_dir(TL_ROOT . '/' . $strResource)) {
+
             // Get a filtered list of all files
             $objFiles = new \RecursiveIteratorIterator(
                 new \Dbafs\Filter(
@@ -450,6 +451,7 @@ class Dbafs
             }
 
             if ($objModel === null) {
+
                 // Add a log entry
                 $objLog->append("[Added] $strRelpath");
 
@@ -498,6 +500,7 @@ class Dbafs
                     $objModel->save();
                 }
             } else {
+
                 // Check whether the MD5 hash has changed
                 $objResource = $objFile->isDir() ? new \Folder($strRelpath) : new \File($strRelpath);
                 $strType = ($objModel->hash != $objResource->hash) ? 'Changed' : 'Unchanged';
@@ -523,6 +526,7 @@ class Dbafs
                 $objFound = \FilesModel::findBy(array('hash=?', 'found=1'), $objFiles->hash);
 
                 if ($objFound !== null) {
+
                     // Check for matching file names if the result is ambiguous (see #5644)
                     if ($objFound->count() > 1) {
                         while ($objFound->next()) {
@@ -564,6 +568,7 @@ class Dbafs
                     // Then save the modified original entry (prevents duplicate key errors)
                     $objFiles->save();
                 } else {
+
                     // Add a log entry BEFORE changing the object
                     $objLog->append("[Deleted] {$objFiles->path}");
 

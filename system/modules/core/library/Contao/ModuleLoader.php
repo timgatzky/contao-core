@@ -96,6 +96,7 @@ class ModuleLoader
             if (\Config::get('coreOnlyMode')) {
                 $modules = array('core', 'calendar', 'comments', 'devtools', 'faq', 'listing', 'news', 'newsletter', 'repository');
             } else {
+
                 // Sort the modules (see #6391)
                 $modules = scan(TL_ROOT . '/system/modules');
                 sort($modules);
@@ -107,6 +108,7 @@ class ModuleLoader
 
             // Walk through the modules
             foreach ($modules as $file) {
+
                 // Ignore dot resources
                 if (strncmp($file, '.', 1) === 0) {
                     continue;
@@ -138,6 +140,7 @@ class ModuleLoader
                     $load[$file] = $config['requires'] ?: array();
 
                     foreach ($load[$file] as $k=>$v) {
+
                         // Optional requirements (see #6835)
                         if (strncmp($v, '*', 1) === 0) {
                             $key = substr($v, 1);

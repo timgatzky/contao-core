@@ -179,6 +179,7 @@ class Search
 
         // Add a new entry
         else {
+
             // Check for a duplicate record with the same checksum
             $objDuplicates = $objDatabase->prepare("SELECT id, url FROM tl_search WHERE pid=? AND checksum=?")
                                          ->limit(1)
@@ -186,6 +187,7 @@ class Search
 
             // Keep the existing record
             if ($objDuplicates->numRows) {
+
                 // Update the URL if the new URL is shorter or the current URL is not canonical
                 if (substr_count($arrSet['url'], '/') < substr_count($objDuplicates->url, '/') || strncmp($arrSet['url'] . '?', $objDuplicates->url, utf8_strlen($arrSet['url']) + 1) === 0) {
                     $objDatabase->prepare("UPDATE tl_search SET url=? WHERE id=?")
@@ -222,6 +224,7 @@ class Search
 
         // Index words
         foreach ($arrWords as $strWord) {
+
             // Strip a leading plus (see #4497)
             if (strncmp($strWord, '+', 1) === 0) {
                 $strWord = substr($strWord, 1);
@@ -312,6 +315,7 @@ class Search
             }
 
             switch (substr($strKeyword, 0, 1)) {
+
                 // Phrases
                 case '"':
                     if (($strKeyword = trim(substr($strKeyword, 1, -1))) != false) {
@@ -445,6 +449,7 @@ class Search
 
         // Make sure to find all words
         if (!$blnOrSearch) {
+
             // Number of keywords without wildcards
             $strQuery .= " HAVING count >= " . $intKeywords;
 

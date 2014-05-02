@@ -156,6 +156,7 @@ abstract class Controller extends \System
 
         // Articles
         if ($intId == 0) {
+
             // Show a particular article only
             if ($objPage->type == 'regular' && \Input::get('articles')) {
                 list($strSection, $strArticle) = explode(':', \Input::get('articles'));
@@ -170,6 +171,7 @@ abstract class Controller extends \System
 
                     // Send a 404 header if the article does not exist
                     if ($objArticle === null) {
+
                         // Do not index the page
                         $objPage->noSearch = 1;
                         $objPage->cache = 0;
@@ -308,6 +310,7 @@ abstract class Controller extends \System
 
         // Print the article as PDF
         if (isset($_GET['pdf']) && \Input::get('pdf') == $objRow->id) {
+
             // Backwards compatibility
             if ($objRow->printable == 1) {
                 $objArticle = new \ModuleArticle($objRow);
@@ -609,6 +612,7 @@ abstract class Controller extends \System
 
             // Replace the tag
             switch (strtolower($elements[0])) {
+
                 // Date
                 case 'date':
                     $arrCache[$strTag] = \Date::parse($elements[1] ?: \Config::get('dateFormat'));
@@ -748,6 +752,7 @@ abstract class Controller extends \System
 
                     // Regular link
                     else {
+
                         // User login page
                         if ($elements[1] == 'login') {
                             if (!FE_USER_LOGGED_IN) {
@@ -1298,6 +1303,7 @@ abstract class Controller extends \System
                     }
 
                     if (\Validator::isUuid($strFile)) {
+
                         // Handle UUIDs
                         $objFile = \FilesModel::findByUuid($strFile);
 
@@ -1308,6 +1314,7 @@ abstract class Controller extends \System
 
                         $strFile = $objFile->path;
                     } elseif (is_numeric($strFile)) {
+
                         // Handle numeric IDs (see #4805)
                         $objFile = \FilesModel::findByPk($strFile);
 
@@ -1318,6 +1325,7 @@ abstract class Controller extends \System
 
                         $strFile = $objFile->path;
                     } else {
+
                         // Sanitize the path
                         $strFile = str_replace('../', '', $strFile);
                     }
@@ -1787,6 +1795,7 @@ abstract class Controller extends \System
             header('HTTP/1.1 204 No Content');
             header('X-Ajax-Location: ' . $strLocation);
         } else {
+
             // Add the HTTP header
             switch ($intStatus) {
                 case 301:
@@ -2026,6 +2035,7 @@ abstract class Controller extends \System
         $arrParent = array();
 
         do {
+
             // Get the pid
             $objParent = $this->Database->prepare("SELECT pid FROM " . $strTable . " WHERE id=?")
                                         ->limit(1)
@@ -2146,6 +2156,7 @@ abstract class Controller extends \System
             }
 
             if ($size[0] > $intMaxWidth || (!$size[0] && !$size[1] && $imgSize[0] > $intMaxWidth)) {
+
                 // See #2268 (thanks to Thyon)
                 $ratio = ($size[0] && $size[1]) ? $size[1] / $size[0] : $imgSize[1] / $imgSize[0];
 
@@ -2176,8 +2187,10 @@ abstract class Controller extends \System
             $objTemplate->attributes = '';
 
             if ($arrItem['fullsize']) {
+
                 // Open images in the lightbox
                 if (preg_match('/\.(jpe?g|gif|png)$/', $arrItem['imageUrl'])) {
+
                     // Do not add the TL_FILES_URL to external URLs (see #4923)
                     if (strncmp($arrItem['imageUrl'], 'http://', 7) !== 0 && strncmp($arrItem['imageUrl'], 'https://', 8) !== 0) {
                         $objTemplate->$strHrefKey = TL_FILES_URL . \System::urlEncode($arrItem['imageUrl']);
@@ -2409,6 +2422,7 @@ abstract class Controller extends \System
             \Cache::set($strKey, $objPage);
             return $objPage;
         } else {
+
             // Invalid ID
             if (!strlen($intId) || $intId < 1) {
                 return null;

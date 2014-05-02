@@ -119,6 +119,7 @@ class Combiner extends \System
 
         // Check the source file
         if (!file_exists(TL_ROOT . '/' . $strFile)) {
+
             // Create the style sheets and retry
             if ($strType == self::CSS) {
                 $this->import('StyleSheets');
@@ -198,6 +199,7 @@ class Combiner extends \System
             $return = array();
 
             foreach ($this->arrFiles as $arrFile) {
+
                 // Compile SCSS/LESS files into temporary files
                 if ($arrFile['extension'] == self::SCSS || $arrFile['extension'] == self::LESS) {
                     $strPath = 'assets/' . $strTarget . '/' . str_replace('/', '_', $arrFile['name']) . $this->strMode;
@@ -335,6 +337,7 @@ class Combiner extends \System
 
             // Skip absolute links and embedded images (see #5082)
             if (strncmp($strData, 'data:', 5) !== 0 && strncmp($strData, 'http://', 7) !== 0 && strncmp($strData, 'https://', 8) !== 0 && strncmp($strData, '/', 1) !== 0 && strncmp($strData, 'assets/css3pie/', 15) !== 0) {
+
                 // Make the paths relative to the root (see #4161)
                 if (strncmp($strData, '../', 3) !== 0) {
                     $strData = '../../' . $strGlue . $strData;

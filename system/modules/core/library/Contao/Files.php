@@ -67,6 +67,7 @@ abstract class Files
     public static function getInstance()
     {
         if (self::$objInstance === null) {
+
             // Use FTP to modify files
             if (\Config::get('useFTP')) {
                 self::$objInstance = new \Files\Ftp();

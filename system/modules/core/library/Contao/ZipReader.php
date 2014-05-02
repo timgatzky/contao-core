@@ -174,6 +174,7 @@ class ZipReader
     public function __get($strKey)
     {
         switch ($strKey) {
+
             // Header
             case 'number_of_this_disk':
             case 'number_of_disk_with_cd':
@@ -370,6 +371,7 @@ class ZipReader
 
         // Decompress data
         switch ($this->arrFiles[$this->intIndex]['compression_method']) {
+
             // Stored
             case 0:
                 break;

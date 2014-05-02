@@ -239,6 +239,7 @@ class ZipWriter
 
         // Check if target file exists
         if (!file_exists(TL_ROOT . '/' . $this->strFile)) {
+
             // Handle open_basedir restrictions
             if (($strFolder = dirname($this->strFile)) == '.') {
                 $strFolder = '';

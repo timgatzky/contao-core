@@ -745,6 +745,7 @@ abstract class Widget extends \Template\Base
 
         if ($this->rgxp != '') {
             switch ($this->rgxp) {
+
                 // Special validation rule for style sheets
                 case (strncmp($this->rgxp, 'digit_', 6) === 0):
                     $textual = explode('_', $this->rgxp);
@@ -792,6 +793,7 @@ abstract class Widget extends \Template\Base
                     if (!\Validator::isDate($varInput)) {
                         $this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['date'], \Date::getInputFormat(\Date::getNumericDateFormat())));
                     } else {
+
                         // Validate the date (see #5086)
                         try {
                             new \Date($varInput);
@@ -813,6 +815,7 @@ abstract class Widget extends \Template\Base
                     if (!\Validator::isDatim($varInput)) {
                         $this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['dateTime'], \Date::getInputFormat(\Date::getNumericDatimFormat())));
                     } else {
+
                         // Validate the date (see #5086)
                         try {
                             new \Date($varInput);
@@ -825,6 +828,7 @@ abstract class Widget extends \Template\Base
                 // Check whether the current value is a valid friendly name e-mail address
                 case 'friendly':
                     list ($strName, $varInput) = \String::splitFriendlyEmail($varInput);
+
                     // no break;
 
                 // Check whether the current value is a valid e-mail address
@@ -1069,6 +1073,7 @@ abstract class Widget extends \Template\Base
             $blnFound = false;
 
             foreach ($this->arrOptions as $v) {
+
                 // Single dimensional array
                 if (array_key_exists('value', $v)) {
                     if ($strInput == $v['value']) {

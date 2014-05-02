@@ -425,8 +425,10 @@ class File extends \System
 
         // Move the temporary file to its destination
         if ($this->blnDoNotCreate) {
+
             // Create the file path
             if (!file_exists(TL_ROOT . '/' . $this->strFile)) {
+
                 // Handle open_basedir restrictions
                 if (($strFolder = dirname($this->strFile)) == '.') {
                     $strFolder = '';
@@ -644,6 +646,7 @@ class File extends \System
     {
         if (!is_resource($this->resFile)) {
             if (!$this->blnDoNotCreate) {
+
                 // Open the original file
                 if (($this->resFile = $this->Files->fopen($this->strFile, $strMode)) == false) {
                     return false;
@@ -676,6 +679,7 @@ class File extends \System
     protected function getMimeInfo()
     {
         $arrMimeTypes = array(
+
             // Application files
             'xl'    => array('application/excel', 'iconOFFICE.gif'),
             'xls'   => array('application/excel', 'iconOFFICE.gif'),

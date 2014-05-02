@@ -62,6 +62,7 @@ class Installer extends \Controller
 
         foreach ($arrOperations as $command=>$label) {
             if (is_array($sql_command[$command])) {
+
                 // Headline
                 $return .= '
     <tr>
@@ -186,6 +187,7 @@ class Installer extends \Controller
         // Drop fields
         foreach ($sql_current as $k=>$v) {
             if (!in_array($k, $drop)) {
+
                 // Create definitions
                 if (is_array($v['TABLE_CREATE_DEFINITIONS'])) {
                     foreach ($v['TABLE_CREATE_DEFINITIONS'] as $kk=>$vv) {
@@ -241,6 +243,7 @@ class Installer extends \Controller
             }
 
             foreach (scan(TL_ROOT . '/' . $strDir) as $strFile) {
+
                 // Ignore non PHP files and files which have been included before
                 if (substr($strFile, -4) != '.php' || in_array($strFile, $included)) {
                     continue;

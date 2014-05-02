@@ -132,6 +132,7 @@ class Automator extends \System
         // Walk through the subfolders
         foreach (scan(TL_ROOT . '/assets/images') as $dir) {
             if ($dir != 'index.html' && strncmp($dir, '.', 1) !== 0) {
+
                 // Purge the folder
                 $objFolder = new \Folder('assets/images/' . $dir);
                 $objFolder->purge();
@@ -157,6 +158,7 @@ class Automator extends \System
     {
         // assets/js and assets/css
         foreach (array('assets/js', 'assets/css') as $dir) {
+
             // Purge the folder
             $objFolder = new \Folder($dir);
             $objFolder->purge();
@@ -214,6 +216,7 @@ class Automator extends \System
         // Check whether the cache exists
         if (is_dir(TL_ROOT . '/system/cache/dca')) {
             foreach (array('config', 'dca', 'language', 'sql') as $dir) {
+
                 // Purge the folder
                 $objFolder = new \Folder('system/cache/' . $dir);
                 $objFolder->delete();
@@ -537,6 +540,7 @@ class Automator extends \System
             }
 
             foreach (scan(TL_ROOT . '/' . $strDir) as $strFile) {
+
                 // Ignore non PHP files and files which have been included before
                 if (substr($strFile, -4) != '.php' || in_array($strFile, $arrFiles)) {
                     continue;
@@ -548,6 +552,7 @@ class Automator extends \System
 
         // Create one file per table
         foreach ($arrFiles as $strName) {
+
             // Generate the cache file
             $objCacheFile = new \File('system/cache/dca/' . $strName . '.php', true);
             $objCacheFile->write('<?php '); // add one space to prevent the "unexpected $end" error
@@ -676,6 +681,7 @@ class Automator extends \System
             }
 
             foreach (scan(TL_ROOT . '/' . $strDir) as $strFile) {
+
                 // Ignore non PHP files and files which have been included before
                 if (substr($strFile, -4) != '.php' || in_array($strFile, $included)) {
                     continue;
@@ -694,6 +700,7 @@ class Automator extends \System
 
         // Create one file per table
         foreach ($arrExtracts as $strTable=>$objExtract) {
+
             // Create the file
             $objFile = new \File('system/cache/sql/' . $strTable . '.php', true);
             $objFile->write("<?php\n\n");

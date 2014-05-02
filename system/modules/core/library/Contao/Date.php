@@ -226,6 +226,7 @@ class Date
         }
 
         return preg_replace_callback('/[a-zA-Z]/', function($matches) {
+
                 // Thanks to Christian Labuda
                 $arrRegexp = array(
                     'a' => '(?P<a>am|pm)',

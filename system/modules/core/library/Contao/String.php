@@ -119,6 +119,7 @@ class String
         $arrChunks = preg_split('/(<[^>]+>)/', $strString, -1, PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
 
         for ($i=0, $c=count($arrChunks); $i<$c; $i++) {
+
             // Buffer tags to include them later
             if (preg_match('/<([^>]+)>/', $arrChunks[$i])) {
                 $arrTagBuffer[] = $arrChunks[$i];

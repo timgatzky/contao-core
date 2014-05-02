@@ -116,6 +116,7 @@ class Idna
 
         // Scheme
         if (isset($arrUrl['scheme'])) {
+
             // Remove the scheme if it has been added above (see #3792)
             if ($blnSchemeAdded) {
                 unset($arrUrl['scheme']);

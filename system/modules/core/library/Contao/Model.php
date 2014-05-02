@@ -357,6 +357,7 @@ abstract class Model
 
             // Only update modified fields
             foreach ($this->arrModified as $k=>$v) {
+
                 // Only set fields that exist in the DB
                 if (in_array($k, $arrFields)) {
                     $arrSet[$k] = $arrRow[$k];
@@ -469,6 +470,7 @@ abstract class Model
                                                ->affectedRows;
 
         if ($intAffected) {
+
             // Unregister the model
             \Model\Registry::getInstance()->unregister($this);
 

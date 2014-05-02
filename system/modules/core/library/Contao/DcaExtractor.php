@@ -227,6 +227,7 @@ class DcaExtractor extends \Controller
 
         // Keys
         foreach ($this->arrKeys as $k=>$v) {
+
             // Handle multi-column indexes (see #5556)
             if (strpos($k, ',') !== false) {
                 $f = trimsplit(',', $k);
@@ -283,6 +284,7 @@ class DcaExtractor extends \Controller
         // Check whether there are fields (see #4826)
         if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'])) {
             foreach ($GLOBALS['TL_DCA'][$this->strTable]['fields'] as $field=>$config) {
+
                 // Check whether all fields have an SQL definition
                 if (!isset($config['sql']) && isset($config['inputType'])) {
                     $blnFromFile = true;

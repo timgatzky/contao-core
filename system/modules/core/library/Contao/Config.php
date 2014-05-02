@@ -129,6 +129,7 @@ class Config
         if (!static::get('bypassCache') && file_exists(TL_ROOT . '/' . $strCacheFile)) {
             include TL_ROOT . '/' . $strCacheFile;
         } else {
+
             // Get the module configuration files
             foreach (\ModuleLoader::getActive() as $strModule) {
                 $strFile = TL_ROOT . '/system/modules/' . $strModule . '/config/config.php';

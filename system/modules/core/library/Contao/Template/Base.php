@@ -134,6 +134,7 @@ abstract class Base extends \Controller
 
         // Root template
         if ($this->strParent === null) {
+
             // Register the block name
             if (!isset($this->arrBlocks[$name])) {
                 $this->arrBlocks[$name] = '[[TL_PARENT]]';
@@ -150,6 +151,7 @@ abstract class Base extends \Controller
 
             // Handle nested blocks
             if ($this->arrBlocks[$name] != '[[TL_PARENT]]') {
+
                 // Output everything before the first TL_PARENT tag
                 if (strpos($this->arrBlocks[$name], '[[TL_PARENT]]') !== false) {
                     list($content) = explode('[[TL_PARENT]]', $this->arrBlocks[$name], 2);
@@ -166,6 +168,7 @@ abstract class Base extends \Controller
 
         // Child template
         else {
+
             // Clean the output buffer
             ob_end_clean();
 
@@ -197,8 +200,10 @@ abstract class Base extends \Controller
 
         // Root template
         if ($this->strParent === null) {
+
             // Handle nested blocks
             if ($this->arrBlocks[$name] != '[[TL_PARENT]]') {
+
                 // Output everything after the first TL_PARENT tag
                 if (strpos($this->arrBlocks[$name], '[[TL_PARENT]]') !== false) {
                     list(, $content) = explode('[[TL_PARENT]]', $this->arrBlocks[$name], 2);
@@ -214,6 +219,7 @@ abstract class Base extends \Controller
 
         // Child template
         else {
+
             // Capture the block content
             $this->arrBlocks[$name][] = ob_get_contents();
             ob_end_clean();

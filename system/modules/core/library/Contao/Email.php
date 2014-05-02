@@ -122,9 +122,11 @@ class Email
         // Instantiate mailer
         if (self::$objMailer === null) {
             if (!\Config::get('useSMTP')) {
+
                 // Mail
                 $objTransport = \Swift_MailTransport::newInstance();
             } else {
+
                 // SMTP
                 $objTransport = \Swift_SmtpTransport::newInstance(\Config::get('smtpHost'), \Config::get('smtpPort'));
 
@@ -426,6 +428,7 @@ class Email
 
         // HTML e-mail
         if ($this->strHtml != '') {
+
             // Embed images
             if ($this->blnEmbedImages) {
                 if ($this->strImageDir == '') {

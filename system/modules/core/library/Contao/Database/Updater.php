@@ -461,6 +461,7 @@ class Updater extends \Controller
 
         // Check whether there are UUIDs
         if (!$this->Database->fieldExists('uuid', 'tl_files')) {
+
             // Adjust the DB structure
             $this->Database->query("ALTER TABLE `tl_files` ADD `uuid` binary(16) NULL");
             $this->Database->query("ALTER TABLE `tl_files` ADD UNIQUE KEY `uuid` (`uuid`)");
@@ -626,6 +627,7 @@ class Updater extends \Controller
             }
 
             foreach (scan(TL_ROOT . '/' . $strDir) as $strFile) {
+
                 // Ignore non PHP files and files which have been included before
                 if (substr($strFile, -4) != '.php' || in_array($strFile, $arrFiles)) {
                     continue;
@@ -658,6 +660,7 @@ class Updater extends \Controller
             // Make sure there are fields (see #6437)
             if (is_array($GLOBALS['TL_DCA'][$strTable]['fields'])) {
                 foreach ($GLOBALS['TL_DCA'][$strTable]['fields'] as $strField=>$arrField) {
+
                     // FIXME: support other field types
                     if ($arrField['inputType'] == 'fileTree') {
                         if ($this->Database->fieldExists($strField, $strTable, true)) {
@@ -788,6 +791,7 @@ class Updater extends \Controller
             }
 
             foreach ($arrValues as $k=>$v) {
+
                 // Numeric ID to UUID
                 if ($objHelper->isNumeric) {
                     $objFile = \FilesModel::findByPk($objHelper->value[$k]);
