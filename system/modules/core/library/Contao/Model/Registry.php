@@ -160,6 +160,7 @@ class Registry implements \Countable
     public function isRegistered(\Model $objModel)
     {
         $intObjectId = spl_object_hash($objModel);
+
         return isset($this->arrIdentities[$intObjectId]);
     }
 }

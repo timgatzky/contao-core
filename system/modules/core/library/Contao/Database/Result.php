@@ -322,6 +322,7 @@ abstract class Result
 
         if (($arrRow = $this->fetch_assoc()) == false) {
             $this->blnDone = true;
+
             return false;
         }
 

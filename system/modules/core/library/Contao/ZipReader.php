@@ -225,6 +225,7 @@ class ZipReader
         foreach ($this->arrFiles as $k=>$v) {
             if ($strName == $v['file_name']) {
                 $this->intIndex = $k;
+
                 return true;
             }
         }
@@ -240,6 +241,7 @@ class ZipReader
     public function first()
     {
         $this->intIndex = 0;
+
         return $this;
     }
 
@@ -255,6 +257,7 @@ class ZipReader
         }
 
         ++$this->intIndex;
+
         return $this;
     }
 
@@ -270,6 +273,7 @@ class ZipReader
         }
 
         --$this->intIndex;
+
         return $this;
     }
 
@@ -281,6 +285,7 @@ class ZipReader
     public function last()
     {
         $this->intIndex = $this->intLast;
+
         return $this;
     }
 
@@ -306,6 +311,7 @@ class ZipReader
     public function reset()
     {
         $this->intIndex = -1;
+
         return $this;
     }
 

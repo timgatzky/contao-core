@@ -41,6 +41,7 @@ class Idna
     public static function encode($strDomain)
     {
         $objIdn = new \idna_convert();
+
         return $objIdn->encode($strDomain);
     }
 
@@ -54,6 +55,7 @@ class Idna
     public static function decode($strDomain)
     {
         $objIdn = new \idna_convert();
+
         return $objIdn->decode($strDomain);
     }
 
@@ -75,6 +77,7 @@ class Idna
         }
 
         list($strLocal, $strHost) = explode('@', $strEmail);
+
         return $strLocal . '@' . static::encode($strHost);
     }
 

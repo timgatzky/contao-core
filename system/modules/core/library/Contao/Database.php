@@ -231,6 +231,7 @@ abstract class Database
         }
 
         $this->arrCache[$strDatabase] = $arrReturn;
+
         return $this->arrCache[$strDatabase];
     }
 
@@ -267,6 +268,7 @@ abstract class Database
         }
 
         $this->arrCache[$strTable] = $this->list_fields($strTable);
+
         return $this->arrCache[$strTable];
     }
 

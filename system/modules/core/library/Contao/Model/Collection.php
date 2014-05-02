@@ -171,6 +171,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
         }
 
         $this->arrModels[$this->intIndex]->setRow($arrData);
+
         return $this;
     }
 
@@ -186,6 +187,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
         }
 
         $this->arrModels[$this->intIndex]->save();
+
         return $this;
     }
 
@@ -247,6 +249,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
     public function first()
     {
         $this->intIndex = 0;
+
         return $this;
     }
 
@@ -262,6 +265,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
         }
 
         --$this->intIndex;
+
         return $this;
     }
 
@@ -291,6 +295,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
         }
 
         ++$this->intIndex;
+
         return $this;
     }
 
@@ -302,6 +307,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
     public function last()
     {
         $this->intIndex = count($this->arrModels) - 1;
+
         return $this;
     }
 
@@ -313,6 +319,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
     public function reset()
     {
         $this->intIndex = -1;
+
         return $this;
     }
 

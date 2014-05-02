@@ -174,6 +174,7 @@ abstract class Controller extends \System
                         $objPage->cache = 0;
 
                         header('HTTP/1.1 404 Not Found');
+
                         return '<p class="error">' . sprintf($GLOBALS['TL_LANG']['MSC']['invalidPage'], $strArticle) . '</p>';
                     }
 
@@ -248,6 +249,7 @@ abstract class Controller extends \System
             // Return if the class does not exist
             if (!class_exists($strClass)) {
                 static::log('Module class "'.$strClass.'" (module "'.$objRow->type.'") does not exist', __METHOD__, TL_ERROR);
+
                 return '';
             }
 
@@ -381,6 +383,7 @@ abstract class Controller extends \System
         // Return if the class does not exist
         if (!class_exists($strClass)) {
             static::log('Content element class "'.$strClass.'" (content element "'.$objRow->type.'") does not exist', __METHOD__, TL_ERROR);
+
             return '';
         }
 
@@ -1648,6 +1651,7 @@ abstract class Controller extends \System
         }
 
         $arrReplace['[[TL_HEAD]]'] = $strScripts;
+
         return str_replace(array_keys($arrReplace), array_values($arrReplace), $strBuffer);
     }
 
@@ -2400,6 +2404,7 @@ abstract class Controller extends \System
             $objPage->loadDetails();
 
             \Cache::set($strKey, $objPage);
+
             return $objPage;
         } else {
 
@@ -2418,6 +2423,7 @@ abstract class Controller extends \System
             $objPage = \PageModel::findWithDetails($intId);
 
             \Cache::set($strKey, $objPage);
+
             return $objPage;
         }
     }

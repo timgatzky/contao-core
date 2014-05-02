@@ -152,6 +152,7 @@ abstract class Statement
         }
 
         $this->strQuery = implode('', $arrChunks);
+
         return $this;
     }
 
@@ -193,6 +194,7 @@ abstract class Statement
         }
 
         $this->strQuery = str_replace('%p', $strQuery, $this->strQuery);
+
         return $this;
     }
 
@@ -215,6 +217,7 @@ abstract class Statement
         }
 
         $this->limit_query($intRows, $intOffset);
+
         return $this;
     }
 
@@ -232,6 +235,7 @@ abstract class Statement
         }
 
         $this->replaceWildcards($arrParams);
+
         return $this->query();
     }
 
@@ -263,6 +267,7 @@ abstract class Statement
         // No result set available
         if (!is_resource($this->resResult) && !is_object($this->resResult)) {
             $this->debugQuery();
+
             return $this;
         }
 

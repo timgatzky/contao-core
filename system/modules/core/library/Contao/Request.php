@@ -295,12 +295,14 @@ class Request
 
             default:
                 $this->strError = 'Invalid schema ' . $uri['scheme'];
+
                 return;
                 break;
         }
 
         if (!is_resource($fp)) {
             $this->strError = trim($errno .' '. $errstr);
+
             return;
         }
 

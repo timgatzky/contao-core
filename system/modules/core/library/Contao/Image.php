@@ -88,6 +88,7 @@ class Image
         // Check whether the file exists
         if (!is_file(TL_ROOT . '/' . $image)) {
             \System::log('Image "' . $image . '" could not be found', __METHOD__, TL_ERROR);
+
             return null;
         }
 
@@ -97,6 +98,7 @@ class Image
         // Check the file type
         if (!in_array($objFile->extension, $arrAllowedTypes)) {
             \System::log('Image type "' . $objFile->extension . '" was not allowed to be processed', __METHOD__, TL_ERROR);
+
             return null;
         }
 
@@ -325,6 +327,7 @@ class Image
         if (!$strSourceImage) {
             imagedestroy($strNewImage);
             \System::log('Image "' . $image . '" could not be processed', __METHOD__, TL_ERROR);
+
             return null;
         }
 
@@ -380,6 +383,7 @@ class Image
         // Resize the original image
         if ($target) {
             \Files::getInstance()->copy($strCacheName, $target);
+
             return \System::urlEncode($target);
         }
 
@@ -420,6 +424,7 @@ class Image
         }
 
         $size = getimagesize(TL_ROOT .'/'. $src);
+
         return '<img src="' . $static . \System::urlEncode($src) . '" ' . $size[3] . ' alt="' . specialchars($alt) . '"' . (($attributes != '') ? ' ' . $attributes : '') . '>';
     }
 }

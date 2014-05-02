@@ -358,6 +358,7 @@ abstract class Widget extends \Template\Base
                 } elseif ($this->arrConfiguration['nullIfEmpty'] && $this->varValue == '') {
                     return null;
                 }
+
                 return $this->varValue;
                 break;
 

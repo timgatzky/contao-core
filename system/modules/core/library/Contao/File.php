@@ -175,6 +175,7 @@ class File extends \System
                 if (!isset($this->arrPathinfo[$strKey])) {
                     $this->arrPathinfo = pathinfo(TL_ROOT . '/' . $this->strFile);
                 }
+
                 return $this->arrPathinfo['basename'];
                 break;
 
@@ -182,6 +183,7 @@ class File extends \System
                 if (!isset($this->arrPathinfo[$strKey])) {
                     $this->arrPathinfo = pathinfo(TL_ROOT . '/' . $this->strFile);
                 }
+
                 return $this->arrPathinfo['dirname'];
                 break;
 
@@ -189,6 +191,7 @@ class File extends \System
                 if (!isset($this->arrPathinfo['extension'])) {
                     $this->arrPathinfo = pathinfo(TL_ROOT . '/' . $this->strFile);
                 }
+
                 return strtolower($this->arrPathinfo['extension']);
                 break;
 
@@ -233,6 +236,7 @@ class File extends \System
                 if (empty($this->arrImageSize)) {
                     $this->arrImageSize = @getimagesize(TL_ROOT . '/' . $this->strFile);
                 }
+
                 return $this->arrImageSize[0];
                 break;
 
@@ -240,6 +244,7 @@ class File extends \System
                 if (empty($this->arrImageSize)) {
                     $this->arrImageSize = @getimagesize(TL_ROOT . '/' . $this->strFile);
                 }
+
                 return $this->arrImageSize[1];
                 break;
 
@@ -251,6 +256,7 @@ class File extends \System
                 if (empty($this->arrImageSize)) {
                     $this->arrImageSize = @getimagesize(TL_ROOT . '/' . $this->strFile);
                 }
+
                 return $this->arrImageSize['channels'];
                 break;
 
@@ -258,6 +264,7 @@ class File extends \System
                 if (empty($this->arrImageSize)) {
                     $this->arrImageSize = @getimagesize(TL_ROOT . '/' . $this->strFile);
                 }
+
                 return $this->arrImageSize['bits'];
                 break;
 
@@ -273,6 +280,7 @@ class File extends \System
                 if (!is_resource($this->resFile)) {
                     $this->resFile = fopen(TL_ROOT . '/' . $this->strFile, 'rb');
                 }
+
                 return $this->resFile;
                 break;
 
@@ -663,6 +671,7 @@ class File extends \System
         }
 
         fputs($this->resFile, $varData);
+
         return true;
     }
 
@@ -818,6 +827,7 @@ class File extends \System
     protected function getMimeType()
     {
         $arrMime = $this->getMimeInfo();
+
         return $arrMime[0];
     }
 
@@ -830,6 +840,7 @@ class File extends \System
     protected function getIcon()
     {
         $arrMime = $this->getMimeInfo();
+
         return $arrMime[1];
     }
 

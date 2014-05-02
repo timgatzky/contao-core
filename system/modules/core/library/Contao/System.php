@@ -642,6 +642,7 @@ abstract class System
         }
 
         $objFile->delete();
+
         return true;
     }
 
