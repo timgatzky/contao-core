@@ -52,8 +52,7 @@ class FeedItem
      */
     public function __construct($arrData=null)
     {
-        if (is_array($arrData))
-        {
+        if (is_array($arrData)) {
             $this->arrData = $arrData;
         }
     }
@@ -80,8 +79,7 @@ class FeedItem
      */
     public function __get($strKey)
     {
-        if (isset($this->arrData[$strKey]))
-        {
+        if (isset($this->arrData[$strKey])) {
             return $this->arrData[$strKey];
         }
 
@@ -109,15 +107,13 @@ class FeedItem
      */
     public function addEnclosure($strFile)
     {
-        if ($strFile == '' || !file_exists(TL_ROOT . '/' . $strFile))
-        {
+        if ($strFile == '' || !file_exists(TL_ROOT . '/' . $strFile)) {
             return;
         }
 
         $objFile = new \File($strFile, true);
 
-        $this->arrData['enclosure'][] = array
-        (
+        $this->arrData['enclosure'][] = array(
             'url' => \Environment::get('base') . \System::urlEncode($strFile),
             'length' => $objFile->size,
             'type' => $objFile->mime

@@ -99,59 +99,47 @@ class Combiner extends \System
         $strType = strrchr($strFile, '.');
 
         // Check the file type
-        if ($strType != self::CSS && $strType != self::JS && $strType != self::SCSS && $strType != self::LESS)
-        {
+        if ($strType != self::CSS && $strType != self::JS && $strType != self::SCSS && $strType != self::LESS) {
             throw new \Exception("Invalid file $strFile");
         }
 
         $strMode = ($strType == self::JS) ? self::JS : self::CSS;
 
         // Set the operation mode
-        if ($this->strMode === null)
-        {
+        if ($this->strMode === null) {
             $this->strMode = $strMode;
-        }
-        elseif ($this->strMode != $strMode)
-        {
+        } elseif ($this->strMode != $strMode) {
             throw new \Exception('You cannot mix different file types. Create another Combiner object instead.');
         }
 
         // Prevent duplicates
-        if (isset($this->arrFiles[$strFile]))
-        {
+        if (isset($this->arrFiles[$strFile])) {
             return;
         }
 
         // Check the source file
-        if (!file_exists(TL_ROOT . '/' . $strFile))
-        {
+        if (!file_exists(TL_ROOT . '/' . $strFile)) {
             // Create the style sheets and retry
-            if ($strType == self::CSS)
-            {
+            if ($strType == self::CSS) {
                 $this->import('StyleSheets');
                 $this->StyleSheets->updateStyleSheets();
 
-                if (!file_exists(TL_ROOT . '/' . $strFile))
-                {
+                if (!file_exists(TL_ROOT . '/' . $strFile)) {
                     throw new \Exception("File $strFile does not exist");
                 }
-            }
-            else
-            {
+            } else {
                 throw new \Exception("File $strFile does not exist");
             }
 
         }
 
         // Default version
-        if ($strVersion === null)
-        {
+        if ($strVersion === null) {
             $strVersion = VERSION .'.'. BUILD;
         }
 
         // Store the file
-        $arrFile = array
-        (
+        $arrFile = array(
             'name' => $strFile,
             'version' => $strVersion,
             'media' => $strMedia,
@@ -172,8 +160,7 @@ class Combiner extends \System
      */
     public function addMultiple(array $arrFiles, $strVersion=null, $strMedia='screen')
     {
-        foreach ($arrFiles as $strFile)
-        {
+        foreach ($arrFiles as $strFile) {
             $this->add($strFile, $strVersion, $strMedia);
         }
     }
@@ -199,8 +186,7 @@ class Combiner extends \System
      */
     public function getCombinedFile($strUrl=null)
     {
-        if ($strUrl === null)
-        {
+        if ($strUrl === null) {
             $strUrl = TL_ASSETS_URL;
         }
 
@@ -208,45 +194,35 @@ class Combiner extends \System
         $strKey = substr(md5($this->strKey), 0, 12);
 
         // Do not combine the files in debug mode (see #6450)
-        if (\Config::get('debugMode'))
-        {
+        if (\Config::get('debugMode')) {
             $return = array();
 
-            foreach ($this->arrFiles as $arrFile)
-            {
+            foreach ($this->arrFiles as $arrFile) {
                 // Compile SCSS/LESS files into temporary files
-                if ($arrFile['extension'] == self::SCSS || $arrFile['extension'] == self::LESS)
-                {
+                if ($arrFile['extension'] == self::SCSS || $arrFile['extension'] == self::LESS) {
                     $strPath = 'assets/' . $strTarget . '/' . str_replace('/', '_', $arrFile['name']) . $this->strMode;
 
-                    if (!file_exists(TL_ROOT . '/' . $strPath))
-                    {
+                    if (!file_exists(TL_ROOT . '/' . $strPath)) {
                         $objFile = new \File($strPath, true);
                         $objFile->write($this->handleScssLess(file_get_contents(TL_ROOT . '/' . $arrFile['name']), $arrFile));
                         $objFile->close();
                     }
 
                     $return[] = $strPath;
-                }
-                else
-                {
+                } else {
                     $return[] = $arrFile['name'];
                 }
             }
 
-            if ($this->strMode == self::JS)
-            {
+            if ($this->strMode == self::JS) {
                 return implode('"></script><script src="', $return);
-            }
-            else
-            {
+            } else {
                 return implode('"><link rel="stylesheet" href="', $return);
             }
         }
 
         // Load the existing file
-        if (file_exists(TL_ROOT . '/assets/' . $strTarget . '/' . $strKey . $this->strMode))
-        {
+        if (file_exists(TL_ROOT . '/assets/' . $strTarget . '/' . $strKey . $this->strMode)) {
             return $strUrl . 'assets/' . $strTarget . '/' . $strKey . $this->strMode;
         }
 
@@ -254,26 +230,20 @@ class Combiner extends \System
         $objFile = new \File('assets/' . $strTarget . '/' . $strKey . $this->strMode, true);
         $objFile->truncate();
 
-        foreach ($this->arrFiles as $arrFile)
-        {
+        foreach ($this->arrFiles as $arrFile) {
             $content = file_get_contents(TL_ROOT . '/' . $arrFile['name']);
 
             // HOOK: modify the file content
-            if (isset($GLOBALS['TL_HOOKS']['getCombinedFile']) && is_array($GLOBALS['TL_HOOKS']['getCombinedFile']))
-            {
-                foreach ($GLOBALS['TL_HOOKS']['getCombinedFile'] as $callback)
-                {
+            if (isset($GLOBALS['TL_HOOKS']['getCombinedFile']) && is_array($GLOBALS['TL_HOOKS']['getCombinedFile'])) {
+                foreach ($GLOBALS['TL_HOOKS']['getCombinedFile'] as $callback) {
                     $this->import($callback[0]);
                     $content = $this->$callback[0]->$callback[1]($content, $strKey, $this->strMode, $arrFile);
                 }
             }
 
-            if ($arrFile['extension'] == self::CSS)
-            {
+            if ($arrFile['extension'] == self::CSS) {
                 $content = $this->handleCss($content, $arrFile);
-            }
-            elseif ($arrFile['extension'] == self::SCSS || $arrFile['extension'] == self::LESS)
-            {
+            } elseif ($arrFile['extension'] == self::SCSS || $arrFile['extension'] == self::LESS) {
                 $content = $this->handleScssLess($content, $arrFile);
             }
 
@@ -284,8 +254,7 @@ class Combiner extends \System
         $objFile->close();
 
         // Create a gzipped version
-        if (\Config::get('gzipScripts') && function_exists('gzencode'))
-        {
+        if (\Config::get('gzipScripts') && function_exists('gzencode')) {
             \File::putContent('assets/' . $strTarget . '/' . $strKey . $this->strMode . '.gz', gzencode(file_get_contents(TL_ROOT . '/assets/' . $strTarget . '/' . $strKey . $this->strMode), 9));
         }
 
@@ -306,8 +275,7 @@ class Combiner extends \System
         $content = $this->fixPaths($content, $arrFile);
 
         // Add the media type if there is no @media command in the code
-        if ($arrFile['media'] != '' && $arrFile['media'] != 'all' && strpos($content, '@media') === false)
-        {
+        if ($arrFile['media'] != '' && $arrFile['media'] != 'all' && strpos($content, '@media') === false) {
             $content = '@media ' . $arrFile['media'] . "{\n" . $content . "\n}";
         }
 
@@ -325,14 +293,11 @@ class Combiner extends \System
      */
     protected function handleScssLess($content, $arrFile)
     {
-        if ($arrFile['extension'] == self::SCSS)
-        {
+        if ($arrFile['extension'] == self::SCSS) {
             $objCompiler = new \scssc();
             $objCompiler->setImportPaths(TL_ROOT . '/' . dirname($arrFile['name']));
             $objCompiler->setFormatter((\Config::get('debugMode') ? 'scss_formatter' : 'scss_formatter_compressed'));
-        }
-        else
-        {
+        } else {
             $objCompiler = new \lessc();
             $objCompiler->setImportDir(TL_ROOT . '/' . dirname($arrFile['name']));
             $objCompiler->setFormatter((\Config::get('debugMode') ? 'lessjs' : 'compressed'));
@@ -359,32 +324,25 @@ class Combiner extends \System
         $chunks = preg_split('/url\(["\']??(.+)["\']??\)/U', $content, -1, PREG_SPLIT_DELIM_CAPTURE);
 
         // Check the URLs
-        for ($i=0, $c=count($chunks); $i<$c; $i=$i+2)
-        {
+        for ($i=0, $c=count($chunks); $i<$c; $i=$i+2) {
             $strBuffer .= $chunks[$i];
 
-            if (!isset($chunks[$i+1]))
-            {
+            if (!isset($chunks[$i+1])) {
                 break;
             }
 
             $strData = $chunks[$i+1];
 
             // Skip absolute links and embedded images (see #5082)
-            if (strncmp($strData, 'data:', 5) !== 0 && strncmp($strData, 'http://', 7) !== 0 && strncmp($strData, 'https://', 8) !== 0 && strncmp($strData, '/', 1) !== 0 && strncmp($strData, 'assets/css3pie/', 15) !== 0)
-            {
+            if (strncmp($strData, 'data:', 5) !== 0 && strncmp($strData, 'http://', 7) !== 0 && strncmp($strData, 'https://', 8) !== 0 && strncmp($strData, '/', 1) !== 0 && strncmp($strData, 'assets/css3pie/', 15) !== 0) {
                 // Make the paths relative to the root (see #4161)
-                if (strncmp($strData, '../', 3) !== 0)
-                {
+                if (strncmp($strData, '../', 3) !== 0) {
                     $strData = '../../' . $strGlue . $strData;
-                }
-                else
-                {
+                } else {
                     $dir = $strDirname;
 
                     // Remove relative paths
-                    while (strncmp($strData, '../', 3) === 0)
-                    {
+                    while (strncmp($strData, '../', 3) === 0) {
                         $dir = dirname($dir);
                         $strData = substr($strData, 3);
                     }

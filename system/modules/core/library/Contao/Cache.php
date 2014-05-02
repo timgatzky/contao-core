@@ -142,8 +142,7 @@ class Cache
      */
     public function __get($strKey)
     {
-        if (static::has($strKey))
-        {
+        if (static::has($strKey)) {
             return static::get($strKey);
         }
 
@@ -187,8 +186,7 @@ class Cache
      */
     public static function getInstance()
     {
-        if (static::$objInstance === null)
-        {
+        if (static::$objInstance === null) {
             static::$objInstance = new static();
         }
 

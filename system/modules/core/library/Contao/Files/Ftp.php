@@ -47,8 +47,7 @@ class Ftp extends \Files
      */
     public function __destruct()
     {
-        if ($this->blnIsConnected)
-        {
+        if ($this->blnIsConnected) {
             @ftp_close($this->resConnection);
         }
     }
@@ -61,36 +60,28 @@ class Ftp extends \Files
      */
     public function connect()
     {
-        if ($this->blnIsConnected)
-        {
+        if ($this->blnIsConnected) {
             return;
         }
 
         // Check the FTP credentials
-        if (\Config::get('ftpHost') == '')
-        {
+        if (\Config::get('ftpHost') == '') {
             throw new \Exception('The FTP host must not be empty');
-        }
-        elseif (\Config::get('ftpUser') == '')
-        {
+        } elseif (\Config::get('ftpUser') == '') {
             throw new \Exception('The FTP username must not be empty');
-        }
-        elseif (\Config::get('ftpPass') == '')
-        {
+        } elseif (\Config::get('ftpPass') == '') {
             throw new \Exception('The FTP password must not be empty');
         }
 
         $ftp_connect = (\Config::get('ftpSSL') && function_exists('ftp_ssl_connect')) ? 'ftp_ssl_connect' : 'ftp_connect';
 
         // Try to connect
-        if (($resConnection = $ftp_connect(\Config::get('ftpHost'), \Config::get('ftpPort'), 5)) == false)
-        {
+        if (($resConnection = $ftp_connect(\Config::get('ftpHost'), \Config::get('ftpPort'), 5)) == false) {
             throw new \Exception('Could not connect to the FTP server');
         }
 
         // Try to login
-        elseif (ftp_login($resConnection, \Config::get('ftpUser'), \Config::get('ftpPass')) == false)
-        {
+        elseif (ftp_login($resConnection, \Config::get('ftpUser'), \Config::get('ftpPass')) == false) {
             throw new \Exception('Authentication failed');
         }
 
@@ -150,12 +141,10 @@ class Ftp extends \Files
         $resFile = fopen(TL_ROOT . '/system/tmp/' . md5(uniqid(mt_rand(), true)), $strMode);
 
         // Copy the temp file
-        if (!file_exists(TL_ROOT . '/' . $strFile))
-        {
+        if (!file_exists(TL_ROOT . '/' . $strFile)) {
             $this->connect();
 
-            if (!@ftp_fput($this->resConnection, \Config::get('ftpPath') . $strFile, $resFile, FTP_BINARY))
-            {
+            if (!@ftp_fput($this->resConnection, \Config::get('ftpPath') . $strFile, $resFile, FTP_BINARY)) {
                 return false;
             }
         }
@@ -188,8 +177,7 @@ class Ftp extends \Files
      */
     public function fclose($resFile)
     {
-        if (!is_resource($resFile))
-        {
+        if (!is_resource($resFile)) {
             return true;
         }
 
@@ -197,8 +185,7 @@ class Ftp extends \Files
         $fclose = fclose($resFile);
 
         // Move the temp file
-        if (isset($this->arrFiles[$arrData['uri']]))
-        {
+        if (isset($this->arrFiles[$arrData['uri']])) {
             $this->rename(preg_replace('/^' . preg_quote(TL_ROOT, '/') . '\//i', '', $arrData['uri']), $this->arrFiles[$arrData['uri']]);
         }
 
@@ -217,8 +204,7 @@ class Ftp extends \Files
     public function rename($strOldName, $strNewName)
     {
         // Source file == target file
-        if ($strOldName == $strNewName)
-        {
+        if ($strOldName == $strNewName) {
             return true;
         }
 
@@ -226,20 +212,17 @@ class Ftp extends \Files
         $this->validate($strOldName, $strNewName);
 
         // Windows fix: delete target file
-        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' && file_exists(TL_ROOT . '/' . $strNewName))
-        {
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' && file_exists(TL_ROOT . '/' . $strNewName)) {
             $this->delete($strNewName);
         }
 
         // Rename directories
-        if (is_dir(TL_ROOT . '/' . $strOldName))
-        {
+        if (is_dir(TL_ROOT . '/' . $strOldName)) {
             return @ftp_rename($this->resConnection, \Config::get('ftpPath') . $strOldName, \Config::get('ftpPath') . $strNewName);
         }
 
         // Unix fix: rename case sensitively
-        if (strcasecmp($strOldName, $strNewName) === 0 && strcmp($strOldName, $strNewName) !== 0)
-        {
+        if (strcasecmp($strOldName, $strNewName) === 0 && strcmp($strOldName, $strNewName) !== 0) {
             @ftp_rename($this->resConnection, \Config::get('ftpPath') . $strOldName, \Config::get('ftpPath') . $strOldName . '__');
             $strOldName .= '__';
         }
@@ -248,8 +231,7 @@ class Ftp extends \Files
         $return = $this->copy($strOldName, $strNewName);
 
         // Delete the old file
-        if (!@unlink(TL_ROOT . '/' . $strOldName))
-        {
+        if (!@unlink(TL_ROOT . '/' . $strOldName)) {
             $this->delete($strOldName);
         }
 
@@ -271,12 +253,9 @@ class Ftp extends \Files
         $this->validate($strSource, $strDestination);
         $return = @ftp_put($this->resConnection, \Config::get('ftpPath') . $strDestination, TL_ROOT . '/' . $strSource, FTP_BINARY);
 
-        if (is_dir(TL_ROOT . '/' . $strDestination))
-        {
+        if (is_dir(TL_ROOT . '/' . $strDestination)) {
             $this->chmod($strDestination, \Config::get('defaultFolderChmod'));
-        }
-        else
-        {
+        } else {
             $this->chmod($strDestination, \Config::get('defaultFileChmod'));
         }
 

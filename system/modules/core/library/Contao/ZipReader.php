@@ -97,24 +97,21 @@ class ZipReader
     public function __construct($strFile)
     {
         // Handle open_basedir restrictions
-        if ($strFile == '.')
-        {
+        if ($strFile == '.') {
             $strFile = '';
         }
 
         $this->strFile = $strFile;
 
         // Check if file exists
-        if (!file_exists(TL_ROOT . '/' . $strFile))
-        {
+        if (!file_exists(TL_ROOT . '/' . $strFile)) {
             throw new \Exception("Could not find file $strFile");
         }
 
         $this->resFile = @fopen(TL_ROOT . '/' . $strFile, 'rb');
 
         // Could not open file
-        if (!is_resource($this->resFile))
-        {
+        if (!is_resource($this->resFile)) {
             throw new \Exception("Could not open file $strFile");
         }
 
@@ -176,8 +173,7 @@ class ZipReader
      */
     public function __get($strKey)
     {
-        switch ($strKey)
-        {
+        switch ($strKey) {
             // Header
             case 'number_of_this_disk':
             case 'number_of_disk_with_cd':
@@ -192,12 +188,10 @@ class ZipReader
 
             // Current file
             default:
-                if ($this->intIndex < 0)
-                {
+                if ($this->intIndex < 0) {
                     $this->first();
                 }
-                if (isset($this->arrFiles[$this->intIndex][$strKey]))
-                {
+                if (isset($this->arrFiles[$this->intIndex][$strKey])) {
                     return $this->arrFiles[$this->intIndex][$strKey];
                 }
                 break;
@@ -216,8 +210,7 @@ class ZipReader
     {
         $arrFiles = array();
 
-        foreach ($this->arrFiles as $arrFile)
-        {
+        foreach ($this->arrFiles as $arrFile) {
             $arrFiles[] = $arrFile['file_name'];
         }
 
@@ -234,10 +227,8 @@ class ZipReader
      */
     public function getFile($strName)
     {
-        foreach ($this->arrFiles as $k=>$v)
-        {
-            if ($strName == $v['file_name'])
-            {
+        foreach ($this->arrFiles as $k=>$v) {
+            if ($strName == $v['file_name']) {
                 $this->intIndex = $k;
                 return true;
             }
@@ -266,8 +257,7 @@ class ZipReader
      */
     public function next()
     {
-        if ($this->intIndex >= $this->intLast)
-        {
+        if ($this->intIndex >= $this->intLast) {
             return false;
         }
 
@@ -283,8 +273,7 @@ class ZipReader
      */
     public function prev()
     {
-        if ($this->intIndex <= 0)
-        {
+        if ($this->intIndex <= 0) {
             return false;
         }
 
@@ -312,8 +301,7 @@ class ZipReader
      */
     public function current()
     {
-        if ($this->intIndex < 0)
-        {
+        if ($this->intIndex < 0) {
             $this->first();
         }
 
@@ -342,30 +330,26 @@ class ZipReader
      */
     public function unzip()
     {
-        if ($this->intIndex < 0)
-        {
+        if ($this->intIndex < 0) {
             $this->first();
         }
 
         $strName = $this->arrFiles[$this->intIndex]['file_name'];
 
         // Encrypted files are not supported
-        if ($this->arrFiles[$this->intIndex]['general_purpose_bit_flag'] & 0x0001)
-        {
+        if ($this->arrFiles[$this->intIndex]['general_purpose_bit_flag'] & 0x0001) {
             throw new \Exception("File $strName is encrypted");
         }
 
         // Reposition pointer
-        if (@fseek($this->resFile, $this->arrFiles[$this->intIndex]['offset_of_local_header']) !== 0)
-        {
+        if (@fseek($this->resFile, $this->arrFiles[$this->intIndex]['offset_of_local_header']) !== 0) {
             throw new \Exception("Cannot reposition pointer");
         }
 
         $strSignature = @fread($this->resFile, 4);
 
         // Not a file
-        if ($strSignature != self::FILE_SIGNATURE)
-        {
+        if ($strSignature != self::FILE_SIGNATURE) {
             throw new \Exception("$strName is not a compressed file");
         }
 
@@ -377,8 +361,7 @@ class ZipReader
         @fseek($this->resFile, ($this->arrFiles[$this->intIndex]['file_name_length'] + $arrEFL[1]), SEEK_CUR);
 
         // Empty file
-        if ($this->arrFiles[$this->intIndex]['compressed_size'] < 1)
-        {
+        if ($this->arrFiles[$this->intIndex]['compressed_size'] < 1) {
             return '';
         }
 
@@ -386,8 +369,7 @@ class ZipReader
         $strBuffer = @fread($this->resFile, $this->arrFiles[$this->intIndex]['compressed_size']);
 
         // Decompress data
-        switch ($this->arrFiles[$this->intIndex]['compression_method'])
-        {
+        switch ($this->arrFiles[$this->intIndex]['compression_method']) {
             // Stored
             case 0:
                 break;
@@ -399,8 +381,7 @@ class ZipReader
 
             // BZIP2
             case 12:
-                if (!extension_loaded('bz2'))
-                {
+                if (!extension_loaded('bz2')) {
                     throw new \Exception('PHP extension "bz2" required to decompress BZIP2 files');
                 }
                 $strBuffer = bzdecompress($strBuffer);
@@ -413,14 +394,12 @@ class ZipReader
         }
 
         // Check uncompressed data
-        if ($strBuffer === false)
-        {
+        if ($strBuffer === false) {
             throw new \Exception('Could not decompress data');
         }
 
         // Check uncompressed size
-        if (strlen($strBuffer) != $this->arrFiles[$this->intIndex]['uncompressed_size'])
-        {
+        if (strlen($strBuffer) != $this->arrFiles[$this->intIndex]['uncompressed_size']) {
             throw new \Exception('Size of the uncompressed file does not match header value');
         }
 
@@ -440,12 +419,10 @@ class ZipReader
         $strMbCharset = null;
 
         // Set the mbstring encoding to ASCII (see #5842)
-        if (ini_get('mbstring.func_overload') > 0)
-        {
+        if (ini_get('mbstring.func_overload') > 0) {
             $strMbCharset = mb_internal_encoding();
 
-            if (mb_internal_encoding('ASCII') === false)
-            {
+            if (mb_internal_encoding('ASCII') === false) {
                 $strMbCharset = null;
             }
         }
@@ -455,22 +432,19 @@ class ZipReader
         $strBuffer = '';
 
         // Read to delimiter
-        do
-        {
+        do {
             $intOffset -= $intInterval;
 
             $fseek = @fseek($this->resFile, $intOffset, SEEK_END);
             $strBuffer = @fread($this->resFile, abs($intOffset)) . $strBuffer;
-        }
-        while ($fseek != -1 && ($pos = strpos($strBuffer, self::CENTRAL_DIR_END)) === false);
+        } while ($fseek != -1 && ($pos = strpos($strBuffer, self::CENTRAL_DIR_END)) === false);
 
         // Reposition pointer
         @fseek($this->resFile, ($intOffset + $pos), SEEK_END);
         $strSignature = @fread($this->resFile, 4);
 
         // Read archive header
-        if ($strSignature != self::CENTRAL_DIR_END)
-        {
+        if ($strSignature != self::CENTRAL_DIR_END) {
             throw new \Exception('Error reading central directory');
         }
 
@@ -486,8 +460,7 @@ class ZipReader
         $arrHeader['zipfile_comment']        = $arrHeader['zipfile_comment_length'][1] ? @fread($this->resFile, $arrHeader['zipfile_comment_length'][1]) : '';
 
         // Eliminate nested arrays
-        foreach ($arrHeader as $k=>$v)
-        {
+        foreach ($arrHeader as $k=>$v) {
             $arrHeader[$k] = is_array($v) ? $v[1] : $v;
         }
 
@@ -498,8 +471,7 @@ class ZipReader
         $strSignature = @fread($this->resFile, 4);
 
         // Build file list
-        while ($strSignature == self::CENTRAL_DIR_START )
-        {
+        while ($strSignature == self::CENTRAL_DIR_START ) {
             $arrFile = array();
 
             $arrFile['version_made_by']           = unpack('v', @fread($this->resFile, 2));
@@ -523,15 +495,13 @@ class ZipReader
             $arrFile['file_comment']              = $arrFile['file_comment_length'][1] ? @fread($this->resFile, $arrFile['file_comment_length'][1]) : '';
 
             // Skip directories
-            if (substr($arrFile['file_name'], -1) == '/')
-            {
+            if (substr($arrFile['file_name'], -1) == '/') {
                 $strSignature = @fread($this->resFile, 4);
                 continue;
             }
 
             // Eliminate nested arrays
-            foreach ($arrFile as $k=>$v)
-            {
+            foreach ($arrFile as $k=>$v) {
                 $arrFile[$k] = is_array($v) ? $v[1] : $v;
             }
 

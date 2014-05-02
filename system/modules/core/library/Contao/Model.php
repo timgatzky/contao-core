@@ -110,20 +110,16 @@ abstract class Model
         $objDca = new \DcaExtractor(static::$strTable);
         $this->arrRelations = $objDca->getRelations();
 
-        if ($objResult !== null)
-        {
+        if ($objResult !== null) {
             $arrRelated = array();
             $arrData = $objResult->row();
 
             // Look for joined fields
-            foreach ($arrData as $k=>$v)
-            {
-                if (strpos($k, '__') !== false)
-                {
+            foreach ($arrData as $k=>$v) {
+                if (strpos($k, '__') !== false) {
                     list($key, $field) = explode('__', $k, 2);
 
-                    if (!isset($arrRelated[$key]))
-                    {
+                    if (!isset($arrRelated[$key])) {
                         $arrRelated[$key] = array();
                     }
 
@@ -133,27 +129,20 @@ abstract class Model
             }
 
             // Create the related models
-            foreach ($arrRelated as $key=>$row)
-            {
+            foreach ($arrRelated as $key=>$row) {
                 $table = $this->arrRelations[$key]['table'];
                 $strClass = static::getClassFromTable($table);
                 $intPk = $strClass::getPk();
 
                 // If the primary key is empty, set null (see #5356)
-                if (!isset($row[$intPk]))
-                {
+                if (!isset($row[$intPk])) {
                     $this->arrRelated[$key] = null;
-                }
-                else
-                {
+                } else {
                     $objRelated = \Model\Registry::getInstance()->fetch($table, $row[$intPk]);
 
-                    if ($objRelated !== null)
-                    {
+                    if ($objRelated !== null) {
                         $objRelated->mergeRow($row);
-                    }
-                    else
-                    {
+                    } else {
                         $objRelated = new $strClass();
                         $objRelated->setRow($row);
                     }
@@ -186,8 +175,7 @@ abstract class Model
      */
     public function __set($strKey, $varValue)
     {
-        if ($this->$strKey === $varValue)
-        {
+        if ($this->$strKey === $varValue) {
             return;
         }
 
@@ -207,8 +195,7 @@ abstract class Model
      */
     public function __get($strKey)
     {
-        if (isset($this->arrData[$strKey]))
-        {
+        if (isset($this->arrData[$strKey])) {
             return $this->arrData[$strKey];
         }
 
@@ -282,10 +269,8 @@ abstract class Model
      */
     public function setRow(array $arrData)
     {
-        foreach ($arrData as $k=>$v)
-        {
-            if (strpos($k, '__') !== false)
-            {
+        foreach ($arrData as $k=>$v) {
+            if (strpos($k, '__') !== false) {
                 unset($arrData[$k]);
             }
         }
@@ -304,15 +289,12 @@ abstract class Model
      */
     public function mergeRow(array $arrData)
     {
-        foreach ($arrData as $k=>$v)
-        {
-            if (strpos($k, '__') !== false)
-            {
+        foreach ($arrData as $k=>$v) {
+            if (strpos($k, '__') !== false) {
                 continue;
             }
 
-            if (!isset($this->arrModified[$k]))
-            {
+            if (!isset($this->arrModified[$k])) {
                 $this->arrData[$k] = $v;
             }
         }
@@ -328,8 +310,7 @@ abstract class Model
      */
     public function markModified($strKey)
     {
-        if (!isset($this->arrModified[$strKey]))
-        {
+        if (!isset($this->arrModified[$strKey])) {
             $this->arrModified[$strKey] = $this->arrData[$strKey];
         }
     }
@@ -357,14 +338,12 @@ abstract class Model
     public function save()
     {
         // Deprecated call
-        if (count(func_get_args()))
-        {
+        if (count(func_get_args())) {
             throw new \InvalidArgumentException('The $blnForceInsert argument has been removed (see system/docs/UPGRADE.md)');
         }
 
         // The instance cannot be saved
-        if ($this->blnPreventSaving)
-        {
+        if ($this->blnPreventSaving) {
             throw new \LogicException('The model instance has been detached and cannot be saved');
         }
 
@@ -372,17 +351,14 @@ abstract class Model
         $arrFields = $objDatabase->getFieldNames(static::$strTable);
 
         // The model is in the registry
-        if (\Model\Registry::getInstance()->isRegistered($this))
-        {
+        if (\Model\Registry::getInstance()->isRegistered($this)) {
             $arrSet = array();
             $arrRow = $this->row();
 
             // Only update modified fields
-            foreach ($this->arrModified as $k=>$v)
-            {
+            foreach ($this->arrModified as $k=>$v) {
                 // Only set fields that exist in the DB
-                if (in_array($k, $arrFields))
-                {
+                if (in_array($k, $arrFields)) {
                     $arrSet[$k] = $arrRow[$k];
                 }
             }
@@ -390,16 +366,14 @@ abstract class Model
             $arrSet = $this->preSave($arrSet);
 
             // No modified fiels
-            if (empty($arrSet))
-            {
+            if (empty($arrSet)) {
                 return $this;
             }
 
             $intPk = $this->{static::$strPk};
 
             // Track primary key changes
-            if (isset($this->arrModified[static::$strPk]))
-            {
+            if (isset($this->arrModified[static::$strPk])) {
                 $intPk = $this->arrModified[static::$strPk];
             }
 
@@ -413,15 +387,12 @@ abstract class Model
         }
 
         // The model is not yet in the registry
-        else
-        {
+        else {
             $arrSet = $this->row();
 
             // Remove fields that do not exist in the DB
-            foreach ($arrSet as $k=>$v)
-            {
-                if (!in_array($k, $arrFields))
-                {
+            foreach ($arrSet as $k=>$v) {
+                if (!in_array($k, $arrFields)) {
                     unset($arrSet[$k]);
                 }
             }
@@ -429,8 +400,7 @@ abstract class Model
             $arrSet = $this->preSave($arrSet);
 
             // No modified fiels
-            if (empty($arrSet))
-            {
+            if (empty($arrSet)) {
                 return $this;
             }
 
@@ -439,8 +409,7 @@ abstract class Model
                                 ->set($arrSet)
                                 ->execute();
 
-            if (static::$strPk == 'id')
-            {
+            if (static::$strPk == 'id') {
                 $this->id = $stmt->insertId;
             }
 
@@ -474,8 +443,7 @@ abstract class Model
      */
     protected function postSave($intType)
     {
-        if ($intType == self::INSERT)
-        {
+        if ($intType == self::INSERT) {
             $this->refresh(); // might have been modified by default values or triggers
         }
     }
@@ -491,8 +459,7 @@ abstract class Model
         $intPk = $this->{static::$strPk};
 
         // Track primary key changes
-        if (isset($this->arrModified[static::$strPk]))
-        {
+        if (isset($this->arrModified[static::$strPk])) {
             $intPk = $this->arrModified[static::$strPk];
         }
 
@@ -501,8 +468,7 @@ abstract class Model
                                                ->execute($intPk)
                                                ->affectedRows;
 
-        if ($intAffected)
-        {
+        if ($intAffected) {
             // Unregister the model
             \Model\Registry::getInstance()->unregister($this);
 
@@ -527,20 +493,17 @@ abstract class Model
     public function getRelated($strKey, array $arrOptions=array())
     {
         // The related model has been loaded before
-        if (array_key_exists($strKey, $this->arrRelated))
-        {
+        if (array_key_exists($strKey, $this->arrRelated)) {
             return $this->arrRelated[$strKey];
         }
 
         // The relation does not exist
-        if (!isset($this->arrRelations[$strKey]))
-        {
+        if (!isset($this->arrRelations[$strKey])) {
             throw new \Exception("Field $strKey does not seem to be related");
         }
 
         // The relation exists but there is no reference yet (see #6161)
-        if (!isset($this->$strKey))
-        {
+        if (!isset($this->$strKey)) {
             return null;
         }
 
@@ -548,27 +511,20 @@ abstract class Model
         $strClass = static::getClassFromTable($arrRelation['table']);
 
         // Load the related record(s)
-        if ($arrRelation['type'] == 'hasOne' || $arrRelation['type'] == 'belongsTo')
-        {
+        if ($arrRelation['type'] == 'hasOne' || $arrRelation['type'] == 'belongsTo') {
             $objModel = $strClass::findOneBy($arrRelation['field'], $this->$strKey, $arrOptions);
             $this->arrRelated[$strKey] = $objModel;
-        }
-        elseif ($arrRelation['type'] == 'hasMany' || $arrRelation['type'] == 'belongsToMany')
-        {
+        } elseif ($arrRelation['type'] == 'hasMany' || $arrRelation['type'] == 'belongsToMany') {
             $arrValues = deserialize($this->$strKey, true);
             $strField = $arrRelation['table'] . '.' . $arrRelation['field'];
 
             // Handle UUIDs (see #6525)
-            if ($strField == 'tl_files.uuid')
-            {
+            if ($strField == 'tl_files.uuid') {
                 $objModel = $strClass::findMultipleByUuids($arrValues, $arrOptions);
-            }
-            else
-            {
+            } else {
                 $arrOptions = array_merge
                 (
-                    array
-                    (
+                    array(
                         'order' => \Database::getInstance()->findInSet($strField, $arrValues)
                     ),
 
@@ -593,8 +549,7 @@ abstract class Model
         $intPk = $this->{static::$strPk};
 
         // Track primary key changes
-        if (isset($this->arrModified[static::$strPk]))
-        {
+        if (isset($this->arrModified[static::$strPk])) {
             $intPk = $this->arrModified[static::$strPk];
         }
 
@@ -636,20 +591,17 @@ abstract class Model
     public static function findByPk($varValue, array $arrOptions=array())
     {
         // Try to load from the registry
-        if (empty($arrOptions))
-        {
+        if (empty($arrOptions)) {
             $objModel = \Model\Registry::getInstance()->fetch(static::$strTable, $varValue);
 
-            if ($objModel !== null)
-            {
+            if ($objModel !== null) {
                 return $objModel;
             }
         }
 
         $arrOptions = array_merge
         (
-            array
-            (
+            array(
                 'limit'  => 1,
                 'column' => static::$strPk,
                 'value'  => $varValue,
@@ -674,12 +626,10 @@ abstract class Model
     public static function findByIdOrAlias($varId, array $arrOptions=array())
     {
         // Try to load from the registry
-        if (is_numeric($varId) && empty($arrOptions))
-        {
+        if (is_numeric($varId) && empty($arrOptions)) {
             $objModel = \Model\Registry::getInstance()->fetch(static::$strTable, $varId);
 
-            if ($objModel !== null)
-            {
+            if ($objModel !== null) {
                 return $objModel;
             }
         }
@@ -688,8 +638,7 @@ abstract class Model
 
         $arrOptions = array_merge
         (
-            array
-            (
+            array(
                 'limit'  => 1,
                 'column' => array("($t.id=? OR $t.alias=?)"),
                 'value'  => array((is_numeric($varId) ? $varId : 0), $varId),
@@ -713,8 +662,7 @@ abstract class Model
      */
     public static function findMultipleByIds($arrIds, array $arrOptions=array())
     {
-        if (empty($arrIds) || !is_array($arrIds))
-        {
+        if (empty($arrIds) || !is_array($arrIds)) {
             return null;
         }
 
@@ -722,30 +670,25 @@ abstract class Model
         $arrUnregistered = array();
 
         // Search for registered models
-        foreach ($arrIds as $intId)
-        {
+        foreach ($arrIds as $intId) {
             $arrRegistered[$intId] = null;
 
-            if (empty($arrOptions))
-            {
+            if (empty($arrOptions)) {
                 $arrRegistered[$intId] = \Model\Registry::getInstance()->fetch(static::$strTable, $intId);
             }
 
-            if ($arrRegistered[$intId] === null)
-            {
+            if ($arrRegistered[$intId] === null) {
                 $arrUnregistered[] = $intId;
             }
         }
 
         // Fetch only the missing models from the database
-        if (!empty($arrUnregistered))
-        {
+        if (!empty($arrUnregistered)) {
             $t = static::$strTable;
 
             $arrOptions = array_merge
             (
-                array
-                (
+                array(
                     'column' => array("$t.id IN(" . implode(',', array_map('intval', $arrUnregistered)) . ")"),
                     'value'  => null,
                     'order'  => \Database::getInstance()->findInSet("$t.id", $arrIds),
@@ -757,10 +700,8 @@ abstract class Model
 
             $objMissing = static::find($arrOptions);
 
-            if ($objMissing !== null)
-            {
-                while ($objMissing->next())
-                {
+            if ($objMissing !== null) {
+                while ($objMissing->next()) {
                     $intId = $objMissing->{static::$strPk};
                     $arrRegistered[$intId] = $objMissing->current();
                 }
@@ -785,19 +726,13 @@ abstract class Model
         $intId = is_array($varValue) ? $varValue[0] : $varValue;
 
         // Try to load from the registry
-        if (empty($arrOptions))
-        {
-            if (is_array($strColumn))
-            {
-                if (count($strColumn) == 1 && $strColumn[0] == static::$strPk)
-                {
+        if (empty($arrOptions)) {
+            if (is_array($strColumn)) {
+                if (count($strColumn) == 1 && $strColumn[0] == static::$strPk) {
                     return static::findByPk($intId, $arrOptions);
                 }
-            }
-            else
-            {
-                if ($strColumn == static::$strPk)
-                {
+            } else {
+                if ($strColumn == static::$strPk) {
                     return static::findByPk($intId, $arrOptions);
                 }
             }
@@ -805,8 +740,7 @@ abstract class Model
 
         $arrOptions = array_merge
         (
-            array
-            (
+            array(
                 'limit'  => 1,
                 'column' => $strColumn,
                 'value'  => $varValue,
@@ -833,8 +767,7 @@ abstract class Model
     {
         $arrOptions = array_merge
         (
-            array
-            (
+            array(
                 'column' => $strColumn,
                 'value'  => $varValue,
                 'return' => 'Collection'
@@ -858,8 +791,7 @@ abstract class Model
     {
         $arrOptions = array_merge
         (
-            array
-            (
+            array(
                 'return' => 'Collection'
             ),
 
@@ -882,18 +814,13 @@ abstract class Model
      */
     public static function __callStatic($name, $args)
     {
-        if (strncmp($name, 'findBy', 6) === 0)
-        {
+        if (strncmp($name, 'findBy', 6) === 0) {
             array_unshift($args, lcfirst(substr($name, 6)));
             return call_user_func_array('static::findBy', $args);
-        }
-        elseif (strncmp($name, 'findOneBy', 9) === 0)
-        {
+        } elseif (strncmp($name, 'findOneBy', 9) === 0) {
             array_unshift($args, lcfirst(substr($name, 9)));
             return call_user_func_array('static::findOneBy', $args);
-        }
-        elseif (strncmp($name, 'countBy', 7) === 0)
-        {
+        } elseif (strncmp($name, 'countBy', 7) === 0) {
             array_unshift($args, lcfirst(substr($name, 7)));
             return call_user_func_array('static::countBy', $args);
         }
@@ -920,8 +847,7 @@ abstract class Model
      */
     protected static function find(array $arrOptions)
     {
-        if (static::$strTable == '')
-        {
+        if (static::$strTable == '') {
             return null;
         }
 
@@ -931,48 +857,40 @@ abstract class Model
         $objStatement = \Database::getInstance()->prepare($strQuery);
 
         // Defaults for limit and offset
-        if (!isset($arrOptions['limit']))
-        {
+        if (!isset($arrOptions['limit'])) {
             $arrOptions['limit'] = 0;
         }
-        if (!isset($arrOptions['offset']))
-        {
+        if (!isset($arrOptions['offset'])) {
             $arrOptions['offset'] = 0;
         }
 
         // Limit
-        if ($arrOptions['limit'] > 0 || $arrOptions['offset'] > 0)
-        {
+        if ($arrOptions['limit'] > 0 || $arrOptions['offset'] > 0) {
             $objStatement->limit($arrOptions['limit'], $arrOptions['offset']);
         }
 
         $objStatement = static::preFind($objStatement);
         $objResult = $objStatement->execute($arrOptions['value']);
 
-        if ($objResult->numRows < 1)
-        {
+        if ($objResult->numRows < 1) {
             return null;
         }
 
         $objResult = static::postFind($objResult);
 
-        if ($arrOptions['return'] == 'Model')
-        {
+        if ($arrOptions['return'] == 'Model') {
             $strPk = static::$strPk;
             $intPk = $objResult->$strPk;
 
             // Try to load from the registry
             $objModel = \Model\Registry::getInstance()->fetch(static::$strTable, $intPk);
 
-            if ($objModel !== null)
-            {
+            if ($objModel !== null) {
                 return $objModel->mergeRow($objResult->row());
             }
 
             return static::createModelFromDbResult($objResult);
-        }
-        else
-        {
+        } else {
             return static::createCollectionFromDbResult($objResult, static::$strTable);
         }
     }
@@ -1014,13 +932,11 @@ abstract class Model
      */
     public static function countBy($strColumn=null, $varValue=null)
     {
-        if (static::$strTable == '')
-        {
+        if (static::$strTable == '') {
             return 0;
         }
 
-        $strQuery = static::buildCountQuery(array
-        (
+        $strQuery = static::buildCountQuery(array(
             'table'  => static::$strTable,
             'column' => $strColumn,
             'value'  => $varValue
@@ -1050,16 +966,12 @@ abstract class Model
      */
     public static function getClassFromTable($strTable)
     {
-        if (isset($GLOBALS['TL_MODELS'][$strTable]))
-        {
+        if (isset($GLOBALS['TL_MODELS'][$strTable])) {
             return $GLOBALS['TL_MODELS'][$strTable]; // see 4796
-        }
-        else
-        {
+        } else {
             $arrChunks = explode('_', $strTable);
 
-            if ($arrChunks[0] == 'tl')
-            {
+            if ($arrChunks[0] == 'tl') {
                 array_shift($arrChunks);
             }
 

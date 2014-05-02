@@ -55,28 +55,22 @@ class Encryption
     public static function encrypt($varValue, $strKey=null)
     {
         // Recursively encrypt arrays
-        if (is_array($varValue))
-        {
-            foreach ($varValue as $k=>$v)
-            {
+        if (is_array($varValue)) {
+            foreach ($varValue as $k=>$v) {
                 $varValue[$k] = static::encrypt($v);
             }
 
             return $varValue;
-        }
-        elseif ($varValue == '')
-        {
+        } elseif ($varValue == '') {
             return '';
         }
 
         // Initialize the module
-        if (static::$resTd === null)
-        {
+        if (static::$resTd === null) {
             static::initialize();
         }
 
-        if (!$strKey)
-        {
+        if (!$strKey) {
             $strKey = \Config::get('encryptionKey');
         }
 
@@ -101,23 +95,18 @@ class Encryption
     public static function decrypt($varValue, $strKey=null)
     {
         // Recursively decrypt arrays
-        if (is_array($varValue))
-        {
-            foreach ($varValue as $k=>$v)
-            {
+        if (is_array($varValue)) {
+            foreach ($varValue as $k=>$v) {
                 $varValue[$k] = static::decrypt($v);
             }
 
             return $varValue;
-        }
-        elseif ($varValue == '')
-        {
+        } elseif ($varValue == '') {
             return '';
         }
 
         // Initialize the module
-        if (static::$resTd === null)
-        {
+        if (static::$resTd === null) {
             static::initialize();
         }
 
@@ -126,13 +115,11 @@ class Encryption
         $iv = substr($varValue, 0, $ivsize);
         $varValue = substr($varValue, $ivsize);
 
-        if ($varValue == '')
-        {
+        if ($varValue == '') {
             return '';
         }
 
-        if (!$strKey)
-        {
+        if (!$strKey) {
             $strKey = \Config::get('encryptionKey');
         }
 
@@ -151,18 +138,15 @@ class Encryption
      */
     protected static function initialize()
     {
-        if (!in_array('mcrypt', get_loaded_extensions()))
-        {
+        if (!in_array('mcrypt', get_loaded_extensions())) {
             throw new \Exception('The PHP mcrypt extension is not installed');
         }
 
-        if ((self::$resTd = mcrypt_module_open(\Config::get('encryptionCipher'), '', \Config::get('encryptionMode'), '')) == false)
-        {
+        if ((self::$resTd = mcrypt_module_open(\Config::get('encryptionCipher'), '', \Config::get('encryptionMode'), '')) == false) {
             throw new \Exception('Error initializing encryption module');
         }
 
-        if (\Config::get('encryptionKey') == '')
-        {
+        if (\Config::get('encryptionKey') == '') {
             throw new \Exception('Encryption key not set');
         }
     }
@@ -179,20 +163,13 @@ class Encryption
      */
     public static function hash($strPassword)
     {
-        if (CRYPT_SHA512 == 1)
-        {
+        if (CRYPT_SHA512 == 1) {
             return crypt($strPassword, '$6$' . md5(uniqid(mt_rand(), true)) . '$');
-        }
-        elseif (CRYPT_SHA256 == 1)
-        {
+        } elseif (CRYPT_SHA256 == 1) {
             return crypt($strPassword, '$5$' . md5(uniqid(mt_rand(), true)) . '$');
-        }
-        elseif (CRYPT_BLOWFISH == 1)
-        {
+        } elseif (CRYPT_BLOWFISH == 1) {
             return crypt($strPassword, '$2a$07$' . md5(uniqid(mt_rand(), true)) . '$');
-        }
-        else
-        {
+        } else {
             throw new \Exception('None of the required crypt() algorithms is available');
         }
     }
@@ -207,20 +184,13 @@ class Encryption
      */
     public static function test($strHash)
     {
-        if (strncmp($strHash, '$6$', 3) === 0)
-        {
+        if (strncmp($strHash, '$6$', 3) === 0) {
             return true;
-        }
-        elseif (strncmp($strHash, '$5$', 3) === 0)
-        {
+        } elseif (strncmp($strHash, '$5$', 3) === 0) {
             return true;
-        }
-        elseif (strncmp($strHash, '$2a$07$', 7) === 0)
-        {
+        } elseif (strncmp($strHash, '$2a$07$', 7) === 0) {
             return true;
-        }
-        else
-        {
+        } else {
             return false;
         }
     }
@@ -254,8 +224,7 @@ class Encryption
      */
     public static function getInstance()
     {
-        if (static::$objInstance === null)
-        {
+        if (static::$objInstance === null) {
             static::$objInstance = new static();
         }
 

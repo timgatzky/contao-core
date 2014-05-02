@@ -155,16 +155,14 @@ class Pagination
         $this->lblLast = $GLOBALS['TL_LANG']['MSC']['last'];
         $this->lblTotal = $GLOBALS['TL_LANG']['MSC']['totalPages'];
 
-        if (\Input::get($strParameter) > 0)
-        {
+        if (\Input::get($strParameter) > 0) {
             $this->intPage = \Input::get($strParameter);
         }
 
         $this->strParameter = $strParameter;
 
         // Backwards compatibility
-        if ($objTemplate === null)
-        {
+        if ($objTemplate === null) {
             $objTemplate = new \FrontendTemplate('pagination');
         }
 
@@ -226,8 +224,7 @@ class Pagination
      */
     public function generate($strSeparator=' ')
     {
-        if ($this->intRowsPerPage < 1)
-        {
+        if ($this->intRowsPerPage < 1) {
             return '';
         }
 
@@ -235,10 +232,8 @@ class Pagination
         $this->strUrl = preg_replace('/\?.*$/', '', \Environment::get('request'));
 
         // Prepare the URL
-        foreach (preg_split('/&(amp;)?/', $_SERVER['QUERY_STRING'], -1, PREG_SPLIT_NO_EMPTY) as $fragment)
-        {
-            if (strpos($fragment, $this->strParameter . '=') === false)
-            {
+        foreach (preg_split('/&(amp;)?/', $_SERVER['QUERY_STRING'], -1, PREG_SPLIT_NO_EMPTY) as $fragment) {
+            if (strpos($fragment, $this->strParameter . '=') === false) {
                 $this->strUrl .= (!$blnQuery ? '?' : '&amp;') . $fragment;
                 $blnQuery = true;
             }
@@ -248,13 +243,11 @@ class Pagination
         $this->intTotalPages = ceil($this->intRows / $this->intRowsPerPage);
 
         // Return if there is only one page
-        if ($this->intTotalPages < 2 || $this->intRows < 1)
-        {
+        if ($this->intTotalPages < 2 || $this->intRows < 1) {
             return '';
         }
 
-        if ($this->intPage > $this->intTotalPages)
-        {
+        if ($this->intPage > $this->intTotalPages) {
             $this->intPage = $this->intTotalPages;
         }
 
@@ -268,29 +261,25 @@ class Pagination
         $objTemplate->items = $this->getItemsAsString($strSeparator);
         $objTemplate->total = sprintf($this->lblTotal, $this->intPage, $this->intTotalPages);
 
-        $objTemplate->first = array
-        (
+        $objTemplate->first = array(
             'link' => $this->lblFirst,
             'href' => $this->linkToPage(1),
             'title' => sprintf(specialchars($GLOBALS['TL_LANG']['MSC']['goToPage']), 1)
         );
 
-        $objTemplate->previous = array
-        (
+        $objTemplate->previous = array(
             'link' => $this->lblPrevious,
             'href' => $this->linkToPage($this->intPage - 1),
             'title' => sprintf(specialchars($GLOBALS['TL_LANG']['MSC']['goToPage']), ($this->intPage - 1))
         );
 
-        $objTemplate->next = array
-        (
+        $objTemplate->next = array(
             'link' => $this->lblNext,
             'href' => $this->linkToPage($this->intPage + 1),
             'title' => sprintf(specialchars($GLOBALS['TL_LANG']['MSC']['goToPage']), ($this->intPage + 1))
         );
 
-        $objTemplate->last = array
-        (
+        $objTemplate->last = array(
             'link' => $this->lblLast,
             'href' => $this->linkToPage($this->intTotalPages),
             'title' => sprintf(specialchars($GLOBALS['TL_LANG']['MSC']['goToPage']), $this->intTotalPages)
@@ -319,36 +308,30 @@ class Pagination
         $intNumberOfLinks = floor($this->intNumberOfLinks / 2);
         $intFirstOffset = $this->intPage - $intNumberOfLinks - 1;
 
-        if ($intFirstOffset > 0)
-        {
+        if ($intFirstOffset > 0) {
             $intFirstOffset = 0;
         }
 
         $intLastOffset = $this->intPage + $intNumberOfLinks - $this->intTotalPages;
 
-        if ($intLastOffset < 0)
-        {
+        if ($intLastOffset < 0) {
             $intLastOffset = 0;
         }
 
         $intFirstLink = $this->intPage - $intNumberOfLinks - $intLastOffset;
 
-        if ($intFirstLink < 1)
-        {
+        if ($intFirstLink < 1) {
             $intFirstLink = 1;
         }
 
         $intLastLink = $this->intPage + $intNumberOfLinks - $intFirstOffset;
 
-        if ($intLastLink > $this->intTotalPages)
-        {
+        if ($intLastLink > $this->intTotalPages) {
             $intLastLink = $this->intTotalPages;
         }
 
-        for ($i=$intFirstLink; $i<=$intLastLink; $i++)
-        {
-            if ($i == $this->intPage)
-            {
+        for ($i=$intFirstLink; $i<=$intLastLink; $i++) {
+            if ($i == $this->intPage) {
                 $arrLinks[] = sprintf('<li><span class="current">%s</span></li>', $i);
                 continue;
             }
@@ -372,12 +355,9 @@ class Pagination
      */
     protected function linkToPage($intPage)
     {
-        if ($intPage <= 1 && !$this->blnForceParam)
-        {
+        if ($intPage <= 1 && !$this->blnForceParam) {
             return ampersand($this->strUrl);
-        }
-        else
-        {
+        } else {
             return ampersand($this->strUrl) . $this->strVarConnector . $this->strParameter . '=' . $intPage;
         }
     }

@@ -90,14 +90,10 @@ abstract class System
      */
     public function __get($strKey)
     {
-        if (!isset($this->arrObjects[$strKey]))
-        {
-            if ($strKey == 'Input' || $strKey == 'Environment')
-            {
+        if (!isset($this->arrObjects[$strKey])) {
+            if ($strKey == 'Input' || $strKey == 'Environment') {
                 $this->arrObjects[$strKey] = $strKey::getInstance();
-            }
-            else
-            {
+            } else {
                 return null;
             }
         }
@@ -117,8 +113,7 @@ abstract class System
     {
         $strKey = $strKey ?: $strClass;
 
-        if ($blnForce || !isset($this->arrObjects[$strKey]))
-        {
+        if ($blnForce || !isset($this->arrObjects[$strKey])) {
             $this->arrObjects[$strKey] = (in_array('getInstance', get_class_methods($strClass))) ? call_user_func(array($strClass, 'getInstance')) : new $strClass();
         }
     }
@@ -137,8 +132,7 @@ abstract class System
     {
         $strKey = $strKey ?: $strClass;
 
-        if ($blnForce || !isset(static::$arrStaticObjects[$strKey]))
-        {
+        if ($blnForce || !isset(static::$arrStaticObjects[$strKey])) {
             static::$arrStaticObjects[$strKey] = (in_array('getInstance', get_class_methods($strClass))) ? call_user_func(array($strClass, 'getInstance')) : new $strClass();
         }
 
@@ -158,12 +152,10 @@ abstract class System
         $strUa = 'N/A';
         $strIp = '127.0.0.1';
 
-        if (\Environment::get('httpUserAgent'))
-        {
+        if (\Environment::get('httpUserAgent')) {
             $strUa = \Environment::get('httpUserAgent');
         }
-        if (\Environment::get('remoteAddr'))
-        {
+        if (\Environment::get('remoteAddr')) {
             $strIp = static::anonymizeIp(\Environment::get('ip'));
         }
 
@@ -171,10 +163,8 @@ abstract class System
                                ->execute(time(), (TL_MODE == 'FE' ? 'FE' : 'BE'), $strCategory, ($GLOBALS['TL_USERNAME'] ? $GLOBALS['TL_USERNAME'] : ''), specialchars($strText), $strFunction, $strIp, $strUa);
 
         // HOOK: allow to add custom loggers
-        if (isset($GLOBALS['TL_HOOKS']['addLogEntry']) && is_array($GLOBALS['TL_HOOKS']['addLogEntry']))
-        {
-            foreach ($GLOBALS['TL_HOOKS']['addLogEntry'] as $callback)
-            {
+        if (isset($GLOBALS['TL_HOOKS']['addLogEntry']) && is_array($GLOBALS['TL_HOOKS']['addLogEntry'])) {
+            foreach ($GLOBALS['TL_HOOKS']['addLogEntry'] as $callback) {
                 static::importStatic($callback[0])->$callback[1]($strText, $strFunction, $strCategory);
             }
         }
@@ -196,18 +186,14 @@ abstract class System
         $session = \Session::getInstance()->get($key);
 
         // Unique referer ID
-        if ($ref && isset($session[$ref]))
-        {
+        if ($ref && isset($session[$ref])) {
             $session = $session[$ref];
-        }
-        elseif (TL_MODE == 'BE' && is_array($session))
-        {
+        } elseif (TL_MODE == 'BE' && is_array($session)) {
             $session = end($session);
         }
 
         // Use a specific referer
-        if ($strTable != '' && isset($session[$strTable]) && \Input::get('act') != 'select')
-        {
+        if ($strTable != '' && isset($session[$strTable]) && \Input::get('act') != 'select') {
             $session['current'] = $session[$strTable];
         }
 
@@ -218,14 +204,12 @@ abstract class System
         $return = preg_replace('/(&(amp;)?|\?)p?tg=[^& ]*/i', '', $strUrl);
 
         // Fallback to the generic referer in the front end
-        if ($return == '' && TL_MODE == 'FE')
-        {
+        if ($return == '' && TL_MODE == 'FE') {
             $return = \Environment::get('httpReferer');
         }
 
         // Fallback to the current URL if there is no referer
-        if ($return == '')
-        {
+        if ($return == '') {
             $return = (TL_MODE == 'BE') ? 'contao/main.php' : \Environment::get('url');
         }
 
@@ -243,39 +227,33 @@ abstract class System
      */
     public static function loadLanguageFile($strName, $strLanguage=null, $blnNoCache=false)
     {
-        if ($strLanguage === null)
-        {
+        if ($strLanguage === null) {
             $strLanguage = str_replace('-', '_', $GLOBALS['TL_LANGUAGE']);
         }
 
         // Fall back to English
-        if ($strLanguage == '')
-        {
+        if ($strLanguage == '') {
             $strLanguage = 'en';
         }
 
         // Return if the language file has been loaded already
-        if (isset(static::$arrLanguageFiles[$strName][$strLanguage]) && !$blnNoCache)
-        {
+        if (isset(static::$arrLanguageFiles[$strName][$strLanguage]) && !$blnNoCache) {
             return;
         }
 
         $strCacheKey = $strLanguage;
 
         // Make sure the language exists
-        if (!static::isInstalledLanguage($strLanguage))
-        {
+        if (!static::isInstalledLanguage($strLanguage)) {
             $strShortLang = substr($strLanguage, 0, 2);
 
             // Fall back to "de" if "de_DE" does not exist
-            if ($strShortLang != $strLanguage && static::isInstalledLanguage($strShortLang))
-            {
+            if ($strShortLang != $strLanguage && static::isInstalledLanguage($strShortLang)) {
                 $strLanguage = $strShortLang;
             }
 
             // Fall back to English (see #6581)
-            else
-            {
+            else {
                 $strLanguage = 'en';
             }
         }
@@ -287,27 +265,19 @@ abstract class System
         $arrCreateLangs = ($strLanguage == 'en') ? array('en') : array('en', $strLanguage);
 
         // Load the language(s)
-        foreach ($arrCreateLangs as $strCreateLang)
-        {
+        foreach ($arrCreateLangs as $strCreateLang) {
             $strCacheFile = 'system/cache/language/' . $strCreateLang . '/' . $strName . '.php';
 
             // Try to load from cache
-            if (!\Config::get('bypassCache') && file_exists(TL_ROOT . '/' . $strCacheFile))
-            {
+            if (!\Config::get('bypassCache') && file_exists(TL_ROOT . '/' . $strCacheFile)) {
                 include TL_ROOT . '/' . $strCacheFile;
-            }
-            else
-            {
-                foreach (\ModuleLoader::getActive() as $strModule)
-                {
+            } else {
+                foreach (\ModuleLoader::getActive() as $strModule) {
                     $strFile = 'system/modules/' . $strModule . '/languages/' . $strCreateLang . '/' . $strName;
 
-                    if (file_exists(TL_ROOT . '/' . $strFile . '.xlf'))
-                    {
+                    if (file_exists(TL_ROOT . '/' . $strFile . '.xlf')) {
                         eval(static::convertXlfToPhp($strFile . '.xlf', $strCreateLang));
-                    }
-                    elseif (file_exists(TL_ROOT . '/' . $strFile . '.php'))
-                    {
+                    } elseif (file_exists(TL_ROOT . '/' . $strFile . '.php')) {
                         include TL_ROOT . '/' . $strFile . '.php';
                     }
                 }
@@ -315,23 +285,19 @@ abstract class System
         }
 
         // HOOK: allow to load custom labels
-        if (isset($GLOBALS['TL_HOOKS']['loadLanguageFile']) && is_array($GLOBALS['TL_HOOKS']['loadLanguageFile']))
-        {
-            foreach ($GLOBALS['TL_HOOKS']['loadLanguageFile'] as $callback)
-            {
+        if (isset($GLOBALS['TL_HOOKS']['loadLanguageFile']) && is_array($GLOBALS['TL_HOOKS']['loadLanguageFile'])) {
+            foreach ($GLOBALS['TL_HOOKS']['loadLanguageFile'] as $callback) {
                 static::importStatic($callback[0])->$callback[1]($strName, $strLanguage, $strCacheKey);
             }
         }
 
         // Handle single quotes in the deleteConfirm message
-        if ($strName == 'default')
-        {
+        if ($strName == 'default') {
             $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] = str_replace("'", "\\'", $GLOBALS['TL_LANG']['MSC']['deleteConfirm']);
         }
 
         // Local configuration file
-        if (file_exists(TL_ROOT . '/system/config/langconfig.php'))
-        {
+        if (file_exists(TL_ROOT . '/system/config/langconfig.php')) {
             include TL_ROOT . '/system/config/langconfig.php';
         }
     }
@@ -346,8 +312,7 @@ abstract class System
      */
     public static function isInstalledLanguage($strLanguage)
     {
-        if (!isset(static::$arrLanguages[$strLanguage]))
-        {
+        if (!isset(static::$arrLanguages[$strLanguage])) {
             static::$arrLanguages[$strLanguage] = (is_dir(TL_ROOT . '/system/modules/core/languages/' . $strLanguage) || is_dir(TL_ROOT . '/system/cache/language/' . $strLanguage) || in_array($strLanguage, array_unique(array_map('basename', glob(TL_ROOT . '/system/modules/*/languages/*')))));
         }
 
@@ -369,23 +334,19 @@ abstract class System
         static::loadLanguageFile('countries');
         include TL_ROOT . '/system/config/countries.php';
 
-        foreach ($countries as $strKey=>$strName)
-        {
+        foreach ($countries as $strKey=>$strName) {
             $arrAux[$strKey] = isset($GLOBALS['TL_LANG']['CNT'][$strKey]) ? utf8_romanize($GLOBALS['TL_LANG']['CNT'][$strKey]) : $strName;
         }
 
         asort($arrAux);
 
-        foreach (array_keys($arrAux) as $strKey)
-        {
+        foreach (array_keys($arrAux) as $strKey) {
             $return[$strKey] = isset($GLOBALS['TL_LANG']['CNT'][$strKey]) ? $GLOBALS['TL_LANG']['CNT'][$strKey] : $countries[$strKey];
         }
 
         // HOOK: add custom logic
-        if (isset($GLOBALS['TL_HOOKS']['getCountries']) && is_array($GLOBALS['TL_HOOKS']['getCountries']))
-        {
-            foreach ($GLOBALS['TL_HOOKS']['getCountries'] as $callback)
-            {
+        if (isset($GLOBALS['TL_HOOKS']['getCountries']) && is_array($GLOBALS['TL_HOOKS']['getCountries'])) {
+            foreach ($GLOBALS['TL_HOOKS']['getCountries'] as $callback) {
                 static::importStatic($callback[0])->$callback[1]($return, $countries);
             }
         }
@@ -411,34 +372,28 @@ abstract class System
         static::loadLanguageFile('languages');
         include TL_ROOT . '/system/config/languages.php';
 
-        foreach ($languages as $strKey=>$strName)
-        {
+        foreach ($languages as $strKey=>$strName) {
             $arrAux[$strKey] = isset($GLOBALS['TL_LANG']['LNG'][$strKey]) ? utf8_romanize($GLOBALS['TL_LANG']['LNG'][$strKey]) : $strName;
         }
 
         asort($arrAux);
         $arrBackendLanguages = scan(TL_ROOT . '/system/modules/core/languages');
 
-        foreach (array_keys($arrAux) as $strKey)
-        {
-            if ($blnInstalledOnly && !in_array($strKey, $arrBackendLanguages))
-            {
+        foreach (array_keys($arrAux) as $strKey) {
+            if ($blnInstalledOnly && !in_array($strKey, $arrBackendLanguages)) {
                 continue;
             }
 
             $return[$strKey] = isset($GLOBALS['TL_LANG']['LNG'][$strKey]) ? $GLOBALS['TL_LANG']['LNG'][$strKey] : $languages[$strKey];
 
-            if (isset($langsNative[$strKey]) && $langsNative[$strKey] != $return[$strKey])
-            {
+            if (isset($langsNative[$strKey]) && $langsNative[$strKey] != $return[$strKey]) {
                 $return[$strKey] .= ' - ' . $langsNative[$strKey];
             }
         }
 
         // HOOK: add custom logic
-        if (isset($GLOBALS['TL_HOOKS']['getLanguages']) && is_array($GLOBALS['TL_HOOKS']['getLanguages']))
-        {
-            foreach ($GLOBALS['TL_HOOKS']['getLanguages'] as $callback)
-            {
+        if (isset($GLOBALS['TL_HOOKS']['getLanguages']) && is_array($GLOBALS['TL_HOOKS']['getLanguages'])) {
+            foreach ($GLOBALS['TL_HOOKS']['getLanguages'] as $callback) {
                 static::importStatic($callback[0])->$callback[1]($return, $languages, $langsNative, $blnInstalledOnly);
             }
         }
@@ -459,10 +414,8 @@ abstract class System
 
         require TL_ROOT . '/system/config/timezones.php';
 
-        foreach ($timezones as $strGroup=>$arrTimezones)
-        {
-            foreach ($arrTimezones as $strTimezone)
-            {
+        foreach ($timezones as $strGroup=>$arrTimezones) {
+            foreach ($arrTimezones as $strTimezone) {
                 $arrReturn[$strGroup][] = $strTimezone;
             }
         }
@@ -497,8 +450,7 @@ abstract class System
      */
     public static function setCookie($strName, $varValue, $intExpires, $strPath=null, $strDomain=null, $blnSecure=false, $blnHttpOnly=false)
     {
-        if ($strPath == '')
-        {
+        if ($strPath == '') {
             $strPath = TL_PATH ?: '/'; // see #4390
         }
 
@@ -513,10 +465,8 @@ abstract class System
         $objCookie->blnHttpOnly = $blnHttpOnly;
 
         // HOOK: allow to add custom logic
-        if (isset($GLOBALS['TL_HOOKS']['setCookie']) && is_array($GLOBALS['TL_HOOKS']['setCookie']))
-        {
-            foreach ($GLOBALS['TL_HOOKS']['setCookie'] as $callback)
-            {
+        if (isset($GLOBALS['TL_HOOKS']['setCookie']) && is_array($GLOBALS['TL_HOOKS']['setCookie'])) {
+            foreach ($GLOBALS['TL_HOOKS']['setCookie'] as $callback) {
                 $objCookie = static::importStatic($callback[0])->$callback[1]($objCookie);
             }
         }
@@ -535,8 +485,7 @@ abstract class System
      */
     public static function getReadableSize($intSize, $intDecimals=1)
     {
-        for ($i=0; $intSize>=1024; $i++)
-        {
+        for ($i=0; $intSize>=1024; $i++) {
             $intSize /= 1024;
         }
 
@@ -568,25 +517,21 @@ abstract class System
     public static function anonymizeIp($strIp)
     {
         // The feature has been disabled
-        if (!\Config::get('privacyAnonymizeIp'))
-        {
+        if (!\Config::get('privacyAnonymizeIp')) {
             return $strIp;
         }
 
         // Localhost
-        if ($strIp == '127.0.0.1' || $strIp == '::1')
-        {
+        if ($strIp == '127.0.0.1' || $strIp == '::1') {
             return $strIp;
         }
 
         // IPv6
-        if (strpos($strIp, ':') !== false)
-        {
+        if (strpos($strIp, ':') !== false) {
             return substr_replace($strIp, ':0000', strrpos($strIp, ':'));
         }
         // IPv4
-        else
-        {
+        else {
             return substr_replace($strIp, '.0', strrpos($strIp, '.'));
         }
     }
@@ -604,8 +549,7 @@ abstract class System
         $strCode = rtrim(file_get_contents(TL_ROOT . '/' . $strName));
 
         // Opening tag
-        if (strncmp($strCode, '<?php', 5) === 0)
-        {
+        if (strncmp($strCode, '<?php', 5) === 0) {
             $strCode = substr($strCode, 5);
         }
 
@@ -616,8 +560,7 @@ abstract class System
         ), '', $strCode);
 
         // Closing tag
-        if (substr($strCode, -2) == '?>')
-        {
+        if (substr($strCode, -2) == '?>') {
             $strCode = substr($strCode, 0, -2);
         }
 
@@ -644,61 +587,47 @@ abstract class System
         $units = $xml->getElementsByTagName('trans-unit');
 
         // Set up the quotekey function
-        $quotekey = function($key)
-        {
-            if ($key === '0')
-            {
+        $quotekey = function($key) {
+            if ($key === '0') {
                 return 0;
-            }
-            elseif (is_numeric($key))
-            {
+            } elseif (is_numeric($key)) {
                 return intval($key);
-            }
-            else
-            {
+            } else {
                 return "'$key'";
             }
         };
 
         // Add the labels
-        foreach ($units as $unit)
-        {
+        foreach ($units as $unit) {
             $node = ($strLanguage == 'en') ? $unit->getElementsByTagName('source') : $unit->getElementsByTagName('target');
 
-            if ($node === null || $node->item(0) === null)
-            {
+            if ($node === null || $node->item(0) === null) {
                 continue;
             }
 
             $value = str_replace("\n", '\n', $node->item(0)->nodeValue);
 
             // Some closing </em> tags oddly have an extra space in
-            if (strpos($value, '</ em>') !== false)
-            {
+            if (strpos($value, '</ em>') !== false) {
                 $value = str_replace('</ em>', '</em>', $value);
             }
 
             // Quote the value
-            if (strpos($value, '\n') !== false)
-            {
+            if (strpos($value, '\n') !== false) {
                 $value = '"' . str_replace('"', '\\"', $value) . '"';
-            }
-            else
-            {
+            } else {
                 $value = "'" . str_replace("'", "\\'", $value) . "'";
             }
 
             $chunks = explode('.', $unit->getAttribute('id'));
 
             // Handle keys with dots
-            if (preg_match('/tl_layout\.[a-z]+\.css\./', $unit->getAttribute('id')))
-            {
+            if (preg_match('/tl_layout\.[a-z]+\.css\./', $unit->getAttribute('id'))) {
                 $chunks = array($chunks[0], $chunks[1] . '.' . $chunks[2], $chunks[3]);
             }
 
             // Create the array entries
-            switch (count($chunks))
-            {
+            switch (count($chunks)) {
                 case 2:
                     $return .= "\$GLOBALS['TL_LANG']['" . $chunks[0] . "'][" . $quotekey($chunks[1]) . "] = " . $value . ";\n";
                     break;
@@ -728,8 +657,7 @@ abstract class System
     {
         $objFile = new \File('system/modules/' . $strName . '/.skip', true);
 
-        if (!$objFile->exists())
-        {
+        if (!$objFile->exists()) {
             return false;
         }
 
@@ -749,8 +677,7 @@ abstract class System
     {
         $objFile = new \File('system/modules/' . $strName . '/.skip', true);
 
-        if ($objFile->exists())
-        {
+        if ($objFile->exists()) {
             return false;
         }
 

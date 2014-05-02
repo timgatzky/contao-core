@@ -36,8 +36,7 @@ class ClassLoader
      * Known namespaces
      * @var array
      */
-    protected static $namespaces = array
-    (
+    protected static $namespaces = array(
         'Contao'
     );
 
@@ -55,8 +54,7 @@ class ClassLoader
      */
     public static function addNamespace($name)
     {
-        if (in_array($name, self::$namespaces))
-        {
+        if (in_array($name, self::$namespaces)) {
             return;
         }
 
@@ -71,8 +69,7 @@ class ClassLoader
      */
     public static function addNamespaces($names)
     {
-        foreach ($names as $name)
-        {
+        foreach ($names as $name) {
             self::addNamespace($name);
         }
     }
@@ -108,8 +105,7 @@ class ClassLoader
      */
     public static function addClasses($classes)
     {
-        foreach ($classes as $class=>$file)
-        {
+        foreach ($classes as $class=>$file) {
             self::addClass($class, $file);
         }
     }
@@ -136,16 +132,13 @@ class ClassLoader
      */
     public static function load($class)
     {
-        if (class_exists($class, false) || interface_exists($class, false))
-        {
+        if (class_exists($class, false) || interface_exists($class, false)) {
             return;
         }
 
         // The class file is set in the mapper
-        if (isset(self::$classes[$class]))
-        {
-            if (\Config::get('debugMode'))
-            {
+        if (isset(self::$classes[$class])) {
+            if (\Config::get('debugMode')) {
                 $GLOBALS['TL_DEBUG']['classes_set'][] = $class;
             }
 
@@ -153,12 +146,9 @@ class ClassLoader
         }
 
         // Find the class in the registered namespaces
-        elseif (($namespaced = self::findClass($class)) != false)
-        {
-            if (!class_exists($namespaced, false))
-            {
-                if (\Config::get('debugMode'))
-                {
+        elseif (($namespaced = self::findClass($class)) != false) {
+            if (!class_exists($namespaced, false)) {
+                if (\Config::get('debugMode')) {
                     $GLOBALS['TL_DEBUG']['classes_aliased'][] = $class . ' <span style="color:#999">(' . $namespaced . ')</span>';
                 }
 
@@ -181,10 +171,8 @@ class ClassLoader
      */
     protected static function findClass($class)
     {
-        foreach (self::$namespaces as $namespace)
-        {
-            if (isset(self::$classes[$namespace . '\\' . $class]))
-            {
+        foreach (self::$namespaces as $namespace) {
+            if (isset(self::$classes[$namespace . '\\' . $class])) {
                 return $namespace . '\\' . $class;
             }
         }
@@ -211,18 +199,13 @@ class ClassLoader
         $strCacheFile = 'system/cache/config/autoload.php';
 
         // Try to load from cache
-        if (!\Config::get('bypassCache') && file_exists(TL_ROOT . '/' . $strCacheFile))
-        {
+        if (!\Config::get('bypassCache') && file_exists(TL_ROOT . '/' . $strCacheFile)) {
             include TL_ROOT . '/' . $strCacheFile;
-        }
-        else
-        {
-            foreach (\ModuleLoader::getActive() as $module)
-            {
+        } else {
+            foreach (\ModuleLoader::getActive() as $module) {
                 $file = 'system/modules/' . $module . '/config/autoload.php';
 
-                if (file_exists(TL_ROOT . '/' . $file))
-                {
+                if (file_exists(TL_ROOT . '/' . $file)) {
                     include TL_ROOT . '/' . $file;
                 }
             }

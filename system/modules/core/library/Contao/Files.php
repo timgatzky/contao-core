@@ -66,23 +66,19 @@ abstract class Files
      */
     public static function getInstance()
     {
-        if (self::$objInstance === null)
-        {
+        if (self::$objInstance === null) {
             // Use FTP to modify files
-            if (\Config::get('useFTP'))
-            {
+            if (\Config::get('useFTP')) {
                 self::$objInstance = new \Files\Ftp();
             }
 
             // HOOK: use the smhextended module
-            elseif (\Config::get('useSmhExtended') && in_array('smhextended', \ModuleLoader::getActive()))
-            {
+            elseif (\Config::get('useSmhExtended') && in_array('smhextended', \ModuleLoader::getActive())) {
                 self::$objInstance = new \SMHExtended();
             }
 
             // Use PHP to modify files
-            else
-            {
+            else {
                 self::$objInstance = new \Files\Php();
             }
         }
@@ -122,20 +118,15 @@ abstract class Files
         $this->validate($strFolder);
         $arrFiles = scan(TL_ROOT . '/' . $strFolder, true);
 
-        foreach ($arrFiles as $strFile)
-        {
-            if (is_dir(TL_ROOT . '/' . $strFolder . '/' . $strFile))
-            {
+        foreach ($arrFiles as $strFile) {
+            if (is_dir(TL_ROOT . '/' . $strFolder . '/' . $strFile)) {
                 $this->rrdir($strFolder . '/' . $strFile);
-            }
-            else
-            {
+            } else {
                 $this->delete($strFolder . '/' . $strFile);
             }
         }
 
-        if (!$blnPreserveRoot)
-        {
+        if (!$blnPreserveRoot) {
             $this->rmdir($strFolder);
         }
     }
@@ -206,14 +197,10 @@ abstract class Files
         $this->mkdir($strDestination);
         $arrFiles = scan(TL_ROOT . '/' . $strSource, true);
 
-        foreach ($arrFiles as $strFile)
-        {
-            if (is_dir(TL_ROOT . '/' . $strSource . '/' . $strFile))
-            {
+        foreach ($arrFiles as $strFile) {
+            if (is_dir(TL_ROOT . '/' . $strSource . '/' . $strFile)) {
                 $this->rcopy($strSource . '/' . $strFile, $strDestination . '/' . $strFile);
-            }
-            else
-            {
+            } else {
                 $this->copy($strSource . '/' . $strFile, $strDestination . '/' . $strFile);
             }
         }
@@ -269,14 +256,10 @@ abstract class Files
      */
     protected function validate()
     {
-        foreach (func_get_args() as $strPath)
-        {
-            if ($strPath == '') // see #5795
-            {
+        foreach (func_get_args() as $strPath) {
+            if ($strPath == '') { // see #5795
                 throw new \Exception('No file or folder name given');
-            }
-            elseif (strpos($strPath, '../') !== false)
-            {
+            } elseif (strpos($strPath, '../') !== false) {
                 throw new \Exception('Invalid file or folder name ' . $strPath);
             }
         }

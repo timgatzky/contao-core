@@ -102,22 +102,19 @@ class Php extends \Files
     public function rename($strOldName, $strNewName)
     {
         // Source file == target file
-        if ($strOldName == $strNewName)
-        {
+        if ($strOldName == $strNewName) {
             return true;
         }
 
         $this->validate($strOldName, $strNewName);
 
         // Windows fix: delete the target file
-        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' && file_exists(TL_ROOT . '/' . $strNewName))
-        {
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' && file_exists(TL_ROOT . '/' . $strNewName)) {
             $this->delete($strNewName);
         }
 
         // Unix fix: rename case sensitively
-        if (strcasecmp($strOldName, $strNewName) === 0 && strcmp($strOldName, $strNewName) !== 0)
-        {
+        if (strcasecmp($strOldName, $strNewName) === 0 && strcmp($strOldName, $strNewName) !== 0) {
             @rename(TL_ROOT . '/' . $strOldName, TL_ROOT . '/' . $strOldName . '__');
             $strOldName .= '__';
         }

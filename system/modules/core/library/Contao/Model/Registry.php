@@ -64,8 +64,7 @@ class Registry implements \Countable
      */
     public static function getInstance()
     {
-        if (static::$objInstance === null)
-        {
+        if (static::$objInstance === null) {
             static::$objInstance = new static();
         }
 
@@ -94,8 +93,7 @@ class Registry implements \Countable
      */
     public function fetch($strTable, $intPk)
     {
-        if (isset($this->arrRegistry[$strTable][$intPk]))
-        {
+        if (isset($this->arrRegistry[$strTable][$intPk])) {
             return $this->arrRegistry[$strTable][$intPk];
         }
 
@@ -115,15 +113,13 @@ class Registry implements \Countable
         $intObjectId = spl_object_hash($objModel);
 
         // The model has been registered already
-        if (isset($this->arrIdentities[$intObjectId]))
-        {
+        if (isset($this->arrIdentities[$intObjectId])) {
             return;
         }
 
         $strTable = $objModel->getTable();
 
-        if (!is_array($this->arrRegistry[$strTable]))
-        {
+        if (!is_array($this->arrRegistry[$strTable])) {
             $this->arrRegistry[$strTable] = array();
         }
 
@@ -131,8 +127,7 @@ class Registry implements \Countable
         $intPk = $objModel->$strPk;
 
         // Another model object is pointing to the DB record already
-        if (isset($this->arrRegistry[$strTable][$intPk]))
-        {
+        if (isset($this->arrRegistry[$strTable][$intPk])) {
             throw new \RuntimeException("The registry already contains an instance for $strTable::$strPk($intPk)");
         }
 
@@ -151,8 +146,7 @@ class Registry implements \Countable
         $intObjectId = spl_object_hash($objModel);
 
         // The model is not registered
-        if (!isset($this->arrIdentities[$intObjectId]))
-        {
+        if (!isset($this->arrIdentities[$intObjectId])) {
             return;
         }
 

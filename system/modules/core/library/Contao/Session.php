@@ -50,8 +50,7 @@ class Session
      */
     protected function __construct()
     {
-        switch (TL_MODE)
-        {
+        switch (TL_MODE) {
             case 'BE':
                 $this->arrSession = (array) $_SESSION['BE_DATA'];
                 break;
@@ -72,8 +71,7 @@ class Session
      */
     public function __destruct()
     {
-        switch (TL_MODE)
-        {
+        switch (TL_MODE) {
             case 'BE':
                 $_SESSION['BE_DATA'] = $this->arrSession;
                 break;
@@ -102,8 +100,7 @@ class Session
      */
     public static function getInstance()
     {
-        if (static::$objInstance === null)
-        {
+        if (static::$objInstance === null) {
             static::$objInstance = new static();
         }
 
@@ -167,8 +164,7 @@ class Session
      */
     public function setData($arrData)
     {
-        if (!is_array($arrData))
-        {
+        if (!is_array($arrData)) {
             throw new \Exception('Array required to set session data');
         }
 
@@ -185,13 +181,11 @@ class Session
      */
     public function appendData($varData)
     {
-        if (is_object($varData))
-        {
+        if (is_object($varData)) {
             $varData = get_object_vars($varData);
         }
 
-        if (!is_array($varData))
-        {
+        if (!is_array($varData)) {
             throw new \Exception('Array or object required to append session data');
         }
 

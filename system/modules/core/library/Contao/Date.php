@@ -66,8 +66,7 @@ class Date
         $this->strDate = ($strDate !== null) ? $strDate : time();
         $this->strFormat = ($strFormat !== null) ? $strFormat : static::getNumericDateFormat();
 
-        if (!preg_match('/^\-?[0-9]+$/', $this->strDate) || preg_match('/^[a-zA-Z]+$/', $this->strFormat))
-        {
+        if (!preg_match('/^\-?[0-9]+$/', $this->strDate) || preg_match('/^[a-zA-Z]+$/', $this->strFormat)) {
             $this->dateToUnix();
         }
     }
@@ -96,8 +95,7 @@ class Date
      */
     public function __get($strKey)
     {
-        switch ($strKey)
-        {
+        switch ($strKey) {
             case 'tstamp':
             case 'timestamp':
                 return $this->strDate;
@@ -159,8 +157,7 @@ class Date
      */
     protected function createDateRanges()
     {
-        if (!empty($this->arrRange))
-        {
+        if (!empty($this->arrRange)) {
             return;
         }
 
@@ -188,8 +185,7 @@ class Date
     {
         $intOffset = date('w', $this->strDate) - $intStartDay;
 
-        if ($intOffset < 0)
-        {
+        if ($intOffset < 0) {
             $intOffset += 7;
         }
 
@@ -221,21 +217,17 @@ class Date
      */
     public static function getRegexp($strFormat=null)
     {
-        if ($strFormat === null)
-        {
+        if ($strFormat === null) {
             $strFormat = static::getNumericDateFormat();
         }
 
-        if (!static::isNumericFormat($strFormat))
-        {
+        if (!static::isNumericFormat($strFormat)) {
             throw new \Exception(sprintf('Invalid date format "%s"', $strFormat));
         }
 
-        return preg_replace_callback('/[a-zA-Z]/', function($matches)
-            {
+        return preg_replace_callback('/[a-zA-Z]/', function($matches) {
                 // Thanks to Christian Labuda
-                $arrRegexp = array
-                (
+                $arrRegexp = array(
                     'a' => '(?P<a>am|pm)',
                     'A' => '(?P<A>AM|PM)',
                     'd' => '(?P<d>0[1-9]|[12][0-9]|3[01])',
@@ -269,18 +261,15 @@ class Date
      */
     public static function getInputFormat($strFormat=null)
     {
-        if ($strFormat === null)
-        {
+        if ($strFormat === null) {
             $strFormat = static::getNumericDateFormat();
         }
 
-        if (!static::isNumericFormat($strFormat))
-        {
+        if (!static::isNumericFormat($strFormat)) {
             throw new \Exception(sprintf('Invalid date format "%s"', $strFormat));
         }
 
-        $arrCharacterMapper = array
-        (
+        $arrCharacterMapper = array(
             'a' => 'am',
             'A' => 'AM',
             'd' => 'DD',
@@ -300,14 +289,10 @@ class Date
         $arrInputFormat = array();
         $arrCharacters = str_split($strFormat);
 
-        foreach ($arrCharacters as $strCharacter)
-        {
-            if (isset($arrCharacterMapper[$strCharacter]))
-            {
+        foreach ($arrCharacters as $strCharacter) {
+            if (isset($arrCharacterMapper[$strCharacter])) {
                 $arrInputFormat[$strFormat] .= $arrCharacterMapper[$strCharacter];
-            }
-            else
-            {
+            } else {
                 $arrInputFormat[$strFormat] .= $strCharacter;
             }
         }
@@ -324,8 +309,7 @@ class Date
      */
     protected function dateToUnix()
     {
-        if (!static::isNumericFormat($this->strFormat))
-        {
+        if (!static::isNumericFormat($this->strFormat)) {
             throw new \Exception(sprintf('Invalid date format "%s"', $this->strFormat));
         }
 
@@ -340,8 +324,7 @@ class Date
         $blnMeridiem = false;
         $blnCorrectHour = false;
 
-        $arrCharacterMapper = array
-        (
+        $arrCharacterMapper = array(
             'd' => 'intDay',
             'j' => 'intDay',
             'm' => 'intMonth',
@@ -358,12 +341,10 @@ class Date
 
         $arrCharacters = str_split($this->strFormat);
 
-        foreach ($arrCharacters as $strCharacter)
-        {
+        foreach ($arrCharacters as $strCharacter) {
             $var = isset($arrCharacterMapper[$strCharacter]) ? $arrCharacterMapper[$strCharacter] : 'dummy';
 
-            switch ($strCharacter)
-            {
+            switch ($strCharacter) {
                 case 'a':
                 case 'A':
                     $blnCorrectHour = true;
@@ -388,8 +369,7 @@ class Date
                 case 'G':
                     $$var .= substr($this->strDate, $intCount++, 1);
 
-                    if (preg_match('/[0-9]+/', substr($this->strDate, $intCount, 1)))
-                    {
+                    if (preg_match('/[0-9]+/', substr($this->strDate, $intCount, 1))) {
                         $$var .= substr($this->strDate, $intCount++, 1);
                     }
                     break;
@@ -407,34 +387,28 @@ class Date
 
         $intHour = (int) $intHour;
 
-        if ($blnMeridiem)
-        {
+        if ($blnMeridiem) {
             $intHour += 12;
         }
 
-        if ($blnCorrectHour && ($intHour == 12 || $intHour == 24))
-        {
+        if ($blnCorrectHour && ($intHour == 12 || $intHour == 24)) {
             $intHour -= 12;
         }
 
-        if (!strlen($intMonth))
-        {
+        if (!strlen($intMonth)) {
             $intMonth = 1;
         }
 
-        if (!strlen($intDay))
-        {
+        if (!strlen($intDay)) {
             $intDay = 1;
         }
 
-        if ($intYear == '')
-        {
+        if ($intYear == '') {
             $intYear = 1970;
         }
 
         // Validate the date (see #5086)
-        if (checkdate($intMonth, $intDay, $intYear) === false)
-        {
+        if (checkdate($intMonth, $intDay, $intYear) === false) {
             throw new \OutOfBoundsException(sprintf('Invalid date "%s"', $this->strDate));
         }
 
@@ -453,10 +427,8 @@ class Date
     {
         $chunks = str_split($strFormat);
 
-        foreach ($chunks as $k=>$v)
-        {
-            switch ($v)
-            {
+        foreach ($chunks as $k=>$v) {
+            switch ($v) {
                 case 'D': $chunks[$k] = 'a'; break;
                 case 'j': $chunks[$k] = 'e'; break;
                 case 'l': $chunks[$k] = 'A'; break;
@@ -498,12 +470,10 @@ class Date
      */
     public static function getNumericDateFormat()
     {
-        if (TL_MODE == 'FE')
-        {
+        if (TL_MODE == 'FE') {
             global $objPage;
 
-            if ($objPage->dateFormat != '' && static::isNumericFormat($objPage->dateFormat))
-            {
+            if ($objPage->dateFormat != '' && static::isNumericFormat($objPage->dateFormat)) {
                 return $objPage->dateFormat;
             }
         }
@@ -519,12 +489,10 @@ class Date
      */
     public static function getNumericTimeFormat()
     {
-        if (TL_MODE == 'FE')
-        {
+        if (TL_MODE == 'FE') {
             global $objPage;
 
-            if ($objPage->timeFormat != '' && static::isNumericFormat($objPage->timeFormat))
-            {
+            if ($objPage->timeFormat != '' && static::isNumericFormat($objPage->timeFormat)) {
                 return $objPage->timeFormat;
             }
         }
@@ -540,12 +508,10 @@ class Date
      */
     public static function getNumericDatimFormat()
     {
-        if (TL_MODE == 'FE')
-        {
+        if (TL_MODE == 'FE') {
             global $objPage;
 
-            if ($objPage->datimFormat != '' && static::isNumericFormat($objPage->datimFormat))
-            {
+            if ($objPage->datimFormat != '' && static::isNumericFormat($objPage->datimFormat)) {
                 return $objPage->datimFormat;
             }
         }
@@ -571,43 +537,33 @@ class Date
             $strFormat
         );
 
-        if ($intTstamp === null)
-        {
+        if ($intTstamp === null) {
             $strDate = date($strModified);
-        }
-        elseif (!is_numeric($intTstamp))
-        {
+        } elseif (!is_numeric($intTstamp)) {
             return '';
-        }
-        else
-        {
+        } else {
             $strDate = date($strModified, $intTstamp);
         }
 
-        if (strpos($strDate, '::') === false)
-        {
+        if (strpos($strDate, '::') === false) {
             return $strDate;
         }
 
-        if (!$GLOBALS['TL_LANG']['MSC']['dayShortLength'])
-        {
+        if (!$GLOBALS['TL_LANG']['MSC']['dayShortLength']) {
             $GLOBALS['TL_LANG']['MSC']['dayShortLength'] = 3;
         }
 
-        if (!$GLOBALS['TL_LANG']['MSC']['monthShortLength'])
-        {
+        if (!$GLOBALS['TL_LANG']['MSC']['monthShortLength']) {
             $GLOBALS['TL_LANG']['MSC']['monthShortLength'] = 3;
         }
 
         $strReturn = '';
         $chunks = preg_split("/([0-9]{1,2}::[1-4])/", $strDate, -1, PREG_SPLIT_DELIM_CAPTURE);
 
-        foreach ($chunks as $chunk)
-        {
+        foreach ($chunks as $chunk) {
             list($index, $flag) = explode('::', $chunk);
 
-            switch ($flag)
-            {
+            switch ($flag) {
                 case 1:
                     $strReturn .= $GLOBALS['TL_LANG']['DAYS'][$index];
                     break;
@@ -631,10 +587,8 @@ class Date
         }
 
         // HOOK: add custom logic (see #4260)
-        if (isset($GLOBALS['TL_HOOKS']['parseDate']) && is_array($GLOBALS['TL_HOOKS']['parseDate']))
-        {
-            foreach ($GLOBALS['TL_HOOKS']['parseDate'] as $callback)
-            {
+        if (isset($GLOBALS['TL_HOOKS']['parseDate']) && is_array($GLOBALS['TL_HOOKS']['parseDate'])) {
+            foreach ($GLOBALS['TL_HOOKS']['parseDate'] as $callback) {
                 $strReturn = \System::importStatic($callback[0])->$callback[1]($strReturn, $strFormat, $intTstamp);
             }
         }

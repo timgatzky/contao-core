@@ -46,8 +46,7 @@ class Filter extends \RecursiveFilterIterator
      */
     public function __construct(\RecursiveIterator $iterator)
     {
-        if (\Config::get('fileSyncExclude') != '')
-        {
+        if (\Config::get('fileSyncExclude') != '') {
             $this->arrExempt = array_map(function($e) {
                 return \Config::get('uploadPath') . '/' . $e;
             }, trimsplit(',', \Config::get('fileSyncExclude')));
@@ -65,16 +64,14 @@ class Filter extends \RecursiveFilterIterator
     public function accept()
     {
         // The resource is to be ignored
-        if (in_array($this->current()->getFilename(), $this->arrIgnore))
-        {
+        if (in_array($this->current()->getFilename(), $this->arrIgnore)) {
             return false;
         }
 
         $strRelpath = str_replace(TL_ROOT . '/', '', $this->current()->getPathname());
 
         // The resource is an exempt folder
-        if (in_array($strRelpath, $this->arrExempt))
-        {
+        if (in_array($strRelpath, $this->arrExempt)) {
             return false;
         }
 

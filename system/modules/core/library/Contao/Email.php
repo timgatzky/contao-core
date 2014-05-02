@@ -120,27 +120,21 @@ class Email
         $this->strCharset = \Config::get('characterSet');
 
         // Instantiate mailer
-        if (self::$objMailer === null)
-        {
-            if (!\Config::get('useSMTP'))
-            {
+        if (self::$objMailer === null) {
+            if (!\Config::get('useSMTP')) {
                 // Mail
                 $objTransport = \Swift_MailTransport::newInstance();
-            }
-            else
-            {
+            } else {
                 // SMTP
                 $objTransport = \Swift_SmtpTransport::newInstance(\Config::get('smtpHost'), \Config::get('smtpPort'));
 
                 // Encryption
-                if (\Config::get('smtpEnc') == 'ssl' || \Config::get('smtpEnc') == 'tls')
-                {
+                if (\Config::get('smtpEnc') == 'ssl' || \Config::get('smtpEnc') == 'tls') {
                     $objTransport->setEncryption(\Config::get('smtpEnc'));
                 }
 
                 // Authentication
-                if (\Config::get('smtpUser') != '')
-                {
+                if (\Config::get('smtpUser') != '') {
                     $objTransport->setUsername(\Config::get('smtpUser'))->setPassword(\Config::get('smtpPass'));
                 }
             }
@@ -177,8 +171,7 @@ class Email
      */
     public function __set($strKey, $varValue)
     {
-        switch ($strKey)
-        {
+        switch ($strKey) {
             case 'subject':
                 $this->strSubject = preg_replace(array('/[\t]+/', '/[\n\r]+/'), array(' ', ''), $varValue);
                 break;
@@ -200,8 +193,7 @@ class Email
                 break;
 
             case 'priority':
-                switch ($varValue)
-                {
+                switch ($varValue) {
                     case 1:
                     case 'highest':
                         $this->intPriority = 1;
@@ -271,8 +263,7 @@ class Email
      */
     public function __get($strKey)
     {
-        switch ($strKey)
-        {
+        switch ($strKey) {
             case 'subject':
                 return $this->strSubject;
                 break;
@@ -418,8 +409,7 @@ class Email
     {
         $arrRecipients = $this->compileRecipients(func_get_args());
 
-        if (empty($arrRecipients))
-        {
+        if (empty($arrRecipients)) {
             return false;
         }
 
@@ -428,21 +418,17 @@ class Email
         $this->objMessage->setPriority($this->intPriority);
 
         // Default subject
-        if ($this->strSubject == '')
-        {
+        if ($this->strSubject == '') {
             $this->strSubject = 'No subject';
         }
 
         $this->objMessage->setSubject($this->strSubject);
 
         // HTML e-mail
-        if ($this->strHtml != '')
-        {
+        if ($this->strHtml != '') {
             // Embed images
-            if ($this->blnEmbedImages)
-            {
-                if ($this->strImageDir == '')
-                {
+            if ($this->blnEmbedImages) {
+                if ($this->strImageDir == '') {
                     $this->strImageDir = TL_ROOT . '/';
                 }
 
@@ -454,10 +440,8 @@ class Email
                 preg_match_all('/<[a-z][a-z0-9]*\b[^>]*((src=|background=|url\()["\']??)(.+\.(jpe?g|png|gif|bmp|tiff?|swf))(["\' ]??(\)??))[^>]*>/Ui', $this->strHtml, $arrMatches);
 
                 // Check for internal images
-                if (!empty($arrMatches) && isset($arrMatches[0]))
-                {
-                    for ($i=0, $c=count($arrMatches[0]); $i<$c; $i++)
-                    {
+                if (!empty($arrMatches) && isset($arrMatches[0])) {
+                    for ($i=0, $c=count($arrMatches[0]); $i<$c; $i++) {
                         $url = $arrMatches[3][$i];
 
                         // Try to remove the base URL
@@ -465,10 +449,8 @@ class Email
                         $src = rawurldecode($src); // see #3713
 
                         // Embed the image if the URL is now relative
-                        if (!preg_match('@^https?://@', $src) && file_exists($this->strImageDir . $src))
-                        {
-                            if (!isset($arrCid[$src]))
-                            {
+                        if (!preg_match('@^https?://@', $src) && file_exists($this->strImageDir . $src)) {
+                            if (!isset($arrCid[$src])) {
                                 $arrCid[$src] = $this->objMessage->embed(\Swift_EmbeddedFile::fromPath($this->strImageDir . $src));
                             }
 
@@ -482,31 +464,23 @@ class Email
         }
 
         // Text content
-        if ($this->strText != '')
-        {
-            if ($this->strHtml != '')
-            {
+        if ($this->strText != '') {
+            if ($this->strHtml != '') {
                 $this->objMessage->addPart($this->strText, 'text/plain');
-            }
-            else
-            {
+            } else {
                 $this->objMessage->setBody($this->strText, 'text/plain');
             }
         }
 
         // Add the administrator e-mail as default sender
-        if ($this->strSender == '')
-        {
+        if ($this->strSender == '') {
             list($this->strSenderName, $this->strSender) = \String::splitFriendlyEmail(\Config::get('adminEmail'));
         }
 
         // Sender
-        if ($this->strSenderName != '')
-        {
+        if ($this->strSenderName != '') {
             $this->objMessage->setFrom(array($this->strSender=>$this->strSenderName));
-        }
-        else
-        {
+        } else {
             $this->objMessage->setFrom($this->strSender);
         }
 
@@ -517,14 +491,12 @@ class Email
         $intSent = self::$objMailer->send($this->objMessage, $this->arrFailures);
 
         // Log failures
-        if (!empty($this->arrFailures))
-        {
+        if (!empty($this->arrFailures)) {
             log_message('E-mail address rejected: ' . implode(', ', $this->arrFailures), $this->strLogFile);
         }
 
         // Return if no e-mails have been sent
-        if ($intSent < 1)
-        {
+        if ($intSent < 1) {
             return false;
         }
 
@@ -534,13 +506,11 @@ class Email
         // Add a log entry
         $strMessage = 'An e-mail has been sent to ' . implode(', ', array_keys($this->objMessage->getTo()));
 
-        if (!empty($arrCc))
-        {
+        if (!empty($arrCc)) {
             $strMessage .= ', CC to ' . implode(', ', array_keys($arrCc));
         }
 
-        if (!empty($arrBcc))
-        {
+        if (!empty($arrBcc)) {
             $strMessage .= ', BCC to ' . implode(', ', array_keys($arrBcc));
         }
 
@@ -560,27 +530,21 @@ class Email
     {
         $arrReturn = array();
 
-        foreach ($arrRecipients as $varRecipients)
-        {
-            if (!is_array($varRecipients))
-            {
+        foreach ($arrRecipients as $varRecipients) {
+            if (!is_array($varRecipients)) {
                 $varRecipients = \String::splitCsv($varRecipients);
             }
 
             // Support friendly name addresses and internationalized domain names
-            foreach ($varRecipients as $v)
-            {
+            foreach ($varRecipients as $v) {
                 list($strName, $strEmail) = \String::splitFriendlyEmail($v);
 
                 $strName = trim($strName, ' "');
                 $strEmail = \Idna::encodeEmail($strEmail);
 
-                if ($strName != '')
-                {
+                if ($strName != '') {
                     $arrReturn[$strEmail] = $strName;
-                }
-                else
-                {
+                } else {
                     $arrReturn[] = $strEmail;
                 }
             }

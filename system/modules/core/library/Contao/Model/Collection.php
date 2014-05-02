@@ -57,10 +57,8 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
     {
         $arrModels = array_values($arrModels);
 
-        foreach ($arrModels as $objModel)
-        {
-            if (!$objModel instanceof \Model)
-            {
+        foreach ($arrModels as $objModel) {
+            if (!$objModel instanceof \Model) {
                 throw new \InvalidArgumentException('Invalid type: ' . gettype($objModel));
             }
         }
@@ -78,8 +76,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     public function __set($strKey, $varValue)
     {
-        if ($this->intIndex < 0)
-        {
+        if ($this->intIndex < 0) {
             $this->first();
         }
 
@@ -96,13 +93,11 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     public function __get($strKey)
     {
-        if ($this->intIndex < 0)
-        {
+        if ($this->intIndex < 0) {
             $this->first();
         }
 
-        if (isset($this->arrModels[$this->intIndex]->$strKey))
-        {
+        if (isset($this->arrModels[$this->intIndex]->$strKey)) {
             return $this->arrModels[$this->intIndex]->$strKey;
         }
 
@@ -119,8 +114,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     public function __isset($strKey)
     {
-        if ($this->intIndex < 0)
-        {
+        if ($this->intIndex < 0) {
             $this->first();
         }
 
@@ -141,17 +135,13 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
         $arrModels = array();
         $strClass = \Model::getClassFromTable($strTable);
 
-        while ($objResult->next())
-        {
+        while ($objResult->next()) {
             $objModel = \Model\Registry::getInstance()->fetch($strTable, $objResult->{$strClass::getPk()});
 
-            if ($objModel !== null)
-            {
+            if ($objModel !== null) {
                 $objModel->mergeRow($objResult->row());
                 $arrModels[] = $objModel;
-            }
-            else
-            {
+            } else {
                 $arrModels[] = new $strClass($objResult);
             }
         }
@@ -167,8 +157,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     public function row()
     {
-        if ($this->intIndex < 0)
-        {
+        if ($this->intIndex < 0) {
             $this->first();
         }
 
@@ -185,8 +174,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     public function setRow(array $arrData)
     {
-        if ($this->intIndex < 0)
-        {
+        if ($this->intIndex < 0) {
             $this->first();
         }
 
@@ -202,8 +190,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     public function save()
     {
-        if ($this->intIndex < 0)
-        {
+        if ($this->intIndex < 0) {
             $this->first();
         }
 
@@ -219,8 +206,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     public function delete()
     {
-        if ($this->intIndex < 0)
-        {
+        if ($this->intIndex < 0) {
             $this->first();
         }
 
@@ -248,8 +234,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     public function getRelated($strKey)
     {
-        if ($this->intIndex < 0)
-        {
+        if ($this->intIndex < 0) {
             $this->first();
         }
 
@@ -287,8 +272,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     public function prev()
     {
-        if ($this->intIndex < 1)
-        {
+        if ($this->intIndex < 1) {
             return false;
         }
 
@@ -304,8 +288,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     public function current()
     {
-        if ($this->intIndex < 0)
-        {
+        if ($this->intIndex < 0) {
             $this->first();
         }
 
@@ -320,8 +303,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     public function next()
     {
-        if (!isset($this->arrModels[$this->intIndex + 1]))
-        {
+        if (!isset($this->arrModels[$this->intIndex + 1])) {
             return false;
         }
 
@@ -366,16 +348,12 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
         $this->reset();
         $return = array();
 
-        while ($this->next())
-        {
+        while ($this->next()) {
             $strPk = $this->current()->getPk();
 
-            if ($strKey != 'id' && isset($this->$strPk))
-            {
+            if ($strKey != 'id' && isset($this->$strPk)) {
                 $return[$this->$strPk] = $this->$strKey;
-            }
-            else
-            {
+            } else {
                 $return[] = $this->$strKey;
             }
         }
@@ -394,8 +372,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
         $this->reset();
         $return = array();
 
-        while ($this->next())
-        {
+        while ($this->next()) {
             $return[] = $this->row();
         }
 

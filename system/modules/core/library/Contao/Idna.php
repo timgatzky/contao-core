@@ -69,13 +69,11 @@ class Idna
      */
     public static function encodeEmail($strEmail)
     {
-        if ($strEmail == '')
-        {
+        if ($strEmail == '') {
             return '';
         }
 
-        if (strpos($strEmail, '@') === false)
-        {
+        if (strpos($strEmail, '@') === false) {
             return $strEmail; // see #6241
         }
 
@@ -93,20 +91,17 @@ class Idna
      */
     public static function encodeUrl($strUrl)
     {
-        if ($strUrl == '')
-        {
+        if ($strUrl == '') {
             return '';
         }
 
         // Empty anchor (see #3555)
-        if ($strUrl == '#')
-        {
+        if ($strUrl == '#') {
             return $strUrl;
         }
 
         // E-mail address
-        if (strncasecmp($strUrl, 'mailto:', 7) === 0)
-        {
+        if (strncasecmp($strUrl, 'mailto:', 7) === 0) {
             return static::encodeEmail($strUrl);
         }
 
@@ -114,65 +109,52 @@ class Idna
         $arrUrl = parse_url($strUrl);
 
         // Add the scheme to ensure that parse_url works correctly
-        if (!isset($arrUrl['scheme']) && strncmp($strUrl, '{{', 2) !== 0)
-        {
+        if (!isset($arrUrl['scheme']) && strncmp($strUrl, '{{', 2) !== 0) {
             $blnSchemeAdded = true;
             $arrUrl = parse_url('http://' . $strUrl);
         }
 
         // Scheme
-        if (isset($arrUrl['scheme']))
-        {
+        if (isset($arrUrl['scheme'])) {
             // Remove the scheme if it has been added above (see #3792)
-            if ($blnSchemeAdded)
-            {
+            if ($blnSchemeAdded) {
                 unset($arrUrl['scheme']);
-            }
-            elseif ($arrUrl['scheme'] == 'tel' || $arrUrl['scheme'] == 'sms')
-            {
+            } elseif ($arrUrl['scheme'] == 'tel' || $arrUrl['scheme'] == 'sms') {
                 $arrUrl['scheme'] .= ':'; // see #6148
-            }
-            else
-            {
+            } else {
                 $arrUrl['scheme'] .= '://';
             }
         }
 
         // User
-        if (isset($arrUrl['user']))
-        {
+        if (isset($arrUrl['user'])) {
             $arrUrl['user'] .= isset($arrUrl['pass']) ? ':' : '@';
         }
 
         // Password
-        if (isset($arrUrl['pass']))
-        {
+        if (isset($arrUrl['pass'])) {
             $arrUrl['pass'] .= '@';
         }
 
         // Host
-        if (isset($arrUrl['host']))
-        {
+        if (isset($arrUrl['host'])) {
             $arrUrl['host'] = static::encode($arrUrl['host']);
         }
 
         // Port
-        if (isset($arrUrl['port']))
-        {
+        if (isset($arrUrl['port'])) {
             $arrUrl['port'] = ':' . $arrUrl['port'];
         }
 
         // Path does not have to be altered
 
         // Query
-        if (isset($arrUrl['query']))
-        {
+        if (isset($arrUrl['query'])) {
             $arrUrl['query'] = '?' . $arrUrl['query'];
         }
 
         // Anchor
-        if (isset($arrUrl['fragment']))
-        {
+        if (isset($arrUrl['fragment'])) {
             $arrUrl['fragment'] = '#' . $arrUrl['fragment'];
         }
 

@@ -81,16 +81,14 @@ class Image
      */
     public static function get($image, $width, $height, $mode='', $target=null, $force=false)
     {
-        if ($image == '')
-        {
+        if ($image == '') {
             return null;
         }
 
         $image = rawurldecode($image);
 
         // Check whether the file exists
-        if (!is_file(TL_ROOT . '/' . $image))
-        {
+        if (!is_file(TL_ROOT . '/' . $image)) {
             \System::log('Image "' . $image . '" could not be found', __METHOD__, TL_ERROR);
             return null;
         }
@@ -99,21 +97,17 @@ class Image
         $arrAllowedTypes = trimsplit(',', strtolower(\Config::get('validImageTypes')));
 
         // Check the file type
-        if (!in_array($objFile->extension, $arrAllowedTypes))
-        {
+        if (!in_array($objFile->extension, $arrAllowedTypes)) {
             \System::log('Image type "' . $objFile->extension . '" was not allowed to be processed', __METHOD__, TL_ERROR);
             return null;
         }
 
         // No resizing required
-        if ($objFile->width == $width && $objFile->height == $height)
-        {
+        if ($objFile->width == $width && $objFile->height == $height) {
             // Return the target image (thanks to Tristan Lins) (see #4166)
-            if ($target)
-            {
+            if ($target) {
                 // Copy the source image if the target image does not exist or is older than the source image
-                if (!file_exists(TL_ROOT . '/' . $target) || $objFile->mtime > filemtime(TL_ROOT . '/' . $target))
-                {
+                if (!file_exists(TL_ROOT . '/' . $target) || $objFile->mtime > filemtime(TL_ROOT . '/' . $target)) {
                     \Files::getInstance()->copy($image, $target);
                 }
 
@@ -124,22 +118,17 @@ class Image
         }
 
         // No mode given
-        if ($mode == '')
-        {
+        if ($mode == '') {
             // Backwards compatibility
-            if ($width && $height)
-            {
+            if ($width && $height) {
                 $mode = 'center_top';
-            }
-            else
-            {
+            } else {
                 $mode = 'proportional';
             }
         }
 
         // Backwards compatibility
-        if ($mode == 'crop')
-        {
+        if ($mode == 'crop') {
             $mode = 'center_center';
         }
 
@@ -147,23 +136,18 @@ class Image
         $strCacheName = 'assets/images/' . substr($strCacheKey, -1) . '/' . $objFile->filename . '-' . $strCacheKey . '.' . $objFile->extension;
 
         // Check whether the image exists already
-        if (!\Config::get('debugMode'))
-        {
+        if (!\Config::get('debugMode')) {
             // Custom target (thanks to Tristan Lins) (see #4166)
-            if ($target && !$force)
-            {
-                if (file_exists(TL_ROOT . '/' . $target) && $objFile->mtime <= filemtime(TL_ROOT . '/' . $target))
-                {
+            if ($target && !$force) {
+                if (file_exists(TL_ROOT . '/' . $target) && $objFile->mtime <= filemtime(TL_ROOT . '/' . $target)) {
                     return \System::urlEncode($target);
                 }
             }
 
             // Regular cache file
-            if (file_exists(TL_ROOT . '/' . $strCacheName))
-            {
+            if (file_exists(TL_ROOT . '/' . $strCacheName)) {
                 // Copy the cached file if it exists
-                if ($target)
-                {
+                if ($target) {
                     \Files::getInstance()->copy($strCacheName, $target);
                 }
 
@@ -172,22 +156,18 @@ class Image
         }
 
         // HOOK: add custom logic
-        if (isset($GLOBALS['TL_HOOKS']['getImage']) && is_array($GLOBALS['TL_HOOKS']['getImage']))
-        {
-            foreach ($GLOBALS['TL_HOOKS']['getImage'] as $callback)
-            {
+        if (isset($GLOBALS['TL_HOOKS']['getImage']) && is_array($GLOBALS['TL_HOOKS']['getImage'])) {
+            foreach ($GLOBALS['TL_HOOKS']['getImage'] as $callback) {
                 $return = \System::importStatic($callback[0])->$callback[1]($image, $width, $height, $mode, $strCacheName, $objFile, $target);
 
-                if (is_string($return))
-                {
+                if (is_string($return)) {
                     return \System::urlEncode($return);
                 }
             }
         }
 
         // Return the path to the original image if the GDlib cannot handle it
-        if (!extension_loaded('gd') || !$objFile->isGdImage || $objFile->width > \Config::get('gdMaxImgWidth') || $objFile->height > \Config::get('gdMaxImgHeight') || (!$width && !$height) || $width > \Config::get('gdMaxImgWidth') || $height > \Config::get('gdMaxImgHeight'))
-        {
+        if (!extension_loaded('gd') || !$objFile->isGdImage || $objFile->width > \Config::get('gdMaxImgWidth') || $objFile->height > \Config::get('gdMaxImgHeight') || (!$width && !$height) || $width > \Config::get('gdMaxImgWidth') || $height > \Config::get('gdMaxImgHeight')) {
             return \System::urlEncode($image);
         }
 
@@ -197,28 +177,20 @@ class Image
         $intHeight = $height;
 
         // Mode-specific changes
-        if ($intWidth && $intHeight)
-        {
-            switch ($mode)
-            {
+        if ($intWidth && $intHeight) {
+            switch ($mode) {
                 case 'proportional':
-                    if ($objFile->width >= $objFile->height)
-                    {
+                    if ($objFile->width >= $objFile->height) {
                         unset($height, $intHeight);
-                    }
-                    else
-                    {
+                    } else {
                         unset($width, $intWidth);
                     }
                     break;
 
                 case 'box':
-                    if (round($objFile->height * $width / $objFile->width) <= $intHeight)
-                    {
+                    if (round($objFile->height * $width / $objFile->width) <= $intHeight) {
                         unset($height, $intHeight);
-                    }
-                    else
-                    {
+                    } else {
                         unset($width, $intWidth);
                     }
                     break;
@@ -229,15 +201,12 @@ class Image
         $strSourceImage = null;
 
         // Resize width and height and crop the image if necessary
-        if ($intWidth && $intHeight)
-        {
-            if (($intWidth * $objFile->height) != ($intHeight * $objFile->width))
-            {
+        if ($intWidth && $intHeight) {
+            if (($intWidth * $objFile->height) != ($intHeight * $objFile->width)) {
                 $intWidth = max(round($objFile->width * $height / $objFile->height), 1);
                 $intPositionX = -intval(($intWidth - $width) / 2);
 
-                if ($intWidth < $width)
-                {
+                if ($intWidth < $width) {
                     $intWidth = $width;
                     $intHeight = max(round($objFile->height * $width / $objFile->width), 1);
                     $intPositionX = 0;
@@ -246,8 +215,7 @@ class Image
             }
 
             // Advanced crop modes
-            switch ($mode)
-            {
+            switch ($mode) {
                 case 'left_top':
                     $intPositionX = 0;
                     $intPositionY = 0;
@@ -298,15 +266,13 @@ class Image
         }
 
         // Calculate the height if only the width is given
-        elseif ($intWidth)
-        {
+        elseif ($intWidth) {
             $intHeight = max(round($objFile->height * $width / $objFile->width), 1);
             $strNewImage = imagecreatetruecolor($intWidth, $intHeight);
         }
 
         // Calculate the width if only the height is given
-        elseif ($intHeight)
-        {
+        elseif ($intHeight) {
             $intWidth = max(round($objFile->width * $height / $objFile->height), 1);
             $strNewImage = imagecreatetruecolor($intWidth, $intHeight);
         }
@@ -314,17 +280,14 @@ class Image
         $arrGdinfo = gd_info();
         $strGdVersion = preg_replace('/[^0-9\.]+/', '', $arrGdinfo['GD Version']);
 
-        switch ($objFile->extension)
-        {
+        switch ($objFile->extension) {
             case 'gif':
-                if ($arrGdinfo['GIF Read Support'])
-                {
+                if ($arrGdinfo['GIF Read Support']) {
                     $strSourceImage = imagecreatefromgif(TL_ROOT . '/' . $image);
                     $intTranspIndex = imagecolortransparent($strSourceImage);
 
                     // Handle transparency
-                    if ($intTranspIndex >= 0 && $intTranspIndex < imagecolorstotal($strSourceImage))
-                    {
+                    if ($intTranspIndex >= 0 && $intTranspIndex < imagecolorstotal($strSourceImage)) {
                         $arrColor = imagecolorsforindex($strSourceImage, $intTranspIndex);
                         $intTranspIndex = imagecolorallocate($strNewImage, $arrColor['red'], $arrColor['green'], $arrColor['blue']);
                         imagefill($strNewImage, 0, 0, $intTranspIndex);
@@ -335,20 +298,17 @@ class Image
 
             case 'jpg':
             case 'jpeg':
-                if ($arrGdinfo['JPG Support'] || $arrGdinfo['JPEG Support'])
-                {
+                if ($arrGdinfo['JPG Support'] || $arrGdinfo['JPEG Support']) {
                     $strSourceImage = imagecreatefromjpeg(TL_ROOT . '/' . $image);
                 }
                 break;
 
             case 'png':
-                if ($arrGdinfo['PNG Support'])
-                {
+                if ($arrGdinfo['PNG Support']) {
                     $strSourceImage = imagecreatefrompng(TL_ROOT . '/' . $image);
 
                     // Handle transparency (GDlib >= 2.0 required)
-                    if (version_compare($strGdVersion, '2.0', '>='))
-                    {
+                    if (version_compare($strGdVersion, '2.0', '>=')) {
                         imagealphablending($strNewImage, false);
                         $intTranspIndex = imagecolorallocatealpha($strNewImage, 0, 0, 0, 127);
                         imagefill($strNewImage, 0, 0, $intTranspIndex);
@@ -359,8 +319,7 @@ class Image
         }
 
         // The new image could not be created
-        if (!$strSourceImage)
-        {
+        if (!$strSourceImage) {
             imagedestroy($strNewImage);
             \System::log('Image "' . $image . '" could not be processed', __METHOD__, TL_ERROR);
             return null;
@@ -370,14 +329,12 @@ class Image
         imagecopyresampled($strNewImage, $strSourceImage, $intPositionX, $intPositionY, 0, 0, $intWidth, $intHeight, $objFile->width, $objFile->height);
 
         // Fallback to PNG if GIF ist not supported
-        if ($objFile->extension == 'gif' && !$arrGdinfo['GIF Create Support'])
-        {
+        if ($objFile->extension == 'gif' && !$arrGdinfo['GIF Create Support']) {
             $objFile->extension = 'png';
         }
 
         // Create the new image
-        switch ($objFile->extension)
-        {
+        switch ($objFile->extension) {
             case 'gif':
                 imagegif($strNewImage, TL_ROOT . '/' . $strCacheName);
                 break;
@@ -389,17 +346,14 @@ class Image
 
             case 'png':
                 // Optimize non-truecolor images (see #2426)
-                if (version_compare($strGdVersion, '2.0', '>=') && function_exists('imagecolormatch') && !imageistruecolor($strSourceImage))
-                {
+                if (version_compare($strGdVersion, '2.0', '>=') && function_exists('imagecolormatch') && !imageistruecolor($strSourceImage)) {
                     // TODO: make it work with transparent images, too
-                    if (imagecolortransparent($strSourceImage) == -1)
-                    {
+                    if (imagecolortransparent($strSourceImage) == -1) {
                         $intColors = imagecolorstotal($strSourceImage);
 
                         // Convert to a palette image
                         // @see http://www.php.net/manual/de/function.imagetruecolortopalette.php#44803
-                        if ($intColors > 0 && $intColors < 256)
-                        {
+                        if ($intColors > 0 && $intColors < 256) {
                             $wi = imagesx($strNewImage);
                             $he = imagesy($strNewImage);
                             $ch = imagecreatetruecolor($wi, $he);
@@ -420,15 +374,13 @@ class Image
         imagedestroy($strNewImage);
 
         // Resize the original image
-        if ($target)
-        {
+        if ($target) {
             \Files::getInstance()->copy($strCacheName, $target);
             return \System::urlEncode($target);
         }
 
         // Set the file permissions when the Safe Mode Hack is used
-        if (\Config::get('useFTP'))
-        {
+        if (\Config::get('useFTP')) {
             \Files::getInstance()->chmod($strCacheName, \Config::get('defaultFileChmod'));
         }
 
@@ -451,21 +403,16 @@ class Image
         $static = TL_FILES_URL;
         $src = rawurldecode($src);
 
-        if (strpos($src, '/') === false)
-        {
-            if (strncmp($src, 'icon', 4) === 0)
-            {
+        if (strpos($src, '/') === false) {
+            if (strncmp($src, 'icon', 4) === 0) {
                 $static = TL_ASSETS_URL;
                 $src = 'assets/contao/images/' . $src;
-            }
-            else
-            {
+            } else {
                 $src = 'system/themes/' . \Backend::getTheme() . '/images/' . $src;
             }
         }
 
-        if (!file_exists(TL_ROOT .'/'. $src))
-        {
+        if (!file_exists(TL_ROOT .'/'. $src)) {
             return '';
         }
 

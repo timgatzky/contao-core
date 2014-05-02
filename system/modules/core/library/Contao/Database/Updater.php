@@ -68,12 +68,10 @@ class Updater extends \Controller
         // Update layouts
         $objLayout = $this->Database->execute("SELECT id, mootools FROM tl_layout");
 
-        while ($objLayout->next())
-        {
+        while ($objLayout->next()) {
             $mootools = array('moo_mediabox');
 
-            if ($objLayout->mootools != '')
-            {
+            if ($objLayout->mootools != '') {
                 $mootools[] = $objLayout->mootools;
             }
 
@@ -82,16 +80,14 @@ class Updater extends \Controller
         }
 
         // Update event reader
-        if (!file_exists(TL_ROOT . '/templates/event_default.tpl'))
-        {
+        if (!file_exists(TL_ROOT . '/templates/event_default.tpl')) {
             $this->Database->execute("UPDATE tl_module SET cal_template='event_full' WHERE cal_template='event_default'");
         }
 
         // News comments
         $objComment = $this->Database->execute("SELECT * FROM tl_news_comments");
 
-        while ($objComment->next())
-        {
+        while ($objComment->next()) {
             $arrSet = $objComment->row();
 
             $arrSet['source'] = 'tl_news';
@@ -146,35 +142,29 @@ class Updater extends \Controller
         // Adjust the user and group rights
         $objUser = $this->Database->execute("SELECT id, modules, 'tl_user' AS tbl FROM tl_user WHERE modules!='' UNION SELECT id, modules, 'tl_user_group' AS tbl FROM tl_user_group WHERE modules!=''");
 
-        while ($objUser->next())
-        {
+        while ($objUser->next()) {
             $modules = deserialize($objUser->modules);
 
-            if (!is_array($modules) || empty($modules))
-            {
+            if (!is_array($modules) || empty($modules)) {
                 continue;
             }
 
             $themes = array();
 
-            foreach ($modules as $k=>$v)
-            {
-                if ($v == 'css' || $v == 'modules ' || $v == 'layout')
-                {
+            foreach ($modules as $k=>$v) {
+                if ($v == 'css' || $v == 'modules ' || $v == 'layout') {
                     $themes[] = $v;
                     unset($modules[$k]);
                 }
             }
 
-            if (!empty($themes))
-            {
+            if (!empty($themes)) {
                 $modules[] = 'themes';
             }
 
             $modules = array_values($modules);
 
-            $set = array
-            (
+            $set = array(
                 'modules' => (!empty($modules) ? serialize($modules) : null),
                 'themes'  => (!empty($themes) ? serialize($themes) : null)
             );
@@ -185,8 +175,7 @@ class Updater extends \Controller
         }
 
         // Featured news
-        if ($this->Database->fieldExists('news_featured', 'tl_module'))
-        {
+        if ($this->Database->fieldExists('news_featured', 'tl_module')) {
             $this->Database->query("ALTER TABLE `tl_module` CHANGE `news_featured` `news_featured` varchar(16) NOT NULL default ''");
             $this->Database->query("UPDATE tl_module SET news_featured='featured' WHERE news_featured=1");
         }
@@ -282,8 +271,7 @@ class Updater extends \Controller
         $this->Database->query("UPDATE `tl_layout` SET `framework`='a:1:{i:0;s:10:\"layout.css\";}' WHERE skipTinymce=1");
 
         // Make sure the "skipFramework" field exists (see #4624)
-        if ($this->Database->fieldExists('skipFramework', 'tl_layout'))
-        {
+        if ($this->Database->fieldExists('skipFramework', 'tl_layout')) {
             $this->Database->query("UPDATE `tl_layout` SET `framework`='' WHERE skipFramework=1");
         }
 
@@ -293,48 +281,37 @@ class Updater extends \Controller
         // Create a content element for each news article
         $objNews = $this->Database->execute("SELECT * FROM tl_news WHERE text!='' AND source='default'");
 
-        while ($objNews->next())
-        {
+        while ($objNews->next()) {
             $this->createContentElement($objNews, 'tl_news', 'text');
         }
 
         // Create a content element for each event
         $objEvents = $this->Database->execute("SELECT * FROM tl_calendar_events WHERE details!='' AND source='default'");
 
-        while ($objEvents->next())
-        {
+        while ($objEvents->next()) {
             $this->createContentElement($objEvents, 'tl_calendar_events', 'details');
         }
 
         // Add an .htaccess file to the modules' html folders so they can be accessed via HTTP
-        foreach (scan(TL_ROOT . '/system/modules') as $strFolder)
-        {
-            if (is_dir(TL_ROOT . '/system/modules/' . $strFolder) && is_dir(TL_ROOT . '/system/modules/' . $strFolder . '/html'))
-            {
-                if (!file_exists(TL_ROOT . '/system/modules/' . $strFolder . '/html/.htaccess'))
-                {
+        foreach (scan(TL_ROOT . '/system/modules') as $strFolder) {
+            if (is_dir(TL_ROOT . '/system/modules/' . $strFolder) && is_dir(TL_ROOT . '/system/modules/' . $strFolder . '/html')) {
+                if (!file_exists(TL_ROOT . '/system/modules/' . $strFolder . '/html/.htaccess')) {
                     \File::putContent('system/modules/' . $strFolder . '/html/.htaccess', "<IfModule !mod_authz_core.c>\n  Order allow,deny\n  Allow from all\n</IfModule>\n<IfModule mod_authz_core.c>\n  Require all granted\n</IfModule>");
                 }
             }
         }
 
         // Convert the gradient angle syntax (see #4569)
-        if ($this->Database->fieldExists('gradientAngle', 'tl_style'))
-        {
+        if ($this->Database->fieldExists('gradientAngle', 'tl_style')) {
             $objStyle = $this->Database->execute("SELECT id, gradientAngle FROM tl_style WHERE gradientAngle!=''");
 
-            while ($objStyle->next())
-            {
+            while ($objStyle->next()) {
                 $angle = '';
 
-                if (strpos($objStyle->gradientAngle, 'deg') !== false)
-                {
+                if (strpos($objStyle->gradientAngle, 'deg') !== false) {
                     $angle = (abs(450 - intval($objStyle->gradientAngle)) % 360) . 'deg';
-                }
-                else
-                {
-                    switch ($objStyle->gradientAngle)
-                    {
+                } else {
+                    switch ($objStyle->gradientAngle) {
                         case 'top':          $angle = 'to bottom';       break;
                         case 'right':        $angle = 'to left';         break;
                         case 'bottom':       $angle = 'to top';          break;
@@ -365,12 +342,10 @@ class Updater extends \Controller
         $objLayout = $this->Database->query("SELECT `id`, `framework` FROM `tl_layout` WHERE `framework`!=''");
 
         // Rename "responsive.css" to "grid.css"
-        while ($objLayout->next())
-        {
+        while ($objLayout->next()) {
             $arrCss = deserialize($objLayout->framework);
 
-            if (($key = array_search('responsive.css', $arrCss)) !== false)
-            {
+            if (($key = array_search('responsive.css', $arrCss)) !== false) {
                 $arrCss[$key] = 'grid.css';
             }
 
@@ -379,8 +354,7 @@ class Updater extends \Controller
         }
 
         // Add the jQuery fields if they do not yet exist (see #5689)
-        if (!$this->Database->fieldExists('addJQuery', 'tl_layout'))
-        {
+        if (!$this->Database->fieldExists('addJQuery', 'tl_layout')) {
             $this->Database->query("ALTER TABLE `tl_layout` ADD `addJQuery` char(1) NOT NULL default ''");
             $this->Database->query("ALTER TABLE `tl_layout` ADD `jSource` varchar(16) NOT NULL default ''");
             $this->Database->query("ALTER TABLE `tl_layout` ADD `jquery` text NULL");
@@ -390,28 +364,21 @@ class Updater extends \Controller
         $objLayout = $this->Database->query("SELECT `id`, `addJQuery`, `jquery`, `mootools` FROM `tl_layout` WHERE `addMooTools`=1 AND `mootools` LIKE '%\"moo_mediaelement\"%'");
 
         // Activate the "j_mediaelement" template instead
-        while ($objLayout->next())
-        {
+        while ($objLayout->next()) {
             $arrSet = array();
 
             // jQuery already activated
-            if ($objLayout->addjQuery)
-            {
+            if ($objLayout->addjQuery) {
                 $arrJQuery = deserialize($objLayout->jquery);
 
                 // Add j_mediaelement
-                if (!is_array($arrJQuery))
-                {
+                if (!is_array($arrJQuery)) {
                     $arrSet['jquery'] = serialize(array('j_mediaelement'));
-                }
-                elseif (!in_array('j_mediaelement', $arrJQuery))
-                {
+                } elseif (!in_array('j_mediaelement', $arrJQuery)) {
                     $arrJQuery[] = 'j_mediaelement';
                     $arrSet['jquery'] = serialize($arrJQuery);
                 }
-            }
-            else
-            {
+            } else {
                 $arrSet['addJQuery'] = 1;
                 $arrSet['jSource'] = 'j_local';
                 $arrSet['jquery'] = serialize(array('j_mediaelement'));
@@ -420,18 +387,14 @@ class Updater extends \Controller
             $arrMooTools = deserialize($objLayout->mootools);
 
             // Unset the moo_mediaelement template
-            if (($key = array_search('moo_mediaelement', $arrMooTools)) !== false)
-            {
+            if (($key = array_search('moo_mediaelement', $arrMooTools)) !== false) {
                 unset($arrMooTools[$key]);
             }
 
             // Update the MooTools templates
-            if (empty($arrMooTools))
-            {
+            if (empty($arrMooTools)) {
                 $arrSet['mootools'] = '';
-            }
-            else
-            {
+            } else {
                 $arrSet['mootools'] = serialize(array_values($arrMooTools));
             }
 
@@ -444,12 +407,10 @@ class Updater extends \Controller
         $objLayout = $this->Database->query("SELECT `id`, `modules` FROM `tl_layout`");
 
         // Add the "enable" flag to all modules
-        while ($objLayout->next())
-        {
+        while ($objLayout->next()) {
             $arrModules = deserialize($objLayout->modules);
 
-            foreach (array_keys($arrModules) as $key)
-            {
+            foreach (array_keys($arrModules) as $key) {
                 $arrModules[$key]['enable'] = true;
             }
 
@@ -468,8 +429,7 @@ class Updater extends \Controller
         $this->Database->query("UPDATE `tl_style` SET `whitespace`='nowrap' WHERE `whitespace`!=''");
 
         // Drop the tl_files.path index (see #5598)
-        if ($this->Database->indexExists('path', 'tl_files'))
-        {
+        if ($this->Database->indexExists('path', 'tl_files')) {
             $this->Database->query("ALTER TABLE `tl_files` DROP INDEX `path`");
         }
 
@@ -487,13 +447,11 @@ class Updater extends \Controller
         $this->Database->query("ALTER TABLE `tl_layout` CHANGE `sections` `sections` varchar(1022) NOT NULL default ''");
         $objLayout = $this->Database->query("SELECT id, sections FROM tl_layout WHERE sections!=''");
 
-        while ($objLayout->next())
-        {
+        while ($objLayout->next()) {
             $strSections = '';
             $tmp = deserialize($objLayout->sections);
 
-            if (!empty($tmp) && is_array($tmp))
-            {
+            if (!empty($tmp) && is_array($tmp)) {
                 $strSections = implode(', ', $tmp);
             }
 
@@ -502,8 +460,7 @@ class Updater extends \Controller
         }
 
         // Check whether there are UUIDs
-        if (!$this->Database->fieldExists('uuid', 'tl_files'))
-        {
+        if (!$this->Database->fieldExists('uuid', 'tl_files')) {
             // Adjust the DB structure
             $this->Database->query("ALTER TABLE `tl_files` ADD `uuid` binary(16) NULL");
             $this->Database->query("ALTER TABLE `tl_files` ADD UNIQUE KEY `uuid` (`uuid`)");
@@ -518,8 +475,7 @@ class Updater extends \Controller
             $objFiles = $this->Database->query("SELECT id FROM tl_files");
 
             // Generate the UUIDs
-            while ($objFiles->next())
-            {
+            while ($objFiles->next()) {
                 $this->Database->prepare("UPDATE tl_files SET uuid=? WHERE id=?")
                                ->execute($this->Database->getUuid(), $objFiles->id);
             }
@@ -527,13 +483,11 @@ class Updater extends \Controller
             $objFiles = $this->Database->query("SELECT pid_backup FROM tl_files WHERE pid_backup>0 GROUP BY pid_backup");
 
             // Adjust the parent IDs
-            while ($objFiles->next())
-            {
+            while ($objFiles->next()) {
                 $objParent = $this->Database->prepare("SELECT uuid FROM tl_files WHERE id=?")
                                             ->execute($objFiles->pid_backup);
 
-                if ($objParent->numRows < 1)
-                {
+                if ($objParent->numRows < 1) {
                     throw new \Exception('Invalid parent ID ' . $objFiles->pid_backup);
                 }
 
@@ -557,15 +511,12 @@ class Updater extends \Controller
     {
         $objLayout = $this->Database->query("SELECT id, framework FROM tl_layout WHERE framework!=''");
 
-        while ($objLayout->next())
-        {
+        while ($objLayout->next()) {
             $strFramework = '';
             $tmp = deserialize($objLayout->framework);
 
-            if (!empty($tmp) && is_array($tmp))
-            {
-                if (($key = array_search('layout.css', $tmp)) !== false)
-                {
+            if (!empty($tmp) && is_array($tmp)) {
+                if (($key = array_search('layout.css', $tmp)) !== false) {
                     array_insert($tmp, $key + 1, 'responsive.css');
                 }
 
@@ -589,8 +540,7 @@ class Updater extends \Controller
      */
     public function scanUploadFolder($strPath=null, $pid=null)
     {
-        if ($strPath === null)
-        {
+        if ($strPath === null) {
             $strPath = \Config::get('uploadPath');
         }
 
@@ -600,26 +550,20 @@ class Updater extends \Controller
         $arrFiles = array();
         $arrScan = scan(TL_ROOT . '/' . $strPath);
 
-        foreach ($arrScan as $strFile)
-        {
-            if (strncmp($strFile, '.', 1) === 0)
-            {
+        foreach ($arrScan as $strFile) {
+            if (strncmp($strFile, '.', 1) === 0) {
                 continue;
             }
 
-            if (is_dir(TL_ROOT . '/' . $strPath . '/' . $strFile))
-            {
+            if (is_dir(TL_ROOT . '/' . $strPath . '/' . $strFile)) {
                 $arrFolders[] = $strPath . '/' . $strFile;
-            }
-            else
-            {
+            } else {
                 $arrFiles[] = $strPath . '/' . $strFile;
             }
         }
 
         // Folders
-        foreach ($arrFolders as $strFolder)
-        {
+        foreach ($arrFolders as $strFolder) {
             $objFolder = new \Folder($strFolder);
             $strUuid = $this->Database->getUuid();
 
@@ -630,18 +574,15 @@ class Updater extends \Controller
         }
 
         // Files
-        foreach ($arrFiles as $strFile)
-        {
+        foreach ($arrFiles as $strFile) {
             $matches = array();
 
             // Handle meta.txt files
-            if (preg_match('/^meta(_([a-z]{2}))?\.txt$/', basename($strFile), $matches))
-            {
+            if (preg_match('/^meta(_([a-z]{2}))?\.txt$/', basename($strFile), $matches)) {
                 $key = $matches[2] ?: 'en';
                 $arrData = file(TL_ROOT . '/' . $strFile, FILE_IGNORE_NEW_LINES);
 
-                foreach ($arrData as $line)
-                {
+                foreach ($arrData as $line) {
                     list($name, $info) = explode('=', $line, 2);
                     list($title, $link, $caption) = explode('|', $info);
                     $arrMeta[trim($name)][$key] = array('title'=>trim($title), 'link'=>trim($link), 'caption'=>trim($caption));
@@ -658,12 +599,9 @@ class Updater extends \Controller
         }
 
         // Insert the meta data AFTER the file entries have been created
-        if (!empty($arrMeta))
-        {
-            foreach ($arrMeta as $file=>$meta)
-            {
-                if (isset($arrMapper[$file]))
-                {
+        if (!empty($arrMeta)) {
+            foreach ($arrMeta as $file=>$meta) {
+                if (isset($arrMapper[$file])) {
                     $this->Database->prepare("UPDATE tl_files SET meta=? WHERE uuid=?")
                                    ->execute(serialize($meta), $arrMapper[$file]);
                 }
@@ -680,20 +618,16 @@ class Updater extends \Controller
         $arrFiles = array();
 
         // Parse all modules (see #6058)
-        foreach (scan(TL_ROOT . '/system/modules') as $strModule)
-        {
+        foreach (scan(TL_ROOT . '/system/modules') as $strModule) {
             $strDir = 'system/modules/' . $strModule . '/dca';
 
-            if (!is_dir(TL_ROOT . '/' . $strDir))
-            {
+            if (!is_dir(TL_ROOT . '/' . $strDir)) {
                 continue;
             }
 
-            foreach (scan(TL_ROOT . '/' . $strDir) as $strFile)
-            {
+            foreach (scan(TL_ROOT . '/' . $strDir) as $strFile) {
                 // Ignore non PHP files and files which have been included before
-                if (substr($strFile, -4) != '.php' || in_array($strFile, $arrFiles))
-                {
+                if (substr($strFile, -4) != '.php' || in_array($strFile, $arrFiles)) {
                     continue;
                 }
 
@@ -704,48 +638,36 @@ class Updater extends \Controller
         $arrFields = array();
 
         // Find all fileTree fields
-        foreach ($arrFiles as $strTable)
-        {
-            try
-            {
+        foreach ($arrFiles as $strTable) {
+            try {
                 $this->loadDataContainer($strTable);
-            }
-            catch (\Exception $e)
-            {
+            } catch (\Exception $e) {
                 continue;
             }
 
             $arrConfig = &$GLOBALS['TL_DCA'][$strTable]['config'];
 
             // Skip non-database DCAs
-            if ($arrConfig['dataContainer'] == 'File')
-            {
+            if ($arrConfig['dataContainer'] == 'File') {
                 continue;
             }
-            if ($arrConfig['dataContainer'] == 'Folder' && !$arrConfig['databaseAssisted'])
-            {
+            if ($arrConfig['dataContainer'] == 'Folder' && !$arrConfig['databaseAssisted']) {
                 continue;
             }
 
             // Make sure there are fields (see #6437)
-            if (is_array($GLOBALS['TL_DCA'][$strTable]['fields']))
-            {
-                foreach ($GLOBALS['TL_DCA'][$strTable]['fields'] as $strField=>$arrField)
-                {
+            if (is_array($GLOBALS['TL_DCA'][$strTable]['fields'])) {
+                foreach ($GLOBALS['TL_DCA'][$strTable]['fields'] as $strField=>$arrField) {
                     // FIXME: support other field types
-                    if ($arrField['inputType'] == 'fileTree')
-                    {
-                        if ($this->Database->fieldExists($strField, $strTable, true))
-                        {
+                    if ($arrField['inputType'] == 'fileTree') {
+                        if ($this->Database->fieldExists($strField, $strTable, true)) {
                             $key = $arrField['eval']['multiple'] ? 'multiple' : 'single';
                             $arrFields[$key][] = $strTable . '.' . $strField;
                         }
 
                         // Convert the order fields as well
-                        if (isset($arrField['eval']['orderField']) && isset($GLOBALS['TL_DCA'][$strTable]['fields'][$arrField['eval']['orderField']]))
-                        {
-                            if ($this->Database->fieldExists($arrField['eval']['orderField'], $strTable, true))
-                            {
+                        if (isset($arrField['eval']['orderField']) && isset($GLOBALS['TL_DCA'][$strTable]['fields'][$arrField['eval']['orderField']])) {
+                            if ($this->Database->fieldExists($arrField['eval']['orderField'], $strTable, true)) {
                                 $arrFields['order'][] = $strTable . '.' . $arrField['eval']['orderField'];
                             }
                         }
@@ -755,30 +677,24 @@ class Updater extends \Controller
         }
 
         // Update the existing singleSRC entries
-        if (isset($arrFields['single']))
-        {
-            foreach ($arrFields['single'] as $val)
-            {
+        if (isset($arrFields['single'])) {
+            foreach ($arrFields['single'] as $val) {
                 list($table, $field) = explode('.', $val);
                 static::convertSingleField($table, $field);
             }
         }
 
         // Update the existing multiSRC entries
-        if (isset($arrFields['multiple']))
-        {
-            foreach ($arrFields['multiple'] as $val)
-            {
+        if (isset($arrFields['multiple'])) {
+            foreach ($arrFields['multiple'] as $val) {
                 list($table, $field) = explode('.', $val);
                 static::convertMultiField($table, $field);
             }
         }
 
         // Update the existing orderField entries
-        if (isset($arrFields['order']))
-        {
-            foreach ($arrFields['order'] as $val)
-            {
+        if (isset($arrFields['order'])) {
+            foreach ($arrFields['order'] as $val) {
                 list($table, $field) = explode('.', $val);
                 static::convertOrderField($table, $field);
             }
@@ -803,25 +719,21 @@ class Updater extends \Controller
         $objDesc = $objDatabase->query("DESC $table $field");
 
         // Change the column type
-        if ($objDesc->Type != 'binary(16)')
-        {
+        if ($objDesc->Type != 'binary(16)') {
             $objDatabase->query("ALTER TABLE `$table` CHANGE `$field` `$field` binary(16) NULL");
             $objDatabase->query("UPDATE `$table` SET `$field`=NULL WHERE `$field`='' OR `$field`=0");
         }
 
-        while ($objRow->next())
-        {
+        while ($objRow->next()) {
             $objHelper = static::generateHelperObject($objRow->$field);
 
             // UUID already
-            if ($objHelper->isUuid)
-            {
+            if ($objHelper->isUuid) {
                 continue;
             }
 
             // Numeric ID to UUID
-            if ($objHelper->isNumeric)
-            {
+            if ($objHelper->isNumeric) {
                 $objFile = \FilesModel::findByPk($objHelper->value);
 
                 $objDatabase->prepare("UPDATE $table SET $field=? WHERE id=?")
@@ -829,8 +741,7 @@ class Updater extends \Controller
             }
 
             // Path to UUID
-            else
-            {
+            else {
                 $objFile = \FilesModel::findByPath($objHelper->value);
 
                 $objDatabase->prepare("UPDATE $table SET $field=? WHERE id=?")
@@ -857,41 +768,34 @@ class Updater extends \Controller
         $objDesc = $objDatabase->query("DESC $table $field");
 
         // Change the column type
-        if ($objDesc->Type != 'blob')
-        {
+        if ($objDesc->Type != 'blob') {
             $objDatabase->query("ALTER TABLE `$table` CHANGE `$field` `$field` blob NULL");
             $objDatabase->query("UPDATE `$table` SET `$field`=NULL WHERE `$field`=''");
         }
 
-        while ($objRow->next())
-        {
+        while ($objRow->next()) {
             $arrValues = deserialize($objRow->$field, true);
 
-            if (empty($arrValues))
-            {
+            if (empty($arrValues)) {
                 continue;
             }
 
             $objHelper = static::generateHelperObject($arrValues);
 
             // UUID already
-            if ($objHelper->isUuid)
-            {
+            if ($objHelper->isUuid) {
                 continue;
             }
 
-            foreach ($arrValues as $k=>$v)
-            {
+            foreach ($arrValues as $k=>$v) {
                 // Numeric ID to UUID
-                if ($objHelper->isNumeric)
-                {
+                if ($objHelper->isNumeric) {
                     $objFile = \FilesModel::findByPk($objHelper->value[$k]);
                     $arrValues[$k] = $objFile->uuid;
                 }
 
                 // Path to UUID
-                else
-                {
+                else {
                     $objFile = \FilesModel::findByPath($objHelper->value[$k]);
                     $arrValues[$k] = $objFile->uuid;
                 }
@@ -917,8 +821,7 @@ class Updater extends \Controller
         $objRow = $objDatabase->query("SELECT id, $field FROM $table WHERE $field LIKE '%,%'");
 
         // Convert the comma separated lists into serialized arrays
-        while ($objRow->next())
-        {
+        while ($objRow->next()) {
             $objDatabase->prepare("UPDATE $table SET $field=? WHERE id=?")
                         ->execute(serialize(explode(',', $objRow->$field)), $objRow->id);
         }
@@ -938,14 +841,11 @@ class Updater extends \Controller
     {
         $return = new \stdClass();
 
-        if (!is_array($value))
-        {
+        if (!is_array($value)) {
             $return->value = rtrim($value, "\x00");
             $return->isUuid = (strlen($value) == 16 && !is_numeric($return->value) && strncmp($return->value, \Config::get('uploadPath') . '/', strlen(\Config::get('uploadPath')) + 1) !== 0);
             $return->isNumeric = (is_numeric($return->value) && $return->value > 0);
-        }
-        else
-        {
+        } else {
             $return->value = array_map(function($var) { return rtrim($var, "\x00"); }, $value);
             $return->isUuid = (strlen($value[0]) == 16 && !is_numeric($return->value[0]) && strncmp($return->value[0], \Config::get('uploadPath') . '/', strlen(\Config::get('uploadPath')) + 1) !== 0);
             $return->isNumeric = (is_numeric($return->value[0]) && $return->value[0] > 0);
@@ -964,8 +864,7 @@ class Updater extends \Controller
      */
     protected function createContentElement(\Database\Result $objElement, $strPtable, $strField)
     {
-        $set = array
-        (
+        $set = array(
             'pid'         => $objElement->id,
             'ptable'      => $strPtable,
             'sorting'     => 128,

@@ -39,27 +39,21 @@ class Mysql extends \Database
     {
         $strHost = $this->arrConfig['dbHost'];
 
-        if ($this->arrConfig['dbPort'])
-        {
+        if ($this->arrConfig['dbPort']) {
             $strHost .= ':' . $this->arrConfig['dbPort'];
         }
 
-        if ($this->arrConfig['dbSocket'])
-        {
+        if ($this->arrConfig['dbSocket']) {
             $strHost .= ':' . $this->arrConfig['dbSocket'];
         }
 
-        if ($this->arrConfig['dbPconnect'])
-        {
+        if ($this->arrConfig['dbPconnect']) {
             $this->resConnection = mysql_pconnect($strHost, $this->arrConfig['dbUser'], $this->arrConfig['dbPass']);
-        }
-        else
-        {
+        } else {
             $this->resConnection = mysql_connect($strHost, $this->arrConfig['dbUser'], $this->arrConfig['dbPass']);
         }
 
-        if (mysql_error())
-        {
+        if (mysql_error()) {
             throw new \Exception(mysql_error());
         }
 
@@ -85,8 +79,7 @@ class Mysql extends \Database
      */
     protected function get_error()
     {
-        if (is_resource($this->resConnection))
-        {
+        if (is_resource($this->resConnection)) {
             return mysql_error($this->resConnection);
         }
 
@@ -105,12 +98,9 @@ class Mysql extends \Database
      */
     protected function find_in_set($strKey, $varSet, $blnIsField=false)
     {
-        if ($blnIsField)
-        {
+        if ($blnIsField) {
             return "FIND_IN_SET(" . $strKey . ", " . $varSet . ")";
-        }
-        else
-        {
+        } else {
             return "FIND_IN_SET(" . $strKey . ", '" . mysql_real_escape_string($varSet, $this->resConnection) . "')";
         }
     }
@@ -140,45 +130,36 @@ class Mysql extends \Database
         $arrReturn = array();
         $objFields = $this->query("SELECT * FROM `INFORMATION_SCHEMA`.`COLUMNS` WHERE `TABLE_SCHEMA` LIKE '{$this->arrConfig['dbDatabase']}' AND `TABLE_NAME` LIKE '%$strTable'");
 
-        while ($objFields->next())
-        {
+        while ($objFields->next()) {
             $arrTmp = array();
             $arrChunks = preg_split('/(\([^\)]+\))/', $objFields->COLUMN_TYPE, -1, PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
 
             $arrTmp['name'] = $objFields->COLUMN_NAME;
             $arrTmp['type'] = $arrChunks[0];
 
-            if (!empty($arrChunks[1]))
-            {
+            if (!empty($arrChunks[1])) {
                 $arrChunks[1] = str_replace(array('(', ')'), '', $arrChunks[1]);
 
                 // Handle enum fields (see #6387)
-                if ($arrChunks[0] == 'enum')
-                {
+                if ($arrChunks[0] == 'enum') {
                     $arrTmp['length'] = $arrChunks[1];
-                }
-                else
-                {
+                } else {
                     $arrSubChunks = explode(',', $arrChunks[1]);
 
                     $arrTmp['length'] = trim($arrSubChunks[0]);
 
-                    if (!empty($arrSubChunks[1]))
-                    {
+                    if (!empty($arrSubChunks[1])) {
                         $arrTmp['precision'] = trim($arrSubChunks[1]);
                     }
                 }
             }
 
-            if (!empty($arrChunks[2]))
-            {
+            if (!empty($arrChunks[2])) {
                 $arrTmp['attributes'] = trim($arrChunks[2]);
             }
 
-            if ($objFields->COLUMN_KEY != '')
-            {
-                switch ($objFields->COLUMN_KEY)
-                {
+            if ($objFields->COLUMN_KEY != '') {
+                switch ($objFields->COLUMN_KEY) {
                     case 'PRI':
                         $arrTmp['index'] = 'PRIMARY';
                         break;
@@ -208,8 +189,7 @@ class Mysql extends \Database
 
         $objIndex = $this->query("SHOW INDEXES FROM `$strTable`");
 
-        while ($objIndex->next())
-        {
+        while ($objIndex->next()) {
             $arrReturn[$objIndex->Key_name]['name'] = $objIndex->Key_name;
             $arrReturn[$objIndex->Key_name]['type'] = 'index';
             $arrReturn[$objIndex->Key_name]['index_fields'][] = $objIndex->Column_name;
@@ -272,8 +252,7 @@ class Mysql extends \Database
     {
         $arrLocks = array();
 
-        foreach ($arrTables as $table=>$mode)
-        {
+        foreach ($arrTables as $table=>$mode) {
             $arrLocks[] = $table .' '. $mode;
         }
 
@@ -331,12 +310,10 @@ class Mysql extends \Database
     {
         static $ids;
 
-        if (empty($ids))
-        {
+        if (empty($ids)) {
             $res = mysql_query(implode(' UNION ALL ', array_fill(0, 10, "SELECT UNHEX(REPLACE(UUID(), '-', '')) AS uuid")));
 
-            while (($row = mysql_fetch_object($res)) != false)
-            {
+            while (($row = mysql_fetch_object($res)) != false) {
                 $ids[] = $row->uuid;
             }
         }

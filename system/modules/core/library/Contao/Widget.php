@@ -132,12 +132,10 @@ abstract class Widget extends \Template\Base
         parent::__construct();
 
         // Override the output format in the front end
-        if (TL_MODE == 'FE')
-        {
+        if (TL_MODE == 'FE') {
             global $objPage;
 
-            if ($objPage->outputFormat != '')
-            {
+            if ($objPage->outputFormat != '') {
                 $this->strFormat = $objPage->outputFormat;
                 $this->strTagEnding = ($this->strFormat == 'xhtml') ? ' />' : '>';
             }
@@ -201,8 +199,7 @@ abstract class Widget extends \Template\Base
      */
     public function __set($strKey, $varValue)
     {
-        switch ($strKey)
-        {
+        switch ($strKey) {
             case 'id':
                 $this->strId = $varValue;
                 break;
@@ -219,15 +216,13 @@ abstract class Widget extends \Template\Base
                 $this->varValue = deserialize($varValue);
 
                 // Decrypt the value if it is encrypted
-                if ($this->arrConfiguration['encrypt'])
-                {
+                if ($this->arrConfiguration['encrypt']) {
                     $this->varValue = \Encryption::decrypt($this->varValue);
                 }
                 break;
 
             case 'class':
-                if ($varValue != '' && strpos($this->strClass, $varValue) === false)
-                {
+                if ($varValue != '' && strpos($this->strClass, $varValue) === false) {
                     $this->strClass = trim($this->strClass . ' ' . $varValue);
                 }
                 break;
@@ -244,8 +239,7 @@ abstract class Widget extends \Template\Base
             case 'autocorrect':
             case 'autocapitalize':
             case 'spellcheck':
-                if (is_bool($varValue))
-                {
+                if (is_bool($varValue)) {
                     $varValue = $varValue ? 'on' : 'off';
                 }
                 // Do not add a break; statement here
@@ -271,38 +265,30 @@ abstract class Widget extends \Template\Base
                 break;
 
             case 'tabindex':
-                if ($varValue > 0)
-                {
+                if ($varValue > 0) {
                     $this->arrAttributes['tabindex'] = $varValue;
                 }
                 break;
 
             case 'disabled':
             case 'readonly':
-                if ($varValue)
-                {
+                if ($varValue) {
                     $this->blnSubmitInput = false;
-                }
-                else
-                {
+                } else {
                     $this->blnSubmitInput = true;
                 }
                 // Do not add a break; statement here
 
             case 'autofocus':
-                if ($varValue)
-                {
+                if ($varValue) {
                     $this->arrAttributes[$strKey] = $strKey;
-                }
-                else
-                {
+                } else {
                     unset($this->arrAttributes[$strKey]);
                 }
                 break;
 
             case 'required':
-                if ($varValue)
-                {
+                if ($varValue) {
                     $this->strClass = trim($this->strClass . ' mandatory');
                 }
                 // Do not add a break; statement here
@@ -355,8 +341,7 @@ abstract class Widget extends \Template\Base
      */
     public function __get($strKey)
     {
-        switch ($strKey)
-        {
+        switch ($strKey) {
             case 'id':
                 return $this->strId;
                 break;
@@ -371,12 +356,9 @@ abstract class Widget extends \Template\Base
 
             case 'value':
                 // Encrypt the value
-                if ($this->arrConfiguration['encrypt'])
-                {
+                if ($this->arrConfiguration['encrypt']) {
                     return \Encryption::encrypt($this->varValue);
-                }
-                elseif ($this->arrConfiguration['nullIfEmpty'] && $this->varValue == '')
-                {
+                } elseif ($this->arrConfiguration['nullIfEmpty'] && $this->varValue == '') {
                     return null;
                 }
                 return $this->varValue;
@@ -411,12 +393,9 @@ abstract class Widget extends \Template\Base
                 break;
 
             default:
-                if (isset($this->arrAttributes[$strKey]))
-                {
+                if (isset($this->arrAttributes[$strKey])) {
                     return $this->arrAttributes[$strKey];
-                }
-                elseif (isset($this->arrConfiguration[$strKey]))
-                {
+                } elseif (isset($this->arrConfiguration[$strKey])) {
                     return $this->arrConfiguration[$strKey];
                 }
                 break;
@@ -494,8 +473,7 @@ abstract class Widget extends \Template\Base
      */
     public function getErrorsAsString($strSeparator=null)
     {
-        if ($strSeparator === null)
-        {
+        if ($strSeparator === null) {
             $strSeparator = '<br' . $this->strTagEnding . "\n";
         }
 
@@ -536,8 +514,7 @@ abstract class Widget extends \Template\Base
      */
     public function parse($arrAttributes=null)
     {
-        if ($this->strTemplate == '')
-        {
+        if ($this->strTemplate == '') {
             return '';
         }
 
@@ -545,18 +522,15 @@ abstract class Widget extends \Template\Base
 
         $this->mandatoryField = $GLOBALS['TL_LANG']['MSC']['mandatory'];
 
-        if ($this->customTpl != '' && TL_MODE == 'FE')
-        {
+        if ($this->customTpl != '' && TL_MODE == 'FE') {
             $this->strTemplate = $this->customTpl;
         }
 
         $strBuffer = parent::parse();
 
         // HOOK: add custom parse filters (see #5553)
-        if (isset($GLOBALS['TL_HOOKS']['parseWidget']) && is_array($GLOBALS['TL_HOOKS']['parseWidget']))
-        {
-            foreach ($GLOBALS['TL_HOOKS']['parseWidget'] as $callback)
-            {
+        if (isset($GLOBALS['TL_HOOKS']['parseWidget']) && is_array($GLOBALS['TL_HOOKS']['parseWidget'])) {
+            foreach ($GLOBALS['TL_HOOKS']['parseWidget'] as $callback) {
                 $this->import($callback[0]);
                 $strBuffer = $this->$callback[0]->$callback[1]($strBuffer, $this);
             }
@@ -573,8 +547,7 @@ abstract class Widget extends \Template\Base
      */
     public function generateLabel()
     {
-        if ($this->strLabel == '')
-        {
+        if ($this->strLabel == '') {
             return '';
         }
 
@@ -623,12 +596,10 @@ abstract class Widget extends \Template\Base
         $blnIsXhtml = false;
 
         // Remove HTML5 attributes in XHTML code
-        if (TL_MODE == 'FE')
-        {
+        if (TL_MODE == 'FE') {
             global $objPage;
 
-            if ($objPage->outputFormat == 'xhtml')
-            {
+            if ($objPage->outputFormat == 'xhtml') {
                 $blnIsXhtml = true;
                 unset($this->arrAttributes['autofocus']);
                 unset($this->arrAttributes['placeholder']);
@@ -637,10 +608,8 @@ abstract class Widget extends \Template\Base
         }
 
         // Optionally strip certain attributes
-        if (is_array($arrStrip))
-        {
-            foreach ($arrStrip as $strAttribute)
-            {
+        if (is_array($arrStrip)) {
+            foreach ($arrStrip as $strAttribute) {
                 unset($this->arrAttributes[$strAttribute]);
             }
         }
@@ -648,23 +617,15 @@ abstract class Widget extends \Template\Base
         $strAttributes = '';
 
         // Add the remaining attributes
-        foreach ($this->arrAttributes as $k=>$v)
-        {
-            if ($k == 'disabled' || $k == 'readonly' || $k == 'required' || $k == 'autofocus' || $k == 'multiple')
-            {
-                if (TL_MODE == 'FE') // see #3878
-                {
+        foreach ($this->arrAttributes as $k=>$v) {
+            if ($k == 'disabled' || $k == 'readonly' || $k == 'required' || $k == 'autofocus' || $k == 'multiple') {
+                if (TL_MODE == 'FE') { // see #3878
                     $strAttributes .= $blnIsXhtml ? ' ' . $k . '="' . $v . '"' : ' ' . $k;
-                }
-                elseif ($k == 'disabled' || $k == 'readonly' || $k == 'multiple') // see #4131
-                {
+                } elseif ($k == 'disabled' || $k == 'readonly' || $k == 'multiple') { // see #4131
                     $strAttributes .= ' ' . $k;
                 }
-            }
-            else
-            {
-                if ($v != '')
-                {
+            } else {
+                if ($v != '') {
                     $strAttributes .= ' ' . $k . '="' . $v . '"';
                 }
             }
@@ -681,8 +642,7 @@ abstract class Widget extends \Template\Base
      */
     protected function addSubmit()
     {
-        if (!$this->addSubmit)
-        {
+        if (!$this->addSubmit) {
             return '';
         }
 
@@ -700,8 +660,7 @@ abstract class Widget extends \Template\Base
     {
         $varValue = $this->validator($this->getPost($this->strName));
 
-        if ($this->hasErrors())
-        {
+        if ($this->hasErrors()) {
             $this->class = 'error';
         }
 
@@ -720,22 +679,18 @@ abstract class Widget extends \Template\Base
     {
         $strMethod = $this->allowHtml ? 'postHtml' : 'post';
 
-        if ($this->preserveTags)
-        {
+        if ($this->preserveTags) {
             $strMethod = 'postRaw';
         }
 
         // Support arrays (thanks to Andreas Schempp)
         $arrParts = explode('[', str_replace(']', '', $strKey));
 
-        if (!empty($arrParts))
-        {
+        if (!empty($arrParts)) {
             $varValue = \Input::$strMethod(array_shift($arrParts), $this->decodeEntities);
 
-            foreach($arrParts as $part)
-            {
-                if (!is_array($varValue))
-                {
+            foreach($arrParts as $part) {
+                if (!is_array($varValue)) {
                     break;
                 }
 
@@ -758,10 +713,8 @@ abstract class Widget extends \Template\Base
      */
     protected function validator($varInput)
     {
-        if (is_array($varInput))
-        {
-            foreach ($varInput as $k=>$v)
-            {
+        if (is_array($varInput)) {
+            foreach ($varInput as $k=>$v) {
                 $varInput[$k] = $this->validator($v);
             }
 
@@ -770,46 +723,34 @@ abstract class Widget extends \Template\Base
 
         $varInput = trim($varInput);
 
-        if ($varInput == '')
-        {
-            if (!$this->mandatory)
-            {
+        if ($varInput == '') {
+            if (!$this->mandatory) {
                 return '';
-            }
-            else
-            {
-                if ($this->strLabel == '')
-                {
+            } else {
+                if ($this->strLabel == '') {
                     $this->addError($GLOBALS['TL_LANG']['ERR']['mdtryNoLabel']);
-                }
-                else
-                {
+                } else {
                     $this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['mandatory'], $this->strLabel));
                 }
             }
         }
 
-        if ($this->minlength && $varInput != '' && utf8_strlen($varInput) < $this->minlength)
-        {
+        if ($this->minlength && $varInput != '' && utf8_strlen($varInput) < $this->minlength) {
             $this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['minlength'], $this->strLabel, $this->minlength));
         }
 
-        if ($this->maxlength && $varInput != '' && utf8_strlen($varInput) > $this->maxlength)
-        {
+        if ($this->maxlength && $varInput != '' && utf8_strlen($varInput) > $this->maxlength) {
             $this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['maxlength'], $this->strLabel, $this->maxlength));
         }
 
-        if ($this->rgxp != '')
-        {
-            switch ($this->rgxp)
-            {
+        if ($this->rgxp != '') {
+            switch ($this->rgxp) {
                 // Special validation rule for style sheets
                 case (strncmp($this->rgxp, 'digit_', 6) === 0):
                     $textual = explode('_', $this->rgxp);
                     array_shift($textual);
 
-                    if (in_array($varInput, $textual) || strncmp($varInput, '$', 1) === 0)
-                    {
+                    if (in_array($varInput, $textual) || strncmp($varInput, '$', 1) === 0) {
                         break;
                     }
                     // DO NOT ADD A break; STATEMENT HERE
@@ -817,55 +758,44 @@ abstract class Widget extends \Template\Base
                 // Numeric characters (including full stop [.] and minus [-])
                 case 'digit':
                     // Support decimal commas and convert them automatically (see #3488)
-                    if (substr_count($varInput, ',') == 1 && strpos($varInput, '.') === false)
-                    {
+                    if (substr_count($varInput, ',') == 1 && strpos($varInput, '.') === false) {
                         $varInput = str_replace(',', '.', $varInput);
                     }
-                    if (!\Validator::isNumeric($varInput))
-                    {
+                    if (!\Validator::isNumeric($varInput)) {
                         $this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['digit'], $this->strLabel));
                     }
                     break;
 
                 // Alphabetic characters (including full stop [.] minus [-] and space [ ])
                 case 'alpha':
-                    if (!\Validator::isAlphabetic($varInput))
-                    {
+                    if (!\Validator::isAlphabetic($varInput)) {
                         $this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['alpha'], $this->strLabel));
                     }
                     break;
 
                 // Alphanumeric characters (including full stop [.] minus [-], underscore [_] and space [ ])
                 case 'alnum':
-                    if (!\Validator::isAlphanumeric($varInput))
-                    {
+                    if (!\Validator::isAlphanumeric($varInput)) {
                         $this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['alnum'], $this->strLabel));
                     }
                     break;
 
                 // Do not allow any characters that are usually encoded by class Input [=<>()#/])
                 case 'extnd':
-                    if (!\Validator::isExtendedAlphanumeric(html_entity_decode($varInput)))
-                    {
+                    if (!\Validator::isExtendedAlphanumeric(html_entity_decode($varInput))) {
                         $this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['extnd'], $this->strLabel));
                     }
                     break;
 
                 // Check whether the current value is a valid date format
                 case 'date':
-                    if (!\Validator::isDate($varInput))
-                    {
+                    if (!\Validator::isDate($varInput)) {
                         $this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['date'], \Date::getInputFormat(\Date::getNumericDateFormat())));
-                    }
-                    else
-                    {
+                    } else {
                         // Validate the date (see #5086)
-                        try
-                        {
+                        try {
                             new \Date($varInput);
-                        }
-                        catch (\OutOfBoundsException $e)
-                        {
+                        } catch (\OutOfBoundsException $e) {
                             $this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['invalidDate'], $varInput));
                         }
                     }
@@ -873,27 +803,20 @@ abstract class Widget extends \Template\Base
 
                 // Check whether the current value is a valid time format
                 case 'time':
-                    if (!\Validator::isTime($varInput))
-                    {
+                    if (!\Validator::isTime($varInput)) {
                         $this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['time'], \Date::getInputFormat(\Date::getNumericTimeFormat())));
                     }
                     break;
 
                 // Check whether the current value is a valid date and time format
                 case 'datim':
-                    if (!\Validator::isDatim($varInput))
-                    {
+                    if (!\Validator::isDatim($varInput)) {
                         $this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['dateTime'], \Date::getInputFormat(\Date::getNumericDatimFormat())));
-                    }
-                    else
-                    {
+                    } else {
                         // Validate the date (see #5086)
-                        try
-                        {
+                        try {
                             new \Date($varInput);
-                        }
-                        catch (\OutOfBoundsException $e)
-                        {
+                        } catch (\OutOfBoundsException $e) {
                             $this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['invalidDate'], $varInput));
                         }
                     }
@@ -906,12 +829,10 @@ abstract class Widget extends \Template\Base
 
                 // Check whether the current value is a valid e-mail address
                 case 'email':
-                    if (!\Validator::isEmail($varInput))
-                    {
+                    if (!\Validator::isEmail($varInput)) {
                         $this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['email'], $this->strLabel));
                     }
-                    if ($this->rgxp == 'friendly' && $strName != '')
-                    {
+                    if ($this->rgxp == 'friendly' && $strName != '') {
                         $varInput = $strName . ' [' . $varInput . ']';
                     }
                     break;
@@ -920,12 +841,10 @@ abstract class Widget extends \Template\Base
                 case 'emails':
                     $arrEmails = trimsplit(',', $varInput);
 
-                    foreach ($arrEmails as $strEmail)
-                    {
+                    foreach ($arrEmails as $strEmail) {
                         $strEmail = \Idna::encodeEmail($strEmail);
 
-                        if (!\Validator::isEmail($strEmail))
-                        {
+                        if (!\Validator::isEmail($strEmail)) {
                             $this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['emails'], $this->strLabel));
                             break;
                         }
@@ -934,80 +853,69 @@ abstract class Widget extends \Template\Base
 
                 // Check whether the current value is a valid URL
                 case 'url':
-                    if (!\Validator::isUrl($varInput))
-                    {
+                    if (!\Validator::isUrl($varInput)) {
                         $this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['url'], $this->strLabel));
                     }
                     break;
 
                 // Check whether the current value is a valid alias
                 case 'alias':
-                    if (!\Validator::isAlias($varInput))
-                    {
+                    if (!\Validator::isAlias($varInput)) {
                         $this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['alias'], $this->strLabel));
                     }
                     break;
 
                 // Check whether the current value is a valid folder URL alias
                 case 'folderalias':
-                    if (!\Validator::isFolderAlias($varInput))
-                    {
+                    if (!\Validator::isFolderAlias($varInput)) {
                         $this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['folderalias'], $this->strLabel));
                     }
                     break;
 
                 // Phone numbers (numeric characters, space [ ], plus [+], minus [-], parentheses [()] and slash [/])
                 case 'phone':
-                    if (!\Validator::isPhone(html_entity_decode($varInput)))
-                    {
+                    if (!\Validator::isPhone(html_entity_decode($varInput))) {
                         $this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['phone'], $this->strLabel));
                     }
                     break;
 
                 // Check whether the current value is a percent value
                 case 'prcnt':
-                    if (!\Validator::isPercent($varInput))
-                    {
+                    if (!\Validator::isPercent($varInput)) {
                         $this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['prcnt'], $this->strLabel));
                     }
                     break;
 
                 // Check whether the current value is a locale
                 case 'locale':
-                    if (!\Validator::isLocale($varInput))
-                    {
+                    if (!\Validator::isLocale($varInput)) {
                         $this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['locale'], $this->strLabel));
                     }
                     break;
 
                 // Check whether the current value is a language code
                 case 'language':
-                    if (!\Validator::isLanguage($varInput))
-                    {
+                    if (!\Validator::isLanguage($varInput)) {
                         $this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['language'], $this->strLabel));
                     }
                     break;
 
                 // Check whether the current value is a Google+ ID or vanity name
                 case 'google+':
-                    if (!\Validator::isGooglePlusId($varInput))
-                    {
+                    if (!\Validator::isGooglePlusId($varInput)) {
                         $this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['invalidGoogleId'], $this->strLabel));
                     }
                     break;
 
                 // HOOK: pass unknown tags to callback functions
                 default:
-                    if (isset($GLOBALS['TL_HOOKS']['addCustomRegexp']) && is_array($GLOBALS['TL_HOOKS']['addCustomRegexp']))
-                    {
-                        foreach ($GLOBALS['TL_HOOKS']['addCustomRegexp'] as $callback)
-                        {
+                    if (isset($GLOBALS['TL_HOOKS']['addCustomRegexp']) && is_array($GLOBALS['TL_HOOKS']['addCustomRegexp'])) {
+                        foreach ($GLOBALS['TL_HOOKS']['addCustomRegexp'] as $callback) {
                             $this->import($callback[0]);
                             $break = $this->$callback[0]->$callback[1]($this->rgxp, $varInput, $this);
 
                             // Stop the loop if a callback returned true
-                            if ($break === true)
-                            {
+                            if ($break === true) {
                                 break;
                             }
                         }
@@ -1016,23 +924,19 @@ abstract class Widget extends \Template\Base
             }
         }
 
-        if ($this->isHexColor && $varInput != '' && strncmp($varInput, '$', 1) !== 0)
-        {
+        if ($this->isHexColor && $varInput != '' && strncmp($varInput, '$', 1) !== 0) {
             $varInput = preg_replace('/[^a-f0-9]+/i', '', $varInput);
         }
 
-        if ($this->nospace && preg_match('/[\t ]+/', $varInput))
-        {
+        if ($this->nospace && preg_match('/[\t ]+/', $varInput)) {
             $this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['noSpace'], $this->strLabel));
         }
 
-        if ($this->spaceToUnderscore)
-        {
+        if ($this->spaceToUnderscore) {
             $varInput = preg_replace('/\s+/', '_', trim($varInput));
         }
 
-        if (is_bool($this->trailingSlash) && $varInput != '')
-        {
+        if (is_bool($this->trailingSlash) && $varInput != '') {
             $varInput = preg_replace('/\/+$/', '', $varInput) . ($this->trailingSlash ? '/' : '');
         }
 
@@ -1047,13 +951,11 @@ abstract class Widget extends \Template\Base
      */
     public function addAttributes($arrAttributes)
     {
-        if (!is_array($arrAttributes))
-        {
+        if (!is_array($arrAttributes)) {
             return;
         }
 
-        foreach ($arrAttributes as $k=>$v)
-        {
+        foreach ($arrAttributes as $k=>$v) {
             $this->$k = $v;
         }
     }
@@ -1068,8 +970,7 @@ abstract class Widget extends \Template\Base
      */
     protected function isChecked($arrOption)
     {
-        if (empty($this->varValue) && $arrOption['default'])
-        {
+        if (empty($this->varValue) && $arrOption['default']) {
             return static::optionChecked(1, 1);
         }
 
@@ -1086,8 +987,7 @@ abstract class Widget extends \Template\Base
      */
     protected function isSelected($arrOption)
     {
-        if (empty($this->varValue) && $arrOption['default'])
-        {
+        if (empty($this->varValue) && $arrOption['default']) {
             return static::optionSelected(1, 1);
         }
 
@@ -1105,19 +1005,16 @@ abstract class Widget extends \Template\Base
      */
     public static function optionSelected($strOption, $varValues)
     {
-        if ($strOption === '')
-        {
+        if ($strOption === '') {
             return '';
         }
 
         $attribute = ' selected';
 
-        if (TL_MODE == 'FE')
-        {
+        if (TL_MODE == 'FE') {
             global $objPage;
 
-            if ($objPage->outputFormat == 'xhtml')
-            {
+            if ($objPage->outputFormat == 'xhtml') {
                 $attribute = ' selected="selected"';
             }
         }
@@ -1136,19 +1033,16 @@ abstract class Widget extends \Template\Base
      */
     public static function optionChecked($strOption, $varValues)
     {
-        if ($strOption === '')
-        {
+        if ($strOption === '') {
             return '';
         }
 
         $attribute = ' checked';
 
-        if (TL_MODE == 'FE')
-        {
+        if (TL_MODE == 'FE') {
             global $objPage;
 
-            if ($objPage->outputFormat == 'xhtml')
-            {
+            if ($objPage->outputFormat == 'xhtml') {
                 $attribute = ' checked="checked"';
             }
         }
@@ -1166,41 +1060,32 @@ abstract class Widget extends \Template\Base
      */
     protected function isValidOption($varInput)
     {
-        if (!is_array($varInput))
-        {
+        if (!is_array($varInput)) {
             $varInput = array($varInput);
         }
 
         // Check each option
-        foreach ($varInput as $strInput)
-        {
+        foreach ($varInput as $strInput) {
             $blnFound = false;
 
-            foreach ($this->arrOptions as $v)
-            {
+            foreach ($this->arrOptions as $v) {
                 // Single dimensional array
-                if (array_key_exists('value', $v))
-                {
-                    if ($strInput == $v['value'])
-                    {
+                if (array_key_exists('value', $v)) {
+                    if ($strInput == $v['value']) {
                         $blnFound = true;
                     }
                 }
                 // Multi-dimensional array
-                else
-                {
-                    foreach ($v as $vv)
-                    {
-                        if ($strInput == $vv['value'])
-                        {
+                else {
+                    foreach ($v as $vv) {
+                        if ($strInput == $vv['value']) {
                             $blnFound = true;
                         }
                     }
                 }
             }
 
-            if (!$blnFound)
-            {
+            if (!$blnFound) {
                 return false;
             }
         }
@@ -1235,14 +1120,10 @@ abstract class Widget extends \Template\Base
         $arrAttributes['dataContainer'] = $objDca;
 
         // Internet Explorer does not support onchange for checkboxes and radio buttons
-        if ($arrData['eval']['submitOnChange'])
-        {
-            if ($arrData['inputType'] == 'checkbox' || $arrData['inputType'] == 'checkboxWizard' || $arrData['inputType'] == 'radio' || $arrData['inputType'] == 'radioTable')
-            {
+        if ($arrData['eval']['submitOnChange']) {
+            if ($arrData['inputType'] == 'checkbox' || $arrData['inputType'] == 'checkboxWizard' || $arrData['inputType'] == 'radio' || $arrData['inputType'] == 'radioTable') {
                 $arrAttributes['onclick'] = trim($arrAttributes['onclick'] . " Backend.autoSubmit('".$strTable."')");
-            }
-            else
-            {
+            } else {
                 $arrAttributes['onchange'] = trim($arrAttributes['onchange'] . " Backend.autoSubmit('".$strTable."')");
             }
         }
@@ -1250,70 +1131,55 @@ abstract class Widget extends \Template\Base
         $arrAttributes['allowHtml'] = ($arrData['eval']['allowHtml'] || strlen($arrData['eval']['rte']) || $arrData['eval']['preserveTags']) ? true : false;
 
         // Decode entities if HTML is allowed
-        if ($arrAttributes['allowHtml'] || $arrData['inputType'] == 'fileTree')
-        {
+        if ($arrAttributes['allowHtml'] || $arrData['inputType'] == 'fileTree') {
             $arrAttributes['decodeEntities'] = true;
         }
 
         // Add Ajax event
-        if ($arrData['inputType'] == 'checkbox' && is_array($GLOBALS['TL_DCA'][$strTable]['subpalettes']) && in_array($strField, array_keys($GLOBALS['TL_DCA'][$strTable]['subpalettes'])) && $arrData['eval']['submitOnChange'])
-        {
+        if ($arrData['inputType'] == 'checkbox' && is_array($GLOBALS['TL_DCA'][$strTable]['subpalettes']) && in_array($strField, array_keys($GLOBALS['TL_DCA'][$strTable]['subpalettes'])) && $arrData['eval']['submitOnChange']) {
             $arrAttributes['onclick'] = "AjaxRequest.toggleSubpalette(this, 'sub_".$strName."', '".$strField."')";
         }
 
         // Options callback
-        if (is_array($arrData['options_callback']))
-        {
+        if (is_array($arrData['options_callback'])) {
             $arrCallback = $arrData['options_callback'];
             $arrData['options'] = static::importStatic($arrCallback[0])->$arrCallback[1]($objDca);
-        }
-        elseif (is_callable($arrData['options_callback']))
-        {
+        } elseif (is_callable($arrData['options_callback'])) {
             $arrData['options'] = $arrData['options_callback']($objDca);
         }
 
         // Foreign key
-        elseif (isset($arrData['foreignKey']))
-        {
+        elseif (isset($arrData['foreignKey'])) {
             $arrKey = explode('.', $arrData['foreignKey'], 2);
             $objOptions = \Database::getInstance()->query("SELECT id, " . $arrKey[1] . " AS value FROM " . $arrKey[0] . " WHERE tstamp>0 ORDER BY value");
             $arrData['options'] = array();
 
-            while($objOptions->next())
-            {
+            while($objOptions->next()) {
                 $arrData['options'][$objOptions->id] = $objOptions->value;
             }
         }
 
         // Add default option to single checkbox
-        if ($arrData['inputType'] == 'checkbox' && !isset($arrData['options']) && !isset($arrData['options_callback']) && !isset($arrData['foreignKey']))
-        {
-            if (TL_MODE == 'FE' && isset($arrAttributes['description']))
-            {
+        if ($arrData['inputType'] == 'checkbox' && !isset($arrData['options']) && !isset($arrData['options_callback']) && !isset($arrData['foreignKey'])) {
+            if (TL_MODE == 'FE' && isset($arrAttributes['description'])) {
                 $arrAttributes['options'][] = array('value'=>1, 'label'=>$arrAttributes['description']);
-            }
-            else
-            {
+            } else {
                 $arrAttributes['options'][] = array('value'=>1, 'label'=>$arrAttributes['label']);
             }
         }
 
         // Add options
-        if (is_array($arrData['options']))
-        {
+        if (is_array($arrData['options'])) {
             $blnIsAssociative = ($arrData['eval']['isAssociative'] || array_is_assoc($arrData['options']));
             $blnUseReference = isset($arrData['reference']);
 
-            if ($arrData['eval']['includeBlankOption'] && !$arrData['eval']['multiple'])
-            {
+            if ($arrData['eval']['includeBlankOption'] && !$arrData['eval']['multiple']) {
                 $strLabel = isset($arrData['eval']['blankOptionLabel']) ? $arrData['eval']['blankOptionLabel'] : '-';
                 $arrAttributes['options'][] = array('value'=>'', 'label'=>$strLabel);
             }
 
-            foreach ($arrData['options'] as $k=>$v)
-            {
-                if (!is_array($v))
-                {
+            foreach ($arrData['options'] as $k=>$v) {
+                if (!is_array($v)) {
                     $arrAttributes['options'][] = array('value'=>($blnIsAssociative ? $k : $v), 'label'=>($blnUseReference ? ((($ref = (is_array($arrData['reference'][$v]) ? $arrData['reference'][$v][0] : $arrData['reference'][$v])) != false) ? $ref : $v) : $v));
                     continue;
                 }
@@ -1321,8 +1187,7 @@ abstract class Widget extends \Template\Base
                 $key = $blnUseReference ? ((($ref = (is_array($arrData['reference'][$k]) ? $arrData['reference'][$k][0] : $arrData['reference'][$k])) != false) ? $ref : $k) : $k;
                 $blnIsAssoc = array_is_assoc($v);
 
-                foreach ($v as $kk=>$vv)
-                {
+                foreach ($v as $kk=>$vv) {
                     $arrAttributes['options'][$key][] = array('value'=>($blnIsAssoc ? $kk : $vv), 'label'=>($blnUseReference ? ((($ref = (is_array($arrData['reference'][$vv]) ? $arrData['reference'][$vv][0] : $arrData['reference'][$vv])) != false) ? $ref : $vv) : $vv));
                 }
             }
@@ -1331,23 +1196,19 @@ abstract class Widget extends \Template\Base
         $arrAttributes['value'] = deserialize($varValue);
 
         // Convert timestamps
-        if ($varValue != '' && ($arrData['eval']['rgxp'] == 'date' || $arrData['eval']['rgxp'] == 'time' || $arrData['eval']['rgxp'] == 'datim'))
-        {
+        if ($varValue != '' && ($arrData['eval']['rgxp'] == 'date' || $arrData['eval']['rgxp'] == 'time' || $arrData['eval']['rgxp'] == 'datim')) {
             $objDate = new \Date($varValue);
             $arrAttributes['value'] = $objDate->{$arrData['eval']['rgxp']};
         }
 
         // Add the "rootNodes" array as attribute (see #3563)
-        if (isset($arrData['rootNodes']) && !isset($arrData['eval']['rootNodes']))
-        {
+        if (isset($arrData['rootNodes']) && !isset($arrData['eval']['rootNodes'])) {
             $arrAttributes['rootNodes'] = $arrData['rootNodes'];
         }
 
         // HOOK: add custom logic
-        if (isset($GLOBALS['TL_HOOKS']['getAttributesFromDca']) && is_array($GLOBALS['TL_HOOKS']['getAttributesFromDca']))
-        {
-            foreach ($GLOBALS['TL_HOOKS']['getAttributesFromDca'] as $callback)
-            {
+        if (isset($GLOBALS['TL_HOOKS']['getAttributesFromDca']) && is_array($GLOBALS['TL_HOOKS']['getAttributesFromDca'])) {
+            foreach ($GLOBALS['TL_HOOKS']['getAttributesFromDca'] as $callback) {
                 $arrAttributes = static::importStatic($callback[0])->$callback[1]($arrAttributes, $objDca);
             }
         }
@@ -1363,8 +1224,7 @@ abstract class Widget extends \Template\Base
      */
     public function getEmptyValue()
     {
-        if (!isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['sql']))
-        {
+        if (!isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['sql'])) {
             return '';
         }
 
@@ -1381,23 +1241,17 @@ abstract class Widget extends \Template\Base
      */
     public static function getEmptyValueByFieldType($sql)
     {
-        if ($sql == '')
-        {
+        if ($sql == '') {
             return '';
         }
 
         $type = preg_replace('/^([A-Za-z]+)(\(| ).*$/', '$1', $sql);
 
-        if (in_array($type, array('binary', 'varbinary', 'tinyblob', 'blob', 'mediumblob', 'longblob')))
-        {
+        if (in_array($type, array('binary', 'varbinary', 'tinyblob', 'blob', 'mediumblob', 'longblob'))) {
             return null;
-        }
-        elseif (in_array($type, array('int', 'integer', 'tinyint', 'smallint', 'mediumint', 'bigint', 'float', 'double', 'dec', 'decimal')))
-        {
+        } elseif (in_array($type, array('int', 'integer', 'tinyint', 'smallint', 'mediumint', 'bigint', 'float', 'double', 'dec', 'decimal'))) {
             return 0;
-        }
-        else
-        {
+        } else {
             return '';
         }
     }

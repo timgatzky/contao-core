@@ -89,8 +89,7 @@ class Feed
      */
     public function __get($strKey)
     {
-        if (isset($this->arrData[$strKey]))
-        {
+        if (isset($this->arrData[$strKey])) {
             return $this->arrData[$strKey];
         }
 
@@ -142,8 +141,7 @@ class Feed
         $xml .= '<generator>Contao Open Source CMS</generator>';
         $xml .= '<atom:link href="' . specialchars(\Environment::get('base') . 'share/' . $this->strName) . '.xml" rel="self" type="application/rss+xml" />';
 
-        foreach ($this->arrItems as $objItem)
-        {
+        foreach ($this->arrItems as $objItem) {
             $xml .= '<item>';
             $xml .= '<title>' . specialchars(strip_tags($objItem->title)) . '</title>';
             $xml .= '<description><![CDATA[' . preg_replace('/[\n\r]+/', ' ', $objItem->description) . ']]></description>';
@@ -151,28 +149,20 @@ class Feed
             $xml .= '<pubDate>' . date('r', $objItem->published) . '</pubDate>';
 
             // Add the GUID
-            if ($objItem->guid)
-            {
+            if ($objItem->guid) {
                 // Add the isPermaLink attribute if the guid is not a link (see #4930)
-                if (strncmp($objItem->guid, 'http://', 7) !== 0 && strncmp($objItem->guid, 'https://', 8) !== 0)
-                {
+                if (strncmp($objItem->guid, 'http://', 7) !== 0 && strncmp($objItem->guid, 'https://', 8) !== 0) {
                     $xml .= '<guid isPermaLink="false">' . $objItem->guid . '</guid>';
-                }
-                else
-                {
+                } else {
                     $xml .= '<guid>' . $objItem->guid . '</guid>';
                 }
-            }
-            else
-            {
+            } else {
                 $xml .= '<guid>' . specialchars($objItem->link) . '</guid>';
             }
 
             // Enclosures
-            if (is_array($objItem->enclosure))
-            {
-                foreach ($objItem->enclosure as $arrEnclosure)
-                {
+            if (is_array($objItem->enclosure)) {
+                foreach ($objItem->enclosure as $arrEnclosure) {
                     $xml .= '<enclosure url="' . $arrEnclosure['url'] . '" length="' . $arrEnclosure['length'] . '" type="' . $arrEnclosure['type'] . '" />';
                 }
             }
@@ -206,8 +196,7 @@ class Feed
         $xml .= '<generator>Contao Open Source CMS</generator>';
         $xml .= '<link href="' . specialchars(\Environment::get('base') . 'share/' . $this->strName) . '.xml" rel="self" />';
 
-        foreach ($this->arrItems as $objItem)
-        {
+        foreach ($this->arrItems as $objItem) {
             $xml .= '<entry>';
             $xml .= '<title>' . specialchars($objItem->title) . '</title>';
             $xml .= '<content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">' . preg_replace('/[\n\r]+/', ' ', $objItem->description) . '</div></content>';
@@ -217,10 +206,8 @@ class Feed
             $xml .= '<author><name>' . $objItem->author . '</name></author>';
 
             // Enclosures
-            if (is_array($objItem->enclosure))
-            {
-                foreach ($objItem->enclosure as $arrEnclosure)
-                {
+            if (is_array($objItem->enclosure)) {
+                foreach ($objItem->enclosure as $arrEnclosure) {
                     $xml .= '<link rel="enclosure" type="' . $arrEnclosure['type'] . '" href="' . $arrEnclosure['url'] . '" length="' . $arrEnclosure['length'] . '" />';
                 }
             }
@@ -237,8 +224,7 @@ class Feed
      */
     protected function adjustPublicationDate()
     {
-        if (!empty($this->arrItems) && $this->arrItems[0]->published > $this->published)
-        {
+        if (!empty($this->arrItems) && $this->arrItems[0]->published > $this->published) {
             $this->published = $this->arrItems[0]->published;
         }
     }

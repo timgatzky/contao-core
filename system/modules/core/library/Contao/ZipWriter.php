@@ -96,14 +96,12 @@ class ZipWriter
         $this->strFile = $strFile;
 
         // Create temporary file
-        if (($this->strTemp = tempnam(TL_ROOT . '/' . self::TEMPORARY_FOLDER , 'zip')) == false)
-        {
+        if (($this->strTemp = tempnam(TL_ROOT . '/' . self::TEMPORARY_FOLDER , 'zip')) == false) {
             throw new \Exception("Cannot create temporary file");
         }
 
         // Open temporary file
-        if (($this->resFile = @fopen($this->strTemp, 'wb')) == false)
-        {
+        if (($this->resFile = @fopen($this->strTemp, 'wb')) == false) {
             throw new \Exception("Cannot open temporary file");
         }
     }
@@ -114,13 +112,11 @@ class ZipWriter
      */
     public function __destruct()
     {
-        if (is_resource($this->resFile))
-        {
+        if (is_resource($this->resFile)) {
             @fclose($this->resFile);
         }
 
-        if (file_exists($this->strTemp))
-        {
+        if (file_exists($this->strTemp)) {
             @unlink($this->strTemp);
         }
     }
@@ -136,14 +132,12 @@ class ZipWriter
      */
     public function addFile($strFile, $strName=null)
     {
-        if (!file_exists(TL_ROOT . '/' . $strFile))
-        {
+        if (!file_exists(TL_ROOT . '/' . $strFile)) {
             throw new \Exception("File $strFile does not exist");
         }
 
         // Remove leading slashes (see #4502)
-        if (strncmp($strName, '/', 1) === 0)
-        {
+        if (strncmp($strName, '/', 1) === 0) {
             $strName = substr($strName, 1);
         }
 
@@ -244,17 +238,14 @@ class ZipWriter
         @fclose($this->resFile);
 
         // Check if target file exists
-        if (!file_exists(TL_ROOT . '/' . $this->strFile))
-        {
+        if (!file_exists(TL_ROOT . '/' . $this->strFile)) {
             // Handle open_basedir restrictions
-            if (($strFolder = dirname($this->strFile)) == '.')
-            {
+            if (($strFolder = dirname($this->strFile)) == '.') {
                 $strFolder = '';
             }
 
             // Create folder
-            if (!is_dir(TL_ROOT . '/' . $strFolder))
-            {
+            if (!is_dir(TL_ROOT . '/' . $strFolder)) {
                 new \Folder($strFolder);
             }
         }

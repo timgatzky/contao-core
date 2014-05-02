@@ -51,8 +51,7 @@ class ModuleLoader
      */
     public static function getActive()
     {
-        if (static::$active === null)
-        {
+        if (static::$active === null) {
             static::scanAndResolve();
         }
 
@@ -67,8 +66,7 @@ class ModuleLoader
      */
     public static function getDisabled()
     {
-        if (static::$active === null)
-        {
+        if (static::$active === null) {
             static::scanAndResolve();
         }
 
@@ -86,24 +84,18 @@ class ModuleLoader
         $strCacheFile = 'system/cache/config/modules.php';
 
         // Try to load from cache
-        if (!\Config::get('bypassCache') && file_exists(TL_ROOT . '/' . $strCacheFile))
-        {
+        if (!\Config::get('bypassCache') && file_exists(TL_ROOT . '/' . $strCacheFile)) {
             include TL_ROOT . '/' . $strCacheFile;
-        }
-        else
-        {
+        } else {
             $load = array();
 
             static::$active = array();
             static::$disabled = array();
 
             // Ignore non-core modules if the system runs in safe mode
-            if (\Config::get('coreOnlyMode'))
-            {
+            if (\Config::get('coreOnlyMode')) {
                 $modules = array('core', 'calendar', 'comments', 'devtools', 'faq', 'listing', 'news', 'newsletter', 'repository');
-            }
-            else
-            {
+            } else {
                 // Sort the modules (see #6391)
                 $modules = scan(TL_ROOT . '/system/modules');
                 sort($modules);
@@ -114,31 +106,26 @@ class ModuleLoader
             }
 
             // Walk through the modules
-            foreach ($modules as $file)
-            {
+            foreach ($modules as $file) {
                 // Ignore dot resources
-                if (strncmp($file, '.', 1) === 0)
-                {
+                if (strncmp($file, '.', 1) === 0) {
                     continue;
                 }
 
                 // Ignore legacy modules
-                if (in_array($file, array('backend', 'frontend', 'rep_base', 'rep_client', 'registration', 'rss_reader', 'tpl_editor')))
-                {
+                if (in_array($file, array('backend', 'frontend', 'rep_base', 'rep_client', 'registration', 'rss_reader', 'tpl_editor'))) {
                     continue;
                 }
 
                 $path = TL_ROOT . '/system/modules/' . $file;
 
                 // Ignore files
-                if (!is_dir($path))
-                {
+                if (!is_dir($path)) {
                     continue;
                 }
 
                 // Ignore disabled module
-                if (file_exists($path . '/.skip'))
-                {
+                if (file_exists($path . '/.skip')) {
                     static::$disabled[] = $file;
                     continue;
                 }
@@ -146,24 +133,18 @@ class ModuleLoader
                 $load[$file] = array();
 
                 // Read the autoload.ini if any
-                if (file_exists($path . '/config/autoload.ini'))
-                {
+                if (file_exists($path . '/config/autoload.ini')) {
                     $config = parse_ini_file($path . '/config/autoload.ini', true);
                     $load[$file] = $config['requires'] ?: array();
 
-                    foreach ($load[$file] as $k=>$v)
-                    {
+                    foreach ($load[$file] as $k=>$v) {
                         // Optional requirements (see #6835)
-                        if (strncmp($v, '*', 1) === 0)
-                        {
+                        if (strncmp($v, '*', 1) === 0) {
                             $key = substr($v, 1);
 
-                            if (!in_array($key, $modules))
-                            {
+                            if (!in_array($key, $modules)) {
                                 unset($load[$file][$k]);
-                            }
-                            else
-                            {
+                            } else {
                                 $load[$file][$k] = $key;
                             }
                         }
@@ -172,23 +153,17 @@ class ModuleLoader
             }
 
             // Resolve the dependencies
-            while (!empty($load))
-            {
+            while (!empty($load)) {
                 $failed = true;
 
-                foreach ($load as $name=>$requires)
-                {
-                    if (empty($requires))
-                    {
+                foreach ($load as $name=>$requires) {
+                    if (empty($requires)) {
                         $resolved = true;
-                    }
-                    else
-                    {
+                    } else {
                         $resolved = count(array_diff($requires, static::$active)) === 0;
                     }
 
-                    if ($resolved === true)
-                    {
+                    if ($resolved === true) {
                         unset($load[$name]);
                         static::$active[] = $name;
                         $failed = false;
@@ -196,8 +171,7 @@ class ModuleLoader
                 }
 
                 // The dependencies cannot be resolved
-                if ($failed === true)
-                {
+                if ($failed === true) {
                     ob_start();
                     dump($load);
                     $buffer = ob_get_contents();

@@ -85,15 +85,13 @@ class Input
      */
     public static function get($strKey, $blnDecodeEntities=false, $blnKeepUnused=false)
     {
-        if (!isset($_GET[$strKey]))
-        {
+        if (!isset($_GET[$strKey])) {
             return null;
         }
 
         $strCacheKey = $blnDecodeEntities ? 'getDecoded' : 'getEncoded';
 
-        if (!isset(static::$arrCache[$strCacheKey][$strKey]))
-        {
+        if (!isset(static::$arrCache[$strCacheKey][$strKey])) {
             $varValue = $_GET[$strKey];
 
             $varValue = static::stripSlashes($varValue);
@@ -101,16 +99,14 @@ class Input
             $varValue = static::xssClean($varValue, true);
             $varValue = static::stripTags($varValue);
 
-            if (!$blnDecodeEntities)
-            {
+            if (!$blnDecodeEntities) {
                 $varValue = static::encodeSpecialChars($varValue);
             }
 
             static::$arrCache[$strCacheKey][$strKey] = $varValue;
 
             // Mark the parameter as used (see #4277)
-            if (!$blnKeepUnused)
-            {
+            if (!$blnKeepUnused) {
                 unset(static::$arrUnusedGet[$strKey]);
             }
         }
@@ -131,12 +127,10 @@ class Input
     {
         $strCacheKey = $blnDecodeEntities ? 'postDecoded' : 'postEncoded';
 
-        if (!isset(static::$arrCache[$strCacheKey][$strKey]))
-        {
+        if (!isset(static::$arrCache[$strCacheKey][$strKey])) {
             $varValue = static::findPost($strKey);
 
-            if ($varValue === null)
-            {
+            if ($varValue === null) {
                 return $varValue;
             }
 
@@ -145,8 +139,7 @@ class Input
             $varValue = static::xssClean($varValue, true);
             $varValue = static::stripTags($varValue);
 
-            if (!$blnDecodeEntities)
-            {
+            if (!$blnDecodeEntities) {
                 $varValue = static::encodeSpecialChars($varValue);
             }
 
@@ -169,12 +162,10 @@ class Input
     {
         $strCacheKey = $blnDecodeEntities ? 'postHtmlDecoded' : 'postHtmlEncoded';
 
-        if (!isset(static::$arrCache[$strCacheKey][$strKey]))
-        {
+        if (!isset(static::$arrCache[$strCacheKey][$strKey])) {
             $varValue = static::findPost($strKey);
 
-            if ($varValue === null)
-            {
+            if ($varValue === null) {
                 return $varValue;
             }
 
@@ -183,8 +174,7 @@ class Input
             $varValue = static::xssClean($varValue);
             $varValue = static::stripTags($varValue, \Config::get('allowedTags'));
 
-            if (!$blnDecodeEntities)
-            {
+            if (!$blnDecodeEntities) {
                 $varValue = static::encodeSpecialChars($varValue);
             }
 
@@ -206,12 +196,10 @@ class Input
     {
         $strCacheKey = 'postRaw';
 
-        if (!isset(static::$arrCache[$strCacheKey][$strKey]))
-        {
+        if (!isset(static::$arrCache[$strCacheKey][$strKey])) {
             $varValue = static::findPost($strKey);
 
-            if ($varValue === null)
-            {
+            if ($varValue === null) {
                 return $varValue;
             }
 
@@ -236,15 +224,13 @@ class Input
      */
     public static function cookie($strKey, $blnDecodeEntities=false)
     {
-        if (!isset($_COOKIE[$strKey]))
-        {
+        if (!isset($_COOKIE[$strKey])) {
             return null;
         }
 
         $strCacheKey = $blnDecodeEntities ? 'cookieDecoded' : 'cookieEncoded';
 
-        if (!isset(static::$arrCache[$strCacheKey][$strKey]))
-        {
+        if (!isset(static::$arrCache[$strCacheKey][$strKey])) {
             $varValue = $_COOKIE[$strKey];
 
             $varValue = static::stripSlashes($varValue);
@@ -252,8 +238,7 @@ class Input
             $varValue = static::xssClean($varValue, true);
             $varValue = static::stripTags($varValue);
 
-            if (!$blnDecodeEntities)
-            {
+            if (!$blnDecodeEntities) {
                 $varValue = static::encodeSpecialChars($varValue);
             }
 
@@ -278,16 +263,12 @@ class Input
         unset(static::$arrCache['getEncoded'][$strKey]);
         unset(static::$arrCache['getDecoded'][$strKey]);
 
-        if ($varValue === null)
-        {
+        if ($varValue === null) {
             unset($_GET[$strKey]);
-        }
-        else
-        {
+        } else {
             $_GET[$strKey] = $varValue;
 
-            if ($blnAddUnused)
-            {
+            if ($blnAddUnused) {
                 static::setUnusedGet($strKey, $varValue); // see #4277
             }
         }
@@ -310,12 +291,9 @@ class Input
         unset(static::$arrCache['postHtmlDecoded'][$strKey]);
         unset(static::$arrCache['postRaw'][$strKey]);
 
-        if ($varValue === null)
-        {
+        if ($varValue === null) {
             unset($_POST[$strKey]);
-        }
-        else
-        {
+        } else {
             $_POST[$strKey] = $varValue;
         }
     }
@@ -334,12 +312,9 @@ class Input
         unset(static::$arrCache['cookieEncoded'][$strKey]);
         unset(static::$arrCache['cookieDecoded'][$strKey]);
 
-        if ($varValue === null)
-        {
+        if ($varValue === null) {
             unset($_COOKIE[$strKey]);
-        }
-        else
-        {
+        } else {
             $_COOKIE[$strKey] = $varValue;
         }
     }
@@ -398,16 +373,13 @@ class Input
     public static function cleanKey($varValue)
     {
         // Recursively clean arrays
-        if (is_array($varValue))
-        {
+        if (is_array($varValue)) {
             $return = array();
 
-            foreach ($varValue as $k=>$v)
-            {
+            foreach ($varValue as $k=>$v) {
                 $k = static::cleanKey($k);
 
-                if (is_array($v))
-                {
+                if (is_array($v)) {
                     $v = static::cleanKey($v);
                 }
 
@@ -435,16 +407,13 @@ class Input
      */
     public static function stripSlashes($varValue)
     {
-        if ($varValue == '' || !static::$blnMagicQuotes)
-        {
+        if ($varValue == '' || !static::$blnMagicQuotes) {
             return $varValue;
         }
 
         // Recursively clean arrays
-        if (is_array($varValue))
-        {
-            foreach ($varValue as $k=>$v)
-            {
+        if (is_array($varValue)) {
+            foreach ($varValue as $k=>$v) {
                 $varValue[$k] = static::stripSlashes($v);
             }
 
@@ -465,16 +434,13 @@ class Input
      */
     public static function stripTags($varValue, $strAllowedTags='')
     {
-        if ($varValue === null || $varValue == '')
-        {
+        if ($varValue === null || $varValue == '') {
             return $varValue;
         }
 
         // Recursively clean arrays
-        if (is_array($varValue))
-        {
-            foreach ($varValue as $k=>$v)
-            {
+        if (is_array($varValue)) {
+            foreach ($varValue as $k=>$v) {
                 $varValue[$k] = static::stripTags($v, $strAllowedTags);
             }
 
@@ -486,8 +452,7 @@ class Input
         $varValue = str_replace(array('&lt;!--', '&lt;![', '--&gt;'), array('<!--', '<![', '-->'), $varValue);
 
         // Recheck for encoded null bytes
-        while (strpos($varValue, '\\0') !== false)
-        {
+        while (strpos($varValue, '\\0') !== false) {
             $varValue = str_replace('\\0', '', $varValue);
         }
 
@@ -505,16 +470,13 @@ class Input
      */
     public static function xssClean($varValue, $blnStrictMode=false)
     {
-        if ($varValue === null || $varValue == '')
-        {
+        if ($varValue === null || $varValue == '') {
             return $varValue;
         }
 
         // Recursively clean arrays
-        if (is_array($varValue))
-        {
-            foreach ($varValue as $k=>$v)
-            {
+        if (is_array($varValue)) {
+            foreach ($varValue as $k=>$v) {
                 $varValue[$k] = static::xssClean($v);
             }
 
@@ -522,8 +484,7 @@ class Input
         }
 
         // Return if the value is not a string
-        if (is_bool($varValue) || $varValue === null || is_numeric($varValue))
-        {
+        if (is_bool($varValue) || $varValue === null || is_numeric($varValue)) {
             return $varValue;
         }
 
@@ -541,14 +502,12 @@ class Input
         $varValue = str_replace(chr(0), '', $varValue);
 
         // Remove encoded null bytes
-        while (strpos($varValue, '\\0') !== false)
-        {
+        while (strpos($varValue, '\\0') !== false) {
             $varValue = str_replace('\\0', '', $varValue);
         }
 
         // Define a list of keywords
-        $arrKeywords = array
-        (
+        $arrKeywords = array(
             '/\bj\s*a\s*v\s*a\s*s\s*c\s*r\s*i\s*p\s*t\b/is', // javascript
             '/\bv\s*b\s*s\s*c\s*r\s*i\s*p\s*t\b/is', // vbscript
             '/\bv\s*b\s*s\s*c\s*r\s*p\s*t\b/is', // vbscrpt
@@ -562,13 +521,11 @@ class Input
         );
 
         // Compact exploded keywords like "j a v a s c r i p t"
-        foreach ($arrKeywords as $strKeyword)
-        {
+        foreach ($arrKeywords as $strKeyword) {
             $arrMatches = array();
             preg_match_all($strKeyword, $varValue, $arrMatches);
 
-            foreach ($arrMatches[0] as $strMatch)
-            {
+            foreach ($arrMatches[0] as $strMatch) {
                 $varValue = str_replace($strMatch, preg_replace('/\s*/', '', $strMatch), $varValue);
             }
         }
@@ -579,8 +536,7 @@ class Input
         $arrRegexp[] = '/<(a|img)[^>]*[^a-z]expression\s*\([^>]*>/is';
 
         // Also remove event handlers and JavaScript in strict mode
-        if ($blnStrictMode)
-        {
+        if ($blnStrictMode) {
             $arrRegexp[] = '/vbscri?pt\s*:/is';
             $arrRegexp[] = '/javascript\s*:/is';
             $arrRegexp[] = '/<\s*embed.*swf/is';
@@ -612,8 +568,7 @@ class Input
         $varValue = preg_replace($arrRegexp, '', $varValue);
 
         // Recheck for encoded null bytes
-        while (strpos($varValue, '\\0') !== false)
-        {
+        while (strpos($varValue, '\\0') !== false) {
             $varValue = str_replace('\\0', '', $varValue);
         }
 
@@ -630,16 +585,13 @@ class Input
      */
     public static function decodeEntities($varValue)
     {
-        if ($varValue === null || $varValue == '')
-        {
+        if ($varValue === null || $varValue == '') {
             return $varValue;
         }
 
         // Recursively clean arrays
-        if (is_array($varValue))
-        {
-            foreach ($varValue as $k=>$v)
-            {
+        if (is_array($varValue)) {
+            foreach ($varValue as $k=>$v) {
                 $varValue[$k] = static::decodeEntities($v);
             }
 
@@ -663,16 +615,13 @@ class Input
      */
     public static function preserveBasicEntities($varValue)
     {
-        if ($varValue === null || $varValue == '')
-        {
+        if ($varValue === null || $varValue == '') {
             return $varValue;
         }
 
         // Recursively clean arrays
-        if (is_array($varValue))
-        {
-            foreach ($varValue as $k=>$v)
-            {
+        if (is_array($varValue)) {
+            foreach ($varValue as $k=>$v) {
                 $varValue[$k] = static::preserveBasicEntities($v);
             }
 
@@ -699,16 +648,13 @@ class Input
      */
     public static function encodeSpecialChars($varValue)
     {
-        if ($varValue === null || $varValue == '')
-        {
+        if ($varValue === null || $varValue == '') {
             return $varValue;
         }
 
         // Recursively clean arrays
-        if (is_array($varValue))
-        {
-            foreach ($varValue as $k=>$v)
-            {
+        if (is_array($varValue)) {
+            foreach ($varValue as $k=>$v) {
                 $varValue[$k] = static::encodeSpecialChars($v);
             }
 
@@ -731,13 +677,11 @@ class Input
      */
     public static function findPost($strKey)
     {
-        if (isset($_POST[$strKey]))
-        {
+        if (isset($_POST[$strKey])) {
             return $_POST[$strKey];
         }
 
-        if (isset($_SESSION['FORM_DATA'][$strKey]))
-        {
+        if (isset($_SESSION['FORM_DATA'][$strKey])) {
             return ($strKey == 'FORM_SUBMIT') ? preg_replace('/^auto_/i', '', $_SESSION['FORM_DATA'][$strKey]) : $_SESSION['FORM_DATA'][$strKey];
         }
 
@@ -773,8 +717,7 @@ class Input
      */
     public static function getInstance()
     {
-        if (static::$objInstance === null)
-        {
+        if (static::$objInstance === null) {
             static::$objInstance = new static();
         }
 

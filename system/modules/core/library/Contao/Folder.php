@@ -61,14 +61,12 @@ class Folder extends \System
     public function __construct($strFolder)
     {
         // Handle open_basedir restrictions
-        if ($strFolder == '.')
-        {
+        if ($strFolder == '.') {
             $strFolder = '';
         }
 
         // Check whether it is a directory
-        if (is_file(TL_ROOT . '/' . $strFolder))
-        {
+        if (is_file(TL_ROOT . '/' . $strFolder)) {
             throw new \Exception(sprintf('File "%s" is not a directory', $strFolder));
         }
 
@@ -79,16 +77,13 @@ class Folder extends \System
         $this->blnSyncDb = (\Config::get('uploadPath') != 'templates' && strncmp($strFolder . '/', \Config::get('uploadPath') . '/', strlen(\Config::get('uploadPath')) + 1) === 0);
 
         // Check the excluded folders
-        if ($this->blnSyncDb && \Config::get('fileSyncExclude') != '')
-        {
+        if ($this->blnSyncDb && \Config::get('fileSyncExclude') != '') {
             $arrExempt = array_map(function($e) {
                 return \Config::get('uploadPath') . '/' . $e;
             }, trimsplit(',', \Config::get('fileSyncExclude')));
 
-            foreach ($arrExempt as $strExempt)
-            {
-                if (strncmp($strExempt . '/', $strFolder . '/', strlen($strExempt) + 1) === 0)
-                {
+            foreach ($arrExempt as $strExempt) {
+                if (strncmp($strExempt . '/', $strFolder . '/', strlen($strExempt) + 1) === 0) {
                     $this->blnSyncDb = false;
                     break;
                 }
@@ -96,21 +91,18 @@ class Folder extends \System
         }
 
         // Create the folder if it does not exist
-        if (!is_dir(TL_ROOT . '/' . $this->strFolder))
-        {
+        if (!is_dir(TL_ROOT . '/' . $this->strFolder)) {
             $strPath = '';
             $arrChunks = explode('/', $this->strFolder);
 
             // Create the folder
-            foreach ($arrChunks as $strFolder)
-            {
+            foreach ($arrChunks as $strFolder) {
                 $strPath .= ($strPath ? '/' : '') . $strFolder;
                 $this->Files->mkdir($strPath);
             }
 
             // Update the database
-            if ($this->blnSyncDb)
-            {
+            if ($this->blnSyncDb) {
                 $this->objModel = \Dbafs::addResource($this->strFolder);
             }
         }
@@ -132,8 +124,7 @@ class Folder extends \System
      */
     public function __get($strKey)
     {
-        switch ($strKey)
-        {
+        switch ($strKey) {
             case 'hash':
                 return $this->getHash();
                 break;
@@ -178,14 +169,11 @@ class Folder extends \System
         $this->Files->rrdir($this->strFolder, true);
 
         // Update the database
-        if ($this->blnSyncDb)
-        {
+        if ($this->blnSyncDb) {
             $objFiles = \FilesModel::findMultipleByBasepath($this->strFolder . '/');
 
-            if ($objFiles !== null)
-            {
-                while ($objFiles->next())
-                {
+            if ($objFiles !== null) {
+                while ($objFiles->next()) {
                     $objFiles->delete();
                 }
             }
@@ -214,8 +202,7 @@ class Folder extends \System
         $this->Files->rrdir($this->strFolder);
 
         // Update the database
-        if ($this->blnSyncDb)
-        {
+        if ($this->blnSyncDb) {
             \Dbafs::deleteResource($this->strFolder);
         }
     }
@@ -246,22 +233,19 @@ class Folder extends \System
         $strParent = dirname($strNewName);
 
         // Create the parent folder if it does not exist
-        if (!is_dir(TL_ROOT . '/' . $strParent))
-        {
+        if (!is_dir(TL_ROOT . '/' . $strParent)) {
             new \Folder($strParent);
         }
 
         $return = $this->Files->rename($this->strFolder, $strNewName);
 
         // Update the database AFTER the folder has been renamed
-        if ($this->blnSyncDb)
-        {
+        if ($this->blnSyncDb) {
             $this->objModel = \Dbafs::moveResource($this->strFolder, $strNewName);
         }
 
         // Reset the object AFTER the database has been updated
-        if ($return != false)
-        {
+        if ($return != false) {
             $this->strFolder = $strNewName;
         }
 
@@ -281,16 +265,14 @@ class Folder extends \System
         $strParent = dirname($strNewName);
 
         // Create the parent folder if it does not exist
-        if (!is_dir(TL_ROOT . '/' . $strParent))
-        {
+        if (!is_dir(TL_ROOT . '/' . $strParent)) {
             new \Folder($strParent);
         }
 
         $return = $this->Files->rcopy($this->strFolder, $strNewName);
 
         // Update the database AFTER the folder has been renamed
-        if ($this->blnSyncDb)
-        {
+        if ($this->blnSyncDb) {
             $this->objModel = \Dbafs::copyResource($this->strFolder, $strNewName);
         }
 
@@ -303,8 +285,7 @@ class Folder extends \System
      */
     public function protect()
     {
-        if (!file_exists(TL_ROOT . '/' . $this->strFolder . '/.htaccess'))
-        {
+        if (!file_exists(TL_ROOT . '/' . $this->strFolder . '/.htaccess')) {
             \File::putContent($this->strFolder . '/.htaccess', "<IfModule !mod_authz_core.c>\n  Order deny,allow\n  Deny from all\n</IfModule>\n<IfModule mod_authz_core.c>\n  Require all denied\n</IfModule>");
         }
     }
@@ -315,8 +296,7 @@ class Folder extends \System
      */
     public function unprotect()
     {
-        if (file_exists(TL_ROOT . '/' . $this->strFolder . '/.htaccess'))
-        {
+        if (file_exists(TL_ROOT . '/' . $this->strFolder . '/.htaccess')) {
             $objFile = new \File($this->strFolder . '/.htaccess', true);
             $objFile->delete();
         }
@@ -350,10 +330,8 @@ class Folder extends \System
             ), \RecursiveIteratorIterator::SELF_FIRST
         );
 
-        while ($it->valid())
-        {
-            if ($it->getFilename() != '.DS_Store')
-            {
+        while ($it->valid()) {
+            if ($it->getFilename() != '.DS_Store') {
                 $arrFiles[] = $it->getSubPathname();
             }
 
@@ -373,20 +351,15 @@ class Folder extends \System
     {
         $intSize = 0;
 
-        foreach (scan(TL_ROOT . '/' . $this->strFolder, true) as $strFile)
-        {
-            if ($strFile == '.svn' || $strFile == '.DS_Store')
-            {
+        foreach (scan(TL_ROOT . '/' . $this->strFolder, true) as $strFile) {
+            if ($strFile == '.svn' || $strFile == '.DS_Store') {
                 continue;
             }
 
-            if (is_dir(TL_ROOT . '/' . $this->strFolder . '/' . $strFile))
-            {
+            if (is_dir(TL_ROOT . '/' . $this->strFolder . '/' . $strFile)) {
                 $objFolder = new \Folder($this->strFolder . '/' . $strFile);
                 $intSize += $objFolder->size;
-            }
-            else
-            {
+            } else {
                 $objFile = new \File($this->strFolder . '/' . $strFile, true);
                 $intSize += $objFile->size;
             }

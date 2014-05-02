@@ -30,8 +30,7 @@ class SortedIterator extends \SplHeap
      */
     public function __construct(\Iterator $iterator)
     {
-        foreach ($iterator as $item)
-        {
+        foreach ($iterator as $item) {
             $this->insert($item);
         }
     }

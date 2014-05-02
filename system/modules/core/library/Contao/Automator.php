@@ -42,16 +42,14 @@ class Automator extends \System
      */
     public function checkForUpdates()
     {
-        if (!is_numeric(BUILD))
-        {
+        if (!is_numeric(BUILD)) {
             return;
         }
 
         $objRequest = new \Request();
         $objRequest->send(\Config::get('liveUpdateBase') . (LONG_TERM_SUPPORT ? 'lts-version.txt' : 'version.txt'));
 
-        if (!$objRequest->hasError())
-        {
+        if (!$objRequest->hasError()) {
             \Config::set('latestVersion', $objRequest->response);
             \Config::persist('latestVersion', $objRequest->response);
         }
@@ -132,10 +130,8 @@ class Automator extends \System
     public function purgeImageCache()
     {
         // Walk through the subfolders
-        foreach (scan(TL_ROOT . '/assets/images') as $dir)
-        {
-            if ($dir != 'index.html' && strncmp($dir, '.', 1) !== 0)
-            {
+        foreach (scan(TL_ROOT . '/assets/images') as $dir) {
+            if ($dir != 'index.html' && strncmp($dir, '.', 1) !== 0) {
                 // Purge the folder
                 $objFolder = new \Folder('assets/images/' . $dir);
                 $objFolder->purge();
@@ -160,8 +156,7 @@ class Automator extends \System
     public function purgeScriptCache()
     {
         // assets/js and assets/css
-        foreach (array('assets/js', 'assets/css') as $dir)
-        {
+        foreach (array('assets/js', 'assets/css') as $dir) {
             // Purge the folder
             $objFolder = new \Folder($dir);
             $objFolder->purge();
@@ -217,10 +212,8 @@ class Automator extends \System
     public function purgeInternalCache()
     {
         // Check whether the cache exists
-        if (is_dir(TL_ROOT . '/system/cache/dca'))
-        {
-            foreach (array('config', 'dca', 'language', 'sql') as $dir)
-            {
+        if (is_dir(TL_ROOT . '/system/cache/dca')) {
+            foreach (array('config', 'dca', 'language', 'sql') as $dir) {
                 // Purge the folder
                 $objFolder = new \Folder('system/cache/' . $dir);
                 $objFolder->delete();
@@ -259,10 +252,8 @@ class Automator extends \System
         $this->generateSitemap();
 
         // HOOK: add custom jobs
-        if (isset($GLOBALS['TL_HOOKS']['generateXmlFiles']) && is_array($GLOBALS['TL_HOOKS']['generateXmlFiles']))
-        {
-            foreach ($GLOBALS['TL_HOOKS']['generateXmlFiles'] as $callback)
-            {
+        if (isset($GLOBALS['TL_HOOKS']['generateXmlFiles']) && is_array($GLOBALS['TL_HOOKS']['generateXmlFiles'])) {
+            foreach ($GLOBALS['TL_HOOKS']['generateXmlFiles'] as $callback) {
                 $this->import($callback[0]);
                 $this->$callback[0]->$callback[1]();
             }
@@ -291,35 +282,28 @@ class Automator extends \System
         // XML sitemaps
         $objFeeds = $objDatabase->execute("SELECT sitemapName FROM tl_page WHERE type='root' AND createSitemap=1 AND sitemapName!=''");
 
-        while ($objFeeds->next())
-        {
+        while ($objFeeds->next()) {
             $arrFeeds[] = $objFeeds->sitemapName;
         }
 
         // HOOK: preserve third party feeds
-        if (isset($GLOBALS['TL_HOOKS']['removeOldFeeds']) && is_array($GLOBALS['TL_HOOKS']['removeOldFeeds']))
-        {
-            foreach ($GLOBALS['TL_HOOKS']['removeOldFeeds'] as $callback)
-            {
+        if (isset($GLOBALS['TL_HOOKS']['removeOldFeeds']) && is_array($GLOBALS['TL_HOOKS']['removeOldFeeds'])) {
+            foreach ($GLOBALS['TL_HOOKS']['removeOldFeeds'] as $callback) {
                 $this->import($callback[0]);
                 $arrFeeds = array_merge($arrFeeds, $this->$callback[0]->$callback[1]());
             }
         }
 
         // Delete the old files
-        if (!$blnReturn)
-        {
-            foreach (scan(TL_ROOT . '/share') as $file)
-            {
-                if (is_dir(TL_ROOT . '/share/' . $file))
-                {
+        if (!$blnReturn) {
+            foreach (scan(TL_ROOT . '/share') as $file) {
+                if (is_dir(TL_ROOT . '/share/' . $file)) {
                     continue; // see #6652
                 }
 
                 $objFile = new \File('share/' . $file, true);
 
-                if ($objFile->extension == 'xml' && !in_array($objFile->filename, $arrFeeds))
-                {
+                if ($objFile->extension == 'xml' && !in_array($objFile->filename, $arrFeeds)) {
                     $objFile->delete();
                 }
             }
@@ -345,32 +329,26 @@ class Automator extends \System
         $objDatabase->execute("UPDATE tl_page SET createSitemap='', sitemapName='' WHERE type!='root'");
 
         // Get a particular root page
-        if ($intId > 0)
-        {
-            do
-            {
+        if ($intId > 0) {
+            do {
                 $objRoot = $objDatabase->prepare("SELECT * FROM tl_page WHERE id=?")
                                        ->limit(1)
                                        ->execute($intId);
 
-                if ($objRoot->numRows < 1)
-                {
+                if ($objRoot->numRows < 1) {
                     break;
                 }
 
                 $intId = $objRoot->pid;
-            }
-            while ($objRoot->type != 'root' && $intId > 0);
+            } while ($objRoot->type != 'root' && $intId > 0);
 
             // Make sure the page is published
-            if (!$objRoot->published || ($objRoot->start != '' && $objRoot->start > $time) || ($objRoot->stop != '' && $objRoot->stop < $time))
-            {
+            if (!$objRoot->published || ($objRoot->start != '' && $objRoot->start > $time) || ($objRoot->stop != '' && $objRoot->stop < $time)) {
                 return;
             }
 
             // Check the sitemap name
-            if (!$objRoot->createSitemap || !$objRoot->sitemapName)
-            {
+            if (!$objRoot->createSitemap || !$objRoot->sitemapName) {
                 return;
             }
 
@@ -378,20 +356,17 @@ class Automator extends \System
         }
 
         // Get all published root pages
-        else
-        {
+        else {
             $objRoot = $objDatabase->execute("SELECT id, dns, language, useSSL, sitemapName FROM tl_page WHERE type='root' AND createSitemap=1 AND sitemapName!='' AND (start='' OR start<$time) AND (stop='' OR stop>$time) AND published=1");
         }
 
         // Return if there are no pages
-        if ($objRoot->numRows < 1)
-        {
+        if ($objRoot->numRows < 1) {
             return;
         }
 
         // Create the XML file
-        while ($objRoot->next())
-        {
+        while ($objRoot->next()) {
             $objFile = new \File('share/' . $objRoot->sitemapName . '.xml', true);
 
             $objFile->truncate();
@@ -405,18 +380,15 @@ class Automator extends \System
             $arrPages = \Backend::findSearchablePages($objRoot->id, $strDomain, true, $objRoot->language);
 
             // HOOK: take additional pages
-            if (isset($GLOBALS['TL_HOOKS']['getSearchablePages']) && is_array($GLOBALS['TL_HOOKS']['getSearchablePages']))
-            {
-                foreach ($GLOBALS['TL_HOOKS']['getSearchablePages'] as $callback)
-                {
+            if (isset($GLOBALS['TL_HOOKS']['getSearchablePages']) && is_array($GLOBALS['TL_HOOKS']['getSearchablePages'])) {
+                foreach ($GLOBALS['TL_HOOKS']['getSearchablePages'] as $callback) {
                     $this->import($callback[0]);
                     $arrPages = $this->$callback[0]->$callback[1]($arrPages, $objRoot->id, true, $objRoot->language);
                 }
             }
 
             // Add pages
-            foreach ($arrPages as $strUrl)
-            {
+            foreach ($arrPages as $strUrl) {
                 $strUrl = rawurlencode($strUrl);
                 $strUrl = str_replace(array('%2F', '%3F', '%3D', '%26', '%3A//'), array('/', '?', '=', '&', '://'), $strUrl);
                 $strUrl = ampersand($strUrl, true);
@@ -440,23 +412,19 @@ class Automator extends \System
     {
         $arrFiles = preg_grep('/\.log$/', scan(TL_ROOT . '/system/logs'));
 
-        foreach ($arrFiles as $strFile)
-        {
+        foreach ($arrFiles as $strFile) {
             $objFile = new \File('system/logs/' . $strFile . '.9', true);
 
             // Delete the oldest file
-            if ($objFile->exists())
-            {
+            if ($objFile->exists()) {
                 $objFile->delete();
             }
 
             // Rotate the files (e.g. error.log.4 becomes error.log.5)
-            for ($i=8; $i>0; $i--)
-            {
+            for ($i=8; $i>0; $i--) {
                 $strGzName = 'system/logs/' . $strFile . '.' . $i;
 
-                if (file_exists(TL_ROOT . '/' . $strGzName))
-                {
+                if (file_exists(TL_ROOT . '/' . $strGzName)) {
                     $objFile = new \File($strGzName, true);
                     $objFile->renameTo('system/logs/' . $strFile . '.' . ($i+1));
                 }
@@ -494,12 +462,10 @@ class Automator extends \System
         $objCacheFile = new \File('system/cache/config/autoload.php', true);
         $objCacheFile->write('<?php '); // add one space to prevent the "unexpected $end" error
 
-        foreach (\ModuleLoader::getActive() as $strModule)
-        {
+        foreach (\ModuleLoader::getActive() as $strModule) {
             $strFile = 'system/modules/' . $strModule . '/config/autoload.php';
 
-            if (file_exists(TL_ROOT . '/' . $strFile))
-            {
+            if (file_exists(TL_ROOT . '/' . $strFile)) {
                 $objCacheFile->append(static::readPhpFileWithoutTags($strFile));
             }
         }
@@ -516,8 +482,7 @@ class Automator extends \System
         $strContent .= "static::\$active = array\n";
         $strContent .= "(\n";
 
-        foreach (\ModuleLoader::getActive() as $strModule)
-        {
+        foreach (\ModuleLoader::getActive() as $strModule) {
             $strContent .= "\t'$strModule',\n";
         }
 
@@ -526,8 +491,7 @@ class Automator extends \System
         $strContent .= "static::\$disabled = array\n";
         $strContent .= "(\n";
 
-        foreach (\ModuleLoader::getDisabled() as $strModule)
-        {
+        foreach (\ModuleLoader::getDisabled() as $strModule) {
             $strContent .= "\t'$strModule',\n";
         }
 
@@ -541,12 +505,10 @@ class Automator extends \System
         $objCacheFile = new \File('system/cache/config/config.php', true);
         $objCacheFile->write('<?php '); // add one space to prevent the "unexpected $end" error
 
-        foreach (\ModuleLoader::getActive() as $strModule)
-        {
+        foreach (\ModuleLoader::getActive() as $strModule) {
             $strFile = 'system/modules/' . $strModule . '/config/config.php';
 
-            if (file_exists(TL_ROOT . '/' . $strFile))
-            {
+            if (file_exists(TL_ROOT . '/' . $strFile)) {
                 $objCacheFile->append(static::readPhpFileWithoutTags($strFile));
             }
         }
@@ -567,20 +529,16 @@ class Automator extends \System
         $arrFiles = array();
 
         // Parse all active modules
-        foreach (\ModuleLoader::getActive() as $strModule)
-        {
+        foreach (\ModuleLoader::getActive() as $strModule) {
             $strDir = 'system/modules/' . $strModule . '/dca';
 
-            if (!is_dir(TL_ROOT . '/' . $strDir))
-            {
+            if (!is_dir(TL_ROOT . '/' . $strDir)) {
                 continue;
             }
 
-            foreach (scan(TL_ROOT . '/' . $strDir) as $strFile)
-            {
+            foreach (scan(TL_ROOT . '/' . $strDir) as $strFile) {
                 // Ignore non PHP files and files which have been included before
-                if (substr($strFile, -4) != '.php' || in_array($strFile, $arrFiles))
-                {
+                if (substr($strFile, -4) != '.php' || in_array($strFile, $arrFiles)) {
                     continue;
                 }
 
@@ -589,19 +547,16 @@ class Automator extends \System
         }
 
         // Create one file per table
-        foreach ($arrFiles as $strName)
-        {
+        foreach ($arrFiles as $strName) {
             // Generate the cache file
             $objCacheFile = new \File('system/cache/dca/' . $strName . '.php', true);
             $objCacheFile->write('<?php '); // add one space to prevent the "unexpected $end" error
 
             // Parse all active modules
-            foreach (\ModuleLoader::getActive() as $strModule)
-            {
+            foreach (\ModuleLoader::getActive() as $strModule) {
                 $strFile = 'system/modules/' . $strModule . '/dca/' . $strName . '.php';
 
-                if (file_exists(TL_ROOT . '/' . $strFile))
-                {
+                if (file_exists(TL_ROOT . '/' . $strFile)) {
                     $objCacheFile->append(static::readPhpFileWithoutTags($strFile));
                 }
             }
@@ -624,42 +579,34 @@ class Automator extends \System
         $objLanguages = \Database::getInstance()->query("SELECT language FROM tl_member UNION SELECT language FROM tl_user UNION SELECT REPLACE(language, '-', '_') FROM tl_page WHERE type='root'");
 
         // Only cache the languages which are in use (see #6013)
-        while ($objLanguages->next())
-        {
-            if ($objLanguages->language == '')
-            {
+        while ($objLanguages->next()) {
+            if ($objLanguages->language == '') {
                 continue;
             }
 
             $arrLanguages[] = $objLanguages->language;
 
             // Also cache "de" if "de-CH" is requested
-            if (strlen($objLanguages->language) > 2)
-            {
+            if (strlen($objLanguages->language) > 2) {
                 $arrLanguages[] = substr($objLanguages->language, 0, 2);
             }
         }
 
         $arrLanguages = array_unique($arrLanguages);
 
-        foreach ($arrLanguages as $strLanguage)
-        {
+        foreach ($arrLanguages as $strLanguage) {
             $arrFiles = array();
 
             // Parse all active modules
-            foreach (\ModuleLoader::getActive() as $strModule)
-            {
+            foreach (\ModuleLoader::getActive() as $strModule) {
                 $strDir = 'system/modules/' . $strModule . '/languages/' . $strLanguage;
 
-                if (!is_dir(TL_ROOT . '/' . $strDir))
-                {
+                if (!is_dir(TL_ROOT . '/' . $strDir)) {
                     continue;
                 }
 
-                foreach (scan(TL_ROOT . '/' . $strDir) as $strFile)
-                {
-                    if ((substr($strFile, -4) != '.php' && substr($strFile, -4) != '.xlf') || in_array($strFile, $arrFiles))
-                    {
+                foreach (scan(TL_ROOT . '/' . $strDir) as $strFile) {
+                    if ((substr($strFile, -4) != '.php' && substr($strFile, -4) != '.xlf') || in_array($strFile, $arrFiles)) {
                         continue;
                     }
 
@@ -668,8 +615,7 @@ class Automator extends \System
             }
 
             // Create one file per table
-            foreach ($arrFiles as $strName)
-            {
+            foreach ($arrFiles as $strName) {
                 $strCacheFile = 'system/cache/language/' . $strLanguage . '/' . $strName . '.php';
 
                 // Add a short header with links to transifex.com
@@ -693,16 +639,12 @@ class Automator extends \System
                 $objCacheFile->write(sprintf($strHeader, $strLanguage));
 
                 // Parse all active modules and append to the cache file
-                foreach (\ModuleLoader::getActive() as $strModule)
-                {
+                foreach (\ModuleLoader::getActive() as $strModule) {
                     $strFile = 'system/modules/' . $strModule . '/languages/' . $strLanguage . '/' . $strName;
 
-                    if (file_exists(TL_ROOT . '/' . $strFile . '.xlf'))
-                    {
+                    if (file_exists(TL_ROOT . '/' . $strFile . '.xlf')) {
                         $objCacheFile->append(static::convertXlfToPhp($strFile . '.xlf', $strLanguage));
-                    }
-                    elseif (file_exists(TL_ROOT . '/' . $strFile . '.php'))
-                    {
+                    } elseif (file_exists(TL_ROOT . '/' . $strFile . '.php')) {
                         $objCacheFile->append(static::readPhpFileWithoutTags($strFile . '.php'));
                     }
                 }
@@ -726,28 +668,23 @@ class Automator extends \System
         $arrExtracts = array();
 
         // Only check the active modules (see #4541)
-        foreach (\ModuleLoader::getActive() as $strModule)
-        {
+        foreach (\ModuleLoader::getActive() as $strModule) {
             $strDir = 'system/modules/' . $strModule . '/dca';
 
-            if (!is_dir(TL_ROOT . '/' . $strDir))
-            {
+            if (!is_dir(TL_ROOT . '/' . $strDir)) {
                 continue;
             }
 
-            foreach (scan(TL_ROOT . '/' . $strDir) as $strFile)
-            {
+            foreach (scan(TL_ROOT . '/' . $strDir) as $strFile) {
                 // Ignore non PHP files and files which have been included before
-                if (substr($strFile, -4) != '.php' || in_array($strFile, $included))
-                {
+                if (substr($strFile, -4) != '.php' || in_array($strFile, $included)) {
                     continue;
                 }
 
                 $strTable = substr($strFile, 0, -4);
                 $objExtract = new \DcaExtractor($strTable);
 
-                if ($objExtract->isDbTable())
-                {
+                if ($objExtract->isDbTable()) {
                     $arrExtracts[$strTable] = $objExtract;
                 }
 
@@ -756,8 +693,7 @@ class Automator extends \System
         }
 
         // Create one file per table
-        foreach ($arrExtracts as $strTable=>$objExtract)
-        {
+        foreach ($arrExtracts as $strTable=>$objExtract) {
             // Create the file
             $objFile = new \File('system/cache/sql/' . $strTable . '.php', true);
             $objFile->write("<?php\n\n");
@@ -774,8 +710,7 @@ class Automator extends \System
             $arrFields = $objExtract->getFields();
             $objFile->append("\$this->arrFields = array\n(");
 
-            foreach ($arrFields as $field=>$sql)
-            {
+            foreach ($arrFields as $field=>$sql) {
                 $sql = str_replace('"', '\"', $sql);
                 $objFile->append("\t'$field' => \"$sql\",");
             }
@@ -786,8 +721,7 @@ class Automator extends \System
             $arrKeys = $objExtract->getKeys();
             $objFile->append("\$this->arrKeys = array\n(");
 
-            foreach ($arrKeys as $field=>$type)
-            {
+            foreach ($arrKeys as $field=>$type) {
                 $objFile->append("\t'$field' => '$type',");
             }
 
@@ -797,12 +731,10 @@ class Automator extends \System
             $arrRelations = $objExtract->getRelations();
             $objFile->append("\$this->arrRelations = array\n(");
 
-            foreach ($arrRelations as $field=>$config)
-            {
+            foreach ($arrRelations as $field=>$config) {
                 $objFile->append("\t'$field' => array\n\t(");
 
-                foreach ($config as $k=>$v)
-                {
+                foreach ($config as $k=>$v) {
                     $objFile->append("\t\t'$k' => '$v',");
                 }
 

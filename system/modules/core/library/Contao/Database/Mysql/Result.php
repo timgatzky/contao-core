@@ -89,20 +89,17 @@ class Result extends \Database\Result
      */
     protected function data_seek($intIndex)
     {
-        if ($intIndex < 0)
-        {
+        if ($intIndex < 0) {
             throw new \OutOfBoundsException("Invalid index $intIndex (must be >= 0)");
         }
 
         $intTotal = $this->num_rows();
 
-        if ($intTotal <= 0)
-        {
+        if ($intTotal <= 0) {
             return; // see #6319
         }
 
-        if ($intIndex >= $intTotal)
-        {
+        if ($intIndex >= $intTotal) {
             throw new \OutOfBoundsException("Invalid index $intIndex (only $intTotal rows in the result set)");
         }
 
@@ -115,8 +112,7 @@ class Result extends \Database\Result
      */
     public function free()
     {
-        if (is_resource($this->resResult))
-        {
+        if (is_resource($this->resResult)) {
             mysql_free_result($this->resResult);
         }
     }

@@ -98,18 +98,15 @@ class Message
      */
     public static function add($strMessage, $strType)
     {
-        if ($strMessage == '')
-        {
+        if ($strMessage == '') {
             return;
         }
 
-        if (!in_array($strType, static::getTypes()))
-        {
+        if (!in_array($strType, static::getTypes())) {
             throw new \Exception("Invalid message type $strType");
         }
 
-        if (!is_array($_SESSION[$strType]))
-        {
+        if (!is_array($_SESSION[$strType])) {
             $_SESSION[$strType] = array();
         }
 
@@ -130,30 +127,23 @@ class Message
         $strMessages = '';
 
         // Regular messages
-        foreach (static::getTypes() as $strType)
-        {
-            if (!is_array($_SESSION[$strType]))
-            {
+        foreach (static::getTypes() as $strType) {
+            if (!is_array($_SESSION[$strType])) {
                 continue;
             }
 
             $strClass = strtolower($strType);
             $_SESSION[$strType] = array_unique($_SESSION[$strType]);
 
-            foreach ($_SESSION[$strType] as $strMessage)
-            {
-                if ($strType == 'TL_RAW')
-                {
+            foreach ($_SESSION[$strType] as $strMessage) {
+                if ($strType == 'TL_RAW') {
                     $strMessages .= $strMessage;
-                }
-                else
-                {
+                } else {
                     $strMessages .= sprintf('<p class="%s">%s</p>%s', $strClass, $strMessage, "\n");
                 }
             }
 
-            if (!$_POST)
-            {
+            if (!$_POST) {
                 $_SESSION[$strType] = array();
             }
         }
@@ -161,8 +151,7 @@ class Message
         $strMessages = trim($strMessages);
 
         // Wrapping container
-        if (!$blnNoWrapper && $strMessages != '')
-        {
+        if (!$blnNoWrapper && $strMessages != '') {
             $strMessages = sprintf('%s<div class="tl_message">%s%s%s</div>%s', ($blnDcLayout ? "\n\n" : "\n"), "\n", $strMessages, "\n", ($blnDcLayout ? '' : "\n"));
         }
 
@@ -175,8 +164,7 @@ class Message
      */
     public static function reset()
     {
-        foreach (static::getTypes() as $strType)
-        {
+        foreach (static::getTypes() as $strType) {
             $_SESSION[$strType] = array();
         }
     }

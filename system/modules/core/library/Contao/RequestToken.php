@@ -56,22 +56,19 @@ class RequestToken
         static::$strToken = @$_SESSION['REQUEST_TOKEN'];
 
         // Backwards compatibility
-        if (is_array(static::$strToken))
-        {
+        if (is_array(static::$strToken)) {
             static::$strToken = null;
             unset($_SESSION['REQUEST_TOKEN']);
         }
 
         // Generate a new token
-        if (static::$strToken == '')
-        {
+        if (static::$strToken == '') {
             static::$strToken = md5(uniqid(mt_rand(), true));
             $_SESSION['REQUEST_TOKEN'] = static::$strToken;
         }
 
         // Set the REQUEST_TOKEN constant
-        if (!defined('REQUEST_TOKEN'))
-        {
+        if (!defined('REQUEST_TOKEN')) {
             define('REQUEST_TOKEN', static::$strToken);
         }
     }
@@ -98,26 +95,21 @@ class RequestToken
     public static function validate($strToken)
     {
         // The feature has been disabled
-        if (\Config::get('disableRefererCheck') || defined('BYPASS_TOKEN_CHECK'))
-        {
+        if (\Config::get('disableRefererCheck') || defined('BYPASS_TOKEN_CHECK')) {
             return true;
         }
 
         // Validate the token
-        if ($strToken != '' && static::$strToken != '' && $strToken == static::$strToken)
-        {
+        if ($strToken != '' && static::$strToken != '' && $strToken == static::$strToken) {
             return true;
         }
 
         // Check against the whitelist (thanks to Tristan Lins) (see #3164)
-        if (\Config::get('requestTokenWhitelist'))
-        {
+        if (\Config::get('requestTokenWhitelist')) {
             $strHostname = gethostbyaddr($_SERVER['REMOTE_ADDR']);
 
-            foreach (\Config::get('requestTokenWhitelist') as $strDomain)
-            {
-                if ($strDomain == $strHostname || preg_match('/\.' . preg_quote($strDomain, '/') . '$/', $strHostname))
-                {
+            foreach (\Config::get('requestTokenWhitelist') as $strDomain) {
+                if ($strDomain == $strHostname || preg_match('/\.' . preg_quote($strDomain, '/') . '$/', $strHostname)) {
                     return true;
                 }
             }
@@ -155,8 +147,7 @@ class RequestToken
      */
     public static function getInstance()
     {
-        if (static::$objInstance === null)
-        {
+        if (static::$objInstance === null) {
             static::$objInstance = new static();
         }
 

@@ -57,12 +57,9 @@ class Statement extends \Database\Statement
      */
     protected function limit_query($intRows, $intOffset)
     {
-        if (strncasecmp($this->strQuery, 'SELECT', 6) === 0)
-        {
+        if (strncasecmp($this->strQuery, 'SELECT', 6) === 0) {
             $this->strQuery .= ' LIMIT ' . $intOffset . ',' . $intRows;
-        }
-        else
-        {
+        } else {
             $this->strQuery .= ' LIMIT ' . $intRows;
         }
     }

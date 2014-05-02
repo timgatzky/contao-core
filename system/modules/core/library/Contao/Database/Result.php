@@ -81,8 +81,7 @@ abstract class Result
      */
     public function __construct($resResult, $strQuery)
     {
-        if (!is_resource($resResult) && !is_object($resResult))
-        {
+        if (!is_resource($resResult) && !is_object($resResult)) {
             throw new \Exception('Invalid result resource');
         }
 
@@ -108,8 +107,7 @@ abstract class Result
      */
     public function __set($strKey, $varValue)
     {
-        if (empty($this->arrCache))
-        {
+        if (empty($this->arrCache)) {
             $this->next();
         }
 
@@ -127,8 +125,7 @@ abstract class Result
      */
     public function __isset($strKey)
     {
-        if (empty($this->arrCache))
-        {
+        if (empty($this->arrCache)) {
             $this->next();
         }
 
@@ -152,8 +149,7 @@ abstract class Result
      */
     public function __get($strKey)
     {
-        switch ($strKey)
-        {
+        switch ($strKey) {
             case 'query':
                 return $this->strQuery;
                 break;
@@ -171,12 +167,10 @@ abstract class Result
                 break;
 
             default:
-                if (empty($this->arrCache))
-                {
+                if (empty($this->arrCache)) {
                     $this->next();
                 }
-                if (isset($this->arrCache[$strKey]))
-                {
+                if (isset($this->arrCache[$strKey])) {
                     return $this->arrCache[$strKey];
                 }
                 break;
@@ -193,8 +187,7 @@ abstract class Result
      */
     public function fetchRow()
     {
-        if (($arrRow = $this->fetch_row()) == false)
-        {
+        if (($arrRow = $this->fetch_row()) == false) {
             return false;
         }
 
@@ -212,8 +205,7 @@ abstract class Result
      */
     public function fetchAssoc()
     {
-        if (($arrRow = $this->fetch_assoc()) == false)
-        {
+        if (($arrRow = $this->fetch_assoc()) == false) {
             return false;
         }
 
@@ -236,14 +228,10 @@ abstract class Result
         $this->reset();
         $arrReturn = array();
 
-        while (($arrRow = $this->fetchAssoc()) !== false)
-        {
-            if ($strKey != 'id' && isset($arrRow['id']))
-            {
+        while (($arrRow = $this->fetchAssoc()) !== false) {
+            if ($strKey != 'id' && isset($arrRow['id'])) {
                 $arrReturn[$arrRow['id']] = $arrRow[$strKey];
-            }
-            else
-            {
+            } else {
                 $arrReturn[] = $arrRow[$strKey];
             }
         }
@@ -262,8 +250,7 @@ abstract class Result
         $this->reset();
         $arrReturn = array();
 
-        while (($arrRow = $this->fetchAssoc()) !== false)
-        {
+        while (($arrRow = $this->fetchAssoc()) !== false) {
             $arrReturn[] = $arrRow;
         }
 
@@ -282,8 +269,7 @@ abstract class Result
     {
         $arrFields = $this->fetch_field($intOffset);
 
-        if (is_object($arrFields))
-        {
+        if (is_object($arrFields)) {
             $arrFields = get_object_vars($arrFields);
         }
 
@@ -301,8 +287,7 @@ abstract class Result
         $this->intIndex = 0;
         $this->data_seek($this->intIndex);
 
-        if (($arrRow = $this->fetch_assoc()) == false)
-        {
+        if (($arrRow = $this->fetch_assoc()) == false) {
             return false;
         }
 
@@ -320,16 +305,14 @@ abstract class Result
      */
     public function prev()
     {
-        if ($this->intIndex < 1)
-        {
+        if ($this->intIndex < 1) {
             return false;
         }
 
         --$this->intIndex;
         $this->data_seek($this->intIndex);
 
-        if (($arrRow = $this->fetch_assoc()) == false)
-        {
+        if (($arrRow = $this->fetch_assoc()) == false) {
             return false;
         }
 
@@ -347,13 +330,11 @@ abstract class Result
      */
     public function next()
     {
-        if ($this->blnDone)
-        {
+        if ($this->blnDone) {
             return false;
         }
 
-        if (($arrRow = $this->fetch_assoc()) == false)
-        {
+        if (($arrRow = $this->fetch_assoc()) == false) {
             $this->blnDone = true;
             return false;
         }
@@ -375,8 +356,7 @@ abstract class Result
         $this->intIndex = $this->count() - 1;
         $this->data_seek($this->intIndex);
 
-        if (($arrRow = $this->fetch_assoc()) == false)
-        {
+        if (($arrRow = $this->fetch_assoc()) == false) {
             return false;
         }
 
@@ -407,8 +387,7 @@ abstract class Result
      */
     public function row($blnEnumerated=false)
     {
-        if (empty($this->arrCache))
-        {
+        if (empty($this->arrCache)) {
             $this->next();
         }
 

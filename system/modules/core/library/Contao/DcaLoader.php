@@ -47,8 +47,7 @@ class DcaLoader extends \Controller
      */
     public function __construct($strTable)
     {
-        if ($strTable == '')
-        {
+        if ($strTable == '') {
             throw new \Exception('The table name must not be empty');
         }
 
@@ -66,8 +65,7 @@ class DcaLoader extends \Controller
     public function load($blnNoCache=false)
     {
         // Return if the data has been loaded already
-        if (isset($GLOBALS['loadDataContainer'][$this->strTable]) && !$blnNoCache)
-        {
+        if (isset($GLOBALS['loadDataContainer'][$this->strTable]) && !$blnNoCache) {
             return;
         }
 
@@ -75,36 +73,28 @@ class DcaLoader extends \Controller
         $strCacheFile = 'system/cache/dca/' . $this->strTable . '.php';
 
         // Try to load from cache
-        if (!\Config::get('bypassCache') && file_exists(TL_ROOT . '/' . $strCacheFile))
-        {
+        if (!\Config::get('bypassCache') && file_exists(TL_ROOT . '/' . $strCacheFile)) {
             include TL_ROOT . '/' . $strCacheFile;
-        }
-        else
-        {
-            foreach (\ModuleLoader::getActive() as $strModule)
-            {
+        } else {
+            foreach (\ModuleLoader::getActive() as $strModule) {
                 $strFile = 'system/modules/' . $strModule . '/dca/' . $this->strTable . '.php';
 
-                if (file_exists(TL_ROOT . '/' . $strFile))
-                {
+                if (file_exists(TL_ROOT . '/' . $strFile)) {
                     include TL_ROOT . '/' . $strFile;
                 }
             }
         }
 
         // HOOK: allow to load custom settings
-        if (isset($GLOBALS['TL_HOOKS']['loadDataContainer']) && is_array($GLOBALS['TL_HOOKS']['loadDataContainer']))
-        {
-            foreach ($GLOBALS['TL_HOOKS']['loadDataContainer'] as $callback)
-            {
+        if (isset($GLOBALS['TL_HOOKS']['loadDataContainer']) && is_array($GLOBALS['TL_HOOKS']['loadDataContainer'])) {
+            foreach ($GLOBALS['TL_HOOKS']['loadDataContainer'] as $callback) {
                 $this->import($callback[0]);
                 $this->$callback[0]->$callback[1]($this->strTable);
             }
         }
 
         // Local configuration file
-        if (file_exists(TL_ROOT . '/system/config/dcaconfig.php'))
-        {
+        if (file_exists(TL_ROOT . '/system/config/dcaconfig.php')) {
             include TL_ROOT . '/system/config/dcaconfig.php';
         }
     }

@@ -53,17 +53,13 @@ class Environment
      */
     public static function get($strKey)
     {
-        if (isset(static::$arrCache[$strKey]))
-        {
+        if (isset(static::$arrCache[$strKey])) {
             return static::$arrCache[$strKey];
         }
 
-        if (in_array($strKey, get_class_methods('Environment')))
-        {
+        if (in_array($strKey, get_class_methods('Environment'))) {
             static::$arrCache[$strKey] = static::$strKey();
-        }
-        else
-        {
+        } else {
             $arrChunks = preg_split('/([A-Z][a-z]*)/', $strKey, -1, PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
             $strServerKey = strtoupper(implode('_', $arrChunks));
             static::$arrCache[$strKey] = $_SERVER[$strServerKey];
@@ -134,31 +130,26 @@ class Environment
         $scriptFilename = static::get('scriptFilename');
 
         // Fallback to DOCUMENT_ROOT if SCRIPT_FILENAME and SCRIPT_NAME point to different files
-        if (basename($scriptName) != basename($scriptFilename))
-        {
+        if (basename($scriptName) != basename($scriptFilename)) {
             return str_replace('//', '/', str_replace('\\', '/', realpath($_SERVER['DOCUMENT_ROOT'])));
         }
 
-        if (substr($scriptFilename, 0, 1) == '/')
-        {
+        if (substr($scriptFilename, 0, 1) == '/') {
             $strDocumentRoot = '/';
         }
 
         $arrSnSegments = explode('/', strrev($scriptName));
         $arrSfnSegments = explode('/', strrev($scriptFilename));
 
-        foreach ($arrSfnSegments as $k=>$v)
-        {
-            if ($arrSnSegments[$k] != $v)
-            {
+        foreach ($arrSfnSegments as $k=>$v) {
+            if ($arrSnSegments[$k] != $v) {
                 $arrUriSegments[] = $v;
             }
         }
 
         $strDocumentRoot .= strrev(implode('/', $arrUriSegments));
 
-        if (strlen($strDocumentRoot) < 2)
-        {
+        if (strlen($strDocumentRoot) < 2) {
             $strDocumentRoot = substr($scriptFilename, 0, -(strlen($strDocumentRoot) + 1));
         }
 
@@ -173,12 +164,9 @@ class Environment
      */
     protected static function requestUri()
     {
-        if (!empty($_SERVER['REQUEST_URI']))
-        {
+        if (!empty($_SERVER['REQUEST_URI'])) {
             return $_SERVER['REQUEST_URI'];
-        }
-        else
-        {
+        } else {
             return '/' . preg_replace('/^\//', '', static::get('scriptName')) . (!empty($_SERVER['QUERY_STRING']) ? '?' . $_SERVER['QUERY_STRING'] : '');
         }
     }
@@ -200,17 +188,14 @@ class Environment
         preg_match_all('/([a-z]{1,8}(-[a-z]{1,8})?)\s*(;\s*q\s*=\s*(1|0\.[0-9]+))?/i', $_SERVER['HTTP_ACCEPT_LANGUAGE'], $arrAccepted);
 
         // Remove all invalid locales
-        foreach ($arrAccepted[1] as $v)
-        {
+        foreach ($arrAccepted[1] as $v) {
             $chunks = explode('-', $v);
 
             // Language plus dialect, e.g. en-US or fr-FR
-            if (isset($chunks[1]))
-            {
+            if (isset($chunks[1])) {
                 $locale = $chunks[0] . '-' . strtoupper($chunks[1]);
 
-                if (preg_match('/^[a-z]{2}(\-[A-Z]{2})?$/', $locale))
-                {
+                if (preg_match('/^[a-z]{2}(\-[A-Z]{2})?$/', $locale)) {
                     $arrLanguages[] = $locale;
                 }
             }
@@ -218,8 +203,7 @@ class Environment
             $locale = $chunks[0];
 
             // Language only, e.g. en or fr (see #29)
-            if (preg_match('/^[a-z]{2}$/', $locale))
-            {
+            if (preg_match('/^[a-z]{2}$/', $locale)) {
                 $arrLanguages[] = $locale;
             }
         }
@@ -260,16 +244,12 @@ class Environment
      */
     protected static function httpHost()
     {
-        if (!empty($_SERVER['HTTP_HOST']))
-        {
+        if (!empty($_SERVER['HTTP_HOST'])) {
             $host = $_SERVER['HTTP_HOST'];
-        }
-        else
-        {
+        } else {
             $host = $_SERVER['SERVER_NAME'];
 
-            if ($_SERVER['SERVER_PORT'] != 80)
-            {
+            if ($_SERVER['SERVER_PORT'] != 80) {
                 $host .= ':' . $_SERVER['SERVER_PORT'];
             }
         }
@@ -311,8 +291,7 @@ class Environment
         $xhost = static::get('httpXForwardedHost');
 
         // SSL proxy
-        if ($xhost != '' && $xhost == \Config::get('sslProxyDomain'))
-        {
+        if ($xhost != '' && $xhost == \Config::get('sslProxyDomain')) {
             return 'https://' .  $xhost . '/' . $host;
         }
 
@@ -339,8 +318,7 @@ class Environment
     protected static function ip()
     {
         // No X-Forwarded-For IP
-        if (empty($_SERVER['HTTP_X_FORWARDED_FOR']) || !preg_match('/^[A-Fa-f0-9, \.\:]+$/', $_SERVER['HTTP_X_FORWARDED_FOR']))
-        {
+        if (empty($_SERVER['HTTP_X_FORWARDED_FOR']) || !preg_match('/^[A-Fa-f0-9, \.\:]+$/', $_SERVER['HTTP_X_FORWARDED_FOR'])) {
             return substr($_SERVER['REMOTE_ADDR'], 0, 64);
         }
 
@@ -348,22 +326,17 @@ class Environment
         $arrTrusted = trimsplit(',', \Config::get('proxyServerIps'));
 
         // Generate an array of X-Forwarded-For IPs
-        if (strpos($strXip, ',') !== false)
-        {
+        if (strpos($strXip, ',') !== false) {
             $arrIps = trimsplit(',', $strXip);
-        }
-        else
-        {
+        } else {
             $arrIps = array($strXip);
         }
 
         $arrIps = array_reverse($arrIps);
 
         // Return the first untrusted IP address (see #5830)
-        foreach ($arrIps as $strIp)
-        {
-            if (!in_array($strIp, $arrTrusted))
-            {
+        foreach ($arrIps as $strIp) {
+            if (!in_array($strIp, $arrTrusted)) {
                 return substr($strIp, 0, 64);
             }
         }
@@ -383,8 +356,7 @@ class Environment
         $strServer = !empty($_SERVER['SERVER_ADDR']) ? $_SERVER['SERVER_ADDR'] : $_SERVER['LOCAL_ADDR'];
 
         // Special workaround for Strato users
-        if (empty($strServer))
-        {
+        if (empty($strServer)) {
             $strServer = @gethostbyname($_SERVER['SERVER_NAME']);
         }
 
@@ -443,8 +415,7 @@ class Environment
     {
         $strRequest = static::get('request');
 
-        if ($strRequest == 'index.php')
-        {
+        if ($strRequest == 'index.php') {
             return '';
         }
 
@@ -505,10 +476,8 @@ class Environment
         $engine = '';
 
         // Operating system
-        foreach (\Config::get('os') as $k=>$v)
-        {
-            if (stripos($ua, $k) !== false)
-            {
+        foreach (\Config::get('os') as $k=>$v) {
+            if (stripos($ua, $k) !== false) {
                 $os = $v['os'];
                 $mobile = $v['mobile'];
                 break;
@@ -516,18 +485,15 @@ class Environment
         }
 
         // Android tablets are not mobile (see #4150)
-        if ($os == 'android' && stripos($ua, 'mobile') === false)
-        {
+        if ($os == 'android' && stripos($ua, 'mobile') === false) {
             $mobile = false;
         }
 
         $return->os = $os;
 
         // Browser and version
-        foreach (\Config::get('browser') as $k=>$v)
-        {
-            if (stripos($ua, $k) !== false)
-            {
+        foreach (\Config::get('browser') as $k=>$v) {
+            if (stripos($ua, $k) !== false) {
                 $browser = $v['browser'];
                 $shorty  = $v['shorty'];
                 $version = preg_replace($v['version'], '$1', $ua);
@@ -542,14 +508,12 @@ class Environment
         $return->class = $os . ' ' . $browser . ' ' . $engine;
 
         // Add the version number if available
-        if ($version != '')
-        {
+        if ($version != '') {
             $return->class .= ' ' . $shorty . $version;
         }
 
         // Mark mobile devices
-        if ($mobile)
-        {
+        if ($mobile) {
             $return->class .= ' mobile';
         }
 
@@ -618,8 +582,7 @@ class Environment
      */
     public static function getInstance()
     {
-        if (static::$objInstance === null)
-        {
+        if (static::$objInstance === null) {
             static::$objInstance = new static();
         }
 

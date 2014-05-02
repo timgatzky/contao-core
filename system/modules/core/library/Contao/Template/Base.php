@@ -73,8 +73,7 @@ abstract class Base extends \Controller
         $this->strParent = $this->strTemplate;
 
         // Include the parent templates
-        while ($this->strParent !== null)
-        {
+        while ($this->strParent !== null) {
             $strParent = $this->getTemplate($this->strParent, $this->strFormat);
             $this->strParent = null;
 
@@ -82,8 +81,7 @@ abstract class Base extends \Controller
             include $strParent;
 
             // Capture the output of the root template
-            if ($this->strParent === null)
-            {
+            if ($this->strParent === null) {
                 $strBuffer = ob_get_contents();
             }
 
@@ -94,8 +92,7 @@ abstract class Base extends \Controller
         $this->arrBlocks = array();
 
         // Add start and end markers in debug mode
-        if (\Config::get('debugMode'))
-        {
+        if (\Config::get('debugMode')) {
             $strRelPath = str_replace(TL_ROOT . '/', '', $this->getTemplate($this->strTemplate, $this->strFormat));
             $strBuffer = "\n<!-- TEMPLATE START: $strRelPath -->\n$strBuffer\n<!-- TEMPLATE END: $strRelPath -->\n";
         }
@@ -136,17 +133,14 @@ abstract class Base extends \Controller
         $this->arrBlockNames[] = $name;
 
         // Root template
-        if ($this->strParent === null)
-        {
+        if ($this->strParent === null) {
             // Register the block name
-            if (!isset($this->arrBlocks[$name]))
-            {
+            if (!isset($this->arrBlocks[$name])) {
                 $this->arrBlocks[$name] = '[[TL_PARENT]]';
             }
 
             // Combine the contents of the child blocks
-            elseif (is_array($this->arrBlocks[$name]))
-            {
+            elseif (is_array($this->arrBlocks[$name])) {
                 $callback = function($current, $parent) {
                     return str_replace('[[TL_PARENT]]', $parent, $current);
                 };
@@ -155,18 +149,15 @@ abstract class Base extends \Controller
             }
 
             // Handle nested blocks
-            if ($this->arrBlocks[$name] != '[[TL_PARENT]]')
-            {
+            if ($this->arrBlocks[$name] != '[[TL_PARENT]]') {
                 // Output everything before the first TL_PARENT tag
-                if (strpos($this->arrBlocks[$name], '[[TL_PARENT]]') !== false)
-                {
+                if (strpos($this->arrBlocks[$name], '[[TL_PARENT]]') !== false) {
                     list($content) = explode('[[TL_PARENT]]', $this->arrBlocks[$name], 2);
                     echo $content;
                 }
 
                 // Output the current block and start a new output buffer to remove the following blocks
-                else
-                {
+                else {
                     echo $this->arrBlocks[$name];
                     ob_start();
                 }
@@ -174,14 +165,12 @@ abstract class Base extends \Controller
         }
 
         // Child template
-        else
-        {
+        else {
             // Clean the output buffer
             ob_end_clean();
 
             // Check for nested blocks
-            if (count($this->arrBlockNames) > 1)
-            {
+            if (count($this->arrBlockNames) > 1) {
                 throw new \Exception('Nested blocks are not allowed in child templates');
             }
 
@@ -199,8 +188,7 @@ abstract class Base extends \Controller
     public function endblock()
     {
         // Check for open blocks
-        if (empty($this->arrBlockNames))
-        {
+        if (empty($this->arrBlockNames)) {
             throw new \Exception('You must start a block before you can end it');
         }
 
@@ -208,29 +196,24 @@ abstract class Base extends \Controller
         $name = array_pop($this->arrBlockNames);
 
         // Root template
-        if ($this->strParent === null)
-        {
+        if ($this->strParent === null) {
             // Handle nested blocks
-            if ($this->arrBlocks[$name] != '[[TL_PARENT]]')
-            {
+            if ($this->arrBlocks[$name] != '[[TL_PARENT]]') {
                 // Output everything after the first TL_PARENT tag
-                if (strpos($this->arrBlocks[$name], '[[TL_PARENT]]') !== false)
-                {
+                if (strpos($this->arrBlocks[$name], '[[TL_PARENT]]') !== false) {
                     list(, $content) = explode('[[TL_PARENT]]', $this->arrBlocks[$name], 2);
                     echo $content;
                 }
 
                 // Remove the overwritten content
-                else
-                {
+                else {
                     ob_end_clean();
                 }
             }
         }
 
         // Child template
-        else
-        {
+        else {
             // Capture the block content
             $this->arrBlocks[$name][] = ob_get_contents();
             ob_end_clean();
@@ -251,8 +234,7 @@ abstract class Base extends \Controller
     {
         $tpl = new static($name);
 
-        if ($data !== null)
-        {
+        if ($data !== null) {
             $tpl->setData($data);
         }
 

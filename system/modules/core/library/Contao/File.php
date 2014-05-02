@@ -87,14 +87,12 @@ class File extends \System
     public function __construct($strFile, $blnDoNotCreate=false)
     {
         // Handle open_basedir restrictions
-        if ($strFile == '.')
-        {
+        if ($strFile == '.') {
             $strFile = '';
         }
 
         // Make sure we are not pointing to a directory
-        if (is_dir(TL_ROOT . '/' . $strFile))
-        {
+        if (is_dir(TL_ROOT . '/' . $strFile)) {
             throw new \Exception(sprintf('Directory "%s" is not a file', $strFile));
         }
 
@@ -108,24 +106,20 @@ class File extends \System
         $this->blnSyncDb = (\Config::get('uploadPath') != 'templates' && strncmp($strFolder . '/', \Config::get('uploadPath') . '/', strlen(\Config::get('uploadPath')) + 1) === 0);
 
         // Check the excluded folders
-        if ($this->blnSyncDb && \Config::get('fileSyncExclude') != '')
-        {
+        if ($this->blnSyncDb && \Config::get('fileSyncExclude') != '') {
             $arrExempt = array_map(function($e) {
                 return \Config::get('uploadPath') . '/' . $e;
             }, trimsplit(',', \Config::get('fileSyncExclude')));
 
-            foreach ($arrExempt as $strExempt)
-            {
-                if (strncmp($strExempt . '/', $strFolder . '/', strlen($strExempt) + 1) === 0)
-                {
+            foreach ($arrExempt as $strExempt) {
+                if (strncmp($strExempt . '/', $strFolder . '/', strlen($strExempt) + 1) === 0) {
                     $this->blnSyncDb = false;
                     break;
                 }
             }
         }
 
-        if (!$blnDoNotCreate)
-        {
+        if (!$blnDoNotCreate) {
             $this->createIfNotExists();
         }
     }
@@ -136,8 +130,7 @@ class File extends \System
      */
     public function __destruct()
     {
-        if (is_resource($this->resFile))
-        {
+        if (is_resource($this->resFile)) {
             $this->Files->fclose($this->resFile);
         }
     }
@@ -175,8 +168,7 @@ class File extends \System
      */
     public function __get($strKey)
     {
-        switch ($strKey)
-        {
+        switch ($strKey) {
             case 'size':
             case 'filesize':
                 return filesize(TL_ROOT . '/' . $this->strFile);
@@ -184,24 +176,21 @@ class File extends \System
 
             case 'name':
             case 'basename':
-                if (!isset($this->arrPathinfo[$strKey]))
-                {
+                if (!isset($this->arrPathinfo[$strKey])) {
                     $this->arrPathinfo = pathinfo(TL_ROOT . '/' . $this->strFile);
                 }
                 return $this->arrPathinfo['basename'];
                 break;
 
             case 'dirname':
-                if (!isset($this->arrPathinfo[$strKey]))
-                {
+                if (!isset($this->arrPathinfo[$strKey])) {
                     $this->arrPathinfo = pathinfo(TL_ROOT . '/' . $this->strFile);
                 }
                 return $this->arrPathinfo['dirname'];
                 break;
 
             case 'extension':
-                if (!isset($this->arrPathinfo['extension']))
-                {
+                if (!isset($this->arrPathinfo['extension'])) {
                     $this->arrPathinfo = pathinfo(TL_ROOT . '/' . $this->strFile);
                 }
                 return strtolower($this->arrPathinfo['extension']);
@@ -245,16 +234,14 @@ class File extends \System
                 break;
 
             case 'width':
-                if (empty($this->arrImageSize))
-                {
+                if (empty($this->arrImageSize)) {
                     $this->arrImageSize = @getimagesize(TL_ROOT . '/' . $this->strFile);
                 }
                 return $this->arrImageSize[0];
                 break;
 
             case 'height':
-                if (empty($this->arrImageSize))
-                {
+                if (empty($this->arrImageSize)) {
                     $this->arrImageSize = @getimagesize(TL_ROOT . '/' . $this->strFile);
                 }
                 return $this->arrImageSize[1];
@@ -265,16 +252,14 @@ class File extends \System
                 break;
 
             case 'channels':
-                if (empty($this->arrImageSize))
-                {
+                if (empty($this->arrImageSize)) {
                     $this->arrImageSize = @getimagesize(TL_ROOT . '/' . $this->strFile);
                 }
                 return $this->arrImageSize['channels'];
                 break;
 
             case 'bits':
-                if (empty($this->arrImageSize))
-                {
+                if (empty($this->arrImageSize)) {
                     $this->arrImageSize = @getimagesize(TL_ROOT . '/' . $this->strFile);
                 }
                 return $this->arrImageSize['bits'];
@@ -289,8 +274,7 @@ class File extends \System
                 break;
 
             case 'handle':
-                if (!is_resource($this->resFile))
-                {
+                if (!is_resource($this->resFile)) {
                     $this->resFile = fopen(TL_ROOT . '/' . $this->strFile, 'rb');
                 }
                 return $this->resFile;
@@ -311,26 +295,22 @@ class File extends \System
     protected function createIfNotExists()
     {
         // The file exists
-        if (file_exists(TL_ROOT . '/' . $this->strFile))
-        {
+        if (file_exists(TL_ROOT . '/' . $this->strFile)) {
             return;
         }
 
         // Handle open_basedir restrictions
-        if (($strFolder = dirname($this->strFile)) == '.')
-        {
+        if (($strFolder = dirname($this->strFile)) == '.') {
             $strFolder = '';
         }
 
         // Create the folder
-        if (!is_dir(TL_ROOT . '/' . $strFolder))
-        {
+        if (!is_dir(TL_ROOT . '/' . $strFolder)) {
             new \Folder($strFolder);
         }
 
         // Open the file
-        if (($this->resFile = $this->Files->fopen($this->strFile, 'wb')) == false)
-        {
+        if (($this->resFile = $this->Files->fopen($this->strFile, 'wb')) == false) {
             throw new \Exception(sprintf('Cannot create file "%s"', $this->strFile));
         }
     }
@@ -354,8 +334,7 @@ class File extends \System
      */
     public function truncate()
     {
-        if (is_resource($this->resFile))
-        {
+        if (is_resource($this->resFile)) {
             ftruncate($this->resFile, 0);
         }
 
@@ -414,8 +393,7 @@ class File extends \System
         $return = $this->Files->delete($this->strFile);
 
         // Update the database
-        if ($this->blnSyncDb)
-        {
+        if ($this->blnSyncDb) {
             \Dbafs::deleteResource($this->strFile);
         }
 
@@ -446,20 +424,16 @@ class File extends \System
         $return = $this->Files->fclose($this->resFile);
 
         // Move the temporary file to its destination
-        if ($this->blnDoNotCreate)
-        {
+        if ($this->blnDoNotCreate) {
             // Create the file path
-            if (!file_exists(TL_ROOT . '/' . $this->strFile))
-            {
+            if (!file_exists(TL_ROOT . '/' . $this->strFile)) {
                 // Handle open_basedir restrictions
-                if (($strFolder = dirname($this->strFile)) == '.')
-                {
+                if (($strFolder = dirname($this->strFile)) == '.') {
                     $strFolder = '';
                 }
 
                 // Create the parent folder
-                if (!is_dir(TL_ROOT . '/' . $strFolder))
-                {
+                if (!is_dir(TL_ROOT . '/' . $strFolder)) {
                     new \Folder($strFolder);
                 }
             }
@@ -468,8 +442,7 @@ class File extends \System
         }
 
         // Update the database
-        if ($this->blnSyncDb)
-        {
+        if ($this->blnSyncDb) {
             $this->objModel = \Dbafs::addResource($this->strFile);
         }
 
@@ -498,16 +471,11 @@ class File extends \System
         $strContent = file_get_contents(TL_ROOT . '/' . $this->strFile);
 
         // Remove BOMs (see #4469)
-        if (strncmp($strContent, "\xEF\xBB\xBF", 3) === 0)
-        {
+        if (strncmp($strContent, "\xEF\xBB\xBF", 3) === 0) {
             $strContent = substr($strContent, 3);
-        }
-        elseif (strncmp($strContent, "\xFF\xFE", 2) === 0)
-        {
+        } elseif (strncmp($strContent, "\xFF\xFE", 2) === 0) {
             $strContent = substr($strContent, 2);
-        }
-        elseif (strncmp($strContent, "\xFE\xFF", 2) === 0)
-        {
+        } elseif (strncmp($strContent, "\xFE\xFF", 2) === 0) {
             $strContent = substr($strContent, 2);
         }
 
@@ -552,22 +520,19 @@ class File extends \System
         $strParent = dirname($strNewName);
 
         // Create the parent folder if it does not exist
-        if (!is_dir(TL_ROOT . '/' . $strParent))
-        {
+        if (!is_dir(TL_ROOT . '/' . $strParent)) {
             new \Folder($strParent);
         }
 
         $return = $this->Files->rename($this->strFile, $strNewName);
 
         // Update the database AFTER the file has been renamed
-        if ($this->blnSyncDb)
-        {
+        if ($this->blnSyncDb) {
             $this->objModel = \Dbafs::moveResource($this->strFile, $strNewName);
         }
 
         // Reset the object AFTER the database has been updated
-        if ($return != false)
-        {
+        if ($return != false) {
             $this->strFile = $strNewName;
             $this->arrImageSize = array();
             $this->arrPathinfo = array();
@@ -589,16 +554,14 @@ class File extends \System
         $strParent = dirname($strNewName);
 
         // Create the parent folder if it does not exist
-        if (!is_dir(TL_ROOT . '/' . $strParent))
-        {
+        if (!is_dir(TL_ROOT . '/' . $strParent)) {
             new \Folder($strParent);
         }
 
         $return = $this->Files->copy($this->strFile, $strNewName);
 
         // Update the database AFTER the file has been renamed
-        if ($this->blnSyncDb)
-        {
+        if ($this->blnSyncDb) {
             $this->objModel = \Dbafs::copyResource($this->strFile, $strNewName);
         }
 
@@ -617,15 +580,13 @@ class File extends \System
      */
     public function resizeTo($width, $height, $mode='')
     {
-        if (!$this->isGdImage)
-        {
+        if (!$this->isGdImage) {
             return false;
         }
 
         $return = \Image::resize($this->strFile, $width, $height, $mode);
 
-        if ($return)
-        {
+        if ($return) {
             $this->arrPathinfo = array();
             $this->arrImageSize = array();
         }
@@ -681,29 +642,22 @@ class File extends \System
      */
     protected function fputs($varData, $strMode)
     {
-        if (!is_resource($this->resFile))
-        {
-            if (!$this->blnDoNotCreate)
-            {
+        if (!is_resource($this->resFile)) {
+            if (!$this->blnDoNotCreate) {
                 // Open the original file
-                if (($this->resFile = $this->Files->fopen($this->strFile, $strMode)) == false)
-                {
+                if (($this->resFile = $this->Files->fopen($this->strFile, $strMode)) == false) {
                     return false;
                 }
-            }
-            else
-            {
+            } else {
                 $this->strTmp = 'system/tmp/' . md5(uniqid(mt_rand(), true));
 
                 // Copy the contents of the original file to append data
-                if (strncmp($strMode, 'a', 1) === 0 && file_exists(TL_ROOT . '/' . $this->strFile))
-                {
+                if (strncmp($strMode, 'a', 1) === 0 && file_exists(TL_ROOT . '/' . $this->strFile)) {
                     $this->Files->copy($this->strFile, $this->strTmp);
                 }
 
                 // Open the temporary file
-                if (($this->resFile = $this->Files->fopen($this->strTmp, $strMode)) == false)
-                {
+                if (($this->resFile = $this->Files->fopen($this->strTmp, $strMode)) == false) {
                     return false;
                 }
             }
@@ -721,8 +675,7 @@ class File extends \System
      */
     protected function getMimeInfo()
     {
-        $arrMimeTypes = array
-        (
+        $arrMimeTypes = array(
             // Application files
             'xl'    => array('application/excel', 'iconOFFICE.gif'),
             'xls'   => array('application/excel', 'iconOFFICE.gif'),
@@ -844,14 +797,12 @@ class File extends \System
         );
 
         // Extend the default lookup array
-        if (!empty($GLOBALS['TL_MIME']) && is_array($GLOBALS['TL_MIME']))
-        {
+        if (!empty($GLOBALS['TL_MIME']) && is_array($GLOBALS['TL_MIME'])) {
             $arrMimeTypes = array_merge($arrMimeTypes, $GLOBALS['TL_MIME']);
         }
 
         // Fallback to application/octet-stream
-        if (!isset($arrMimeTypes[$this->extension]))
-        {
+        if (!isset($arrMimeTypes[$this->extension])) {
             return array('application/octet-stream', 'iconPLAIN.gif');
         }
 
@@ -891,12 +842,9 @@ class File extends \System
     protected function getHash()
     {
         // Do not try to hash if bigger than 2 GB
-        if ($this->filesize >= 2147483648)
-        {
+        if ($this->filesize >= 2147483648) {
             return '';
-        }
-        else
-        {
+        } else {
             return md5_file(TL_ROOT . '/' . $this->strFile);
         }
     }

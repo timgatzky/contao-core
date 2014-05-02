@@ -46,15 +46,13 @@ class Installer extends \Controller
         $return = '';
         $sql_command = $this->compileCommands();
 
-        if (empty($sql_command))
-        {
+        if (empty($sql_command)) {
             return '';
         }
 
         $_SESSION['sql_commands'] = array();
 
-        $arrOperations = array
-        (
+        $arrOperations = array(
             'CREATE'        => $GLOBALS['TL_LANG']['tl_install']['CREATE'],
             'ALTER_ADD'     => $GLOBALS['TL_LANG']['tl_install']['ALTER_ADD'],
             'ALTER_CHANGE'  => $GLOBALS['TL_LANG']['tl_install']['ALTER_CHANGE'],
@@ -62,10 +60,8 @@ class Installer extends \Controller
             'DROP'          => $GLOBALS['TL_LANG']['tl_install']['DROP']
         );
 
-        foreach ($arrOperations as $command=>$label)
-        {
-            if (is_array($sql_command[$command]))
-            {
+        foreach ($arrOperations as $command=>$label) {
+            if (is_array($sql_command[$command])) {
                 // Headline
                 $return .= '
     <tr>
@@ -80,8 +76,7 @@ class Installer extends \Controller
     </tr>';
 
                 // Fields
-                foreach ($sql_command[$command] as $vv)
-                {
+                foreach ($sql_command[$command] as $vv) {
                     $key = md5($vv);
                     $_SESSION['sql_commands'][$key] = $vv;
 
@@ -118,21 +113,14 @@ class Installer extends \Controller
         $sql_legacy = $this->getFromFile();
 
         // Manually merge the legacy definitions (see #4766)
-        if (!empty($sql_legacy))
-        {
-            foreach ($sql_legacy as $table=>$categories)
-            {
-                foreach ($categories as $category=>$fields)
-                {
-                    if (is_array($fields))
-                    {
-                        foreach ($fields as $name=>$sql)
-                        {
+        if (!empty($sql_legacy)) {
+            foreach ($sql_legacy as $table=>$categories) {
+                foreach ($categories as $category=>$fields) {
+                    if (is_array($fields)) {
+                        foreach ($fields as $name=>$sql) {
                             $sql_target[$table][$category][$name] = $sql;
                         }
-                    }
-                    else
-                    {
+                    } else {
                         $sql_target[$table][$category] = $fields;
                     }
                 }
@@ -140,66 +128,49 @@ class Installer extends \Controller
         }
 
         // Create tables
-        foreach (array_diff(array_keys($sql_target), array_keys($sql_current)) as $table)
-        {
+        foreach (array_diff(array_keys($sql_target), array_keys($sql_current)) as $table) {
             $return['CREATE'][] = "CREATE TABLE `" . $table . "` (\n  " . implode(",\n  ", $sql_target[$table]['TABLE_FIELDS']) . (!empty($sql_target[$table]['TABLE_CREATE_DEFINITIONS']) ? ',' . "\n  " . implode(",\n  ", $sql_target[$table]['TABLE_CREATE_DEFINITIONS']) : '') . "\n)" . $sql_target[$table]['TABLE_OPTIONS'] . ';';
             $create[] = $table;
         }
 
         // Add or change fields
-        foreach ($sql_target as $k=>$v)
-        {
-            if (in_array($k, $create))
-            {
+        foreach ($sql_target as $k=>$v) {
+            if (in_array($k, $create)) {
                 continue;
             }
 
             // Fields
-            if (is_array($v['TABLE_FIELDS']))
-            {
-                foreach ($v['TABLE_FIELDS'] as $kk=>$vv)
-                {
-                    if (!isset($sql_current[$k]['TABLE_FIELDS'][$kk]))
-                    {
+            if (is_array($v['TABLE_FIELDS'])) {
+                foreach ($v['TABLE_FIELDS'] as $kk=>$vv) {
+                    if (!isset($sql_current[$k]['TABLE_FIELDS'][$kk])) {
                         $return['ALTER_ADD'][] = 'ALTER TABLE `'.$k.'` ADD '.$vv.';';
-                    }
-                    elseif ($sql_current[$k]['TABLE_FIELDS'][$kk] != $vv)
-                    {
+                    } elseif ($sql_current[$k]['TABLE_FIELDS'][$kk] != $vv) {
                         $return['ALTER_CHANGE'][] = 'ALTER TABLE `'.$k.'` CHANGE `'.$kk.'` '.$vv.';';
                     }
                 }
             }
 
             // Create definitions
-            if (is_array($v['TABLE_CREATE_DEFINITIONS']))
-            {
-                foreach ($v['TABLE_CREATE_DEFINITIONS'] as $kk=>$vv)
-                {
-                    if (!isset($sql_current[$k]['TABLE_CREATE_DEFINITIONS'][$kk]))
-                    {
+            if (is_array($v['TABLE_CREATE_DEFINITIONS'])) {
+                foreach ($v['TABLE_CREATE_DEFINITIONS'] as $kk=>$vv) {
+                    if (!isset($sql_current[$k]['TABLE_CREATE_DEFINITIONS'][$kk])) {
                         $return['ALTER_ADD'][] = 'ALTER TABLE `'.$k.'` ADD '.$vv.';';
-                    }
-                    elseif ($sql_current[$k]['TABLE_CREATE_DEFINITIONS'][$kk] != str_replace('FULLTEXT ', '', $vv))
-                    {
+                    } elseif ($sql_current[$k]['TABLE_CREATE_DEFINITIONS'][$kk] != str_replace('FULLTEXT ', '', $vv)) {
                         $return['ALTER_CHANGE'][] = 'ALTER TABLE `'.$k.'` DROP INDEX `'.$kk.'`, ADD '.$vv.';';
                     }
                 }
             }
 
             // Move auto_increment fields to the end of the array
-            if (is_array($return['ALTER_ADD']))
-            {
-                foreach (preg_grep('/auto_increment/i', $return['ALTER_ADD']) as $kk=>$vv)
-                {
+            if (is_array($return['ALTER_ADD'])) {
+                foreach (preg_grep('/auto_increment/i', $return['ALTER_ADD']) as $kk=>$vv) {
                     unset($return['ALTER_ADD'][$kk]);
                     $return['ALTER_ADD'][$kk] = $vv;
                 }
             }
 
-            if (is_array($return['ALTER_CHANGE']))
-            {
-                foreach (preg_grep('/auto_increment/i', $return['ALTER_CHANGE']) as $kk=>$vv)
-                {
+            if (is_array($return['ALTER_CHANGE'])) {
+                foreach (preg_grep('/auto_increment/i', $return['ALTER_CHANGE']) as $kk=>$vv) {
                     unset($return['ALTER_CHANGE'][$kk]);
                     $return['ALTER_CHANGE'][$kk] = $vv;
                 }
@@ -207,36 +178,27 @@ class Installer extends \Controller
         }
 
         // Drop tables
-        foreach (array_diff(array_keys($sql_current), array_keys($sql_target)) as $table)
-        {
+        foreach (array_diff(array_keys($sql_current), array_keys($sql_target)) as $table) {
             $return['DROP'][] = 'DROP TABLE `'.$table.'`;';
             $drop[] = $table;
         }
 
         // Drop fields
-        foreach ($sql_current as $k=>$v)
-        {
-            if (!in_array($k, $drop))
-            {
+        foreach ($sql_current as $k=>$v) {
+            if (!in_array($k, $drop)) {
                 // Create definitions
-                if (is_array($v['TABLE_CREATE_DEFINITIONS']))
-                {
-                    foreach ($v['TABLE_CREATE_DEFINITIONS'] as $kk=>$vv)
-                    {
-                        if (!isset($sql_target[$k]['TABLE_CREATE_DEFINITIONS'][$kk]))
-                        {
+                if (is_array($v['TABLE_CREATE_DEFINITIONS'])) {
+                    foreach ($v['TABLE_CREATE_DEFINITIONS'] as $kk=>$vv) {
+                        if (!isset($sql_target[$k]['TABLE_CREATE_DEFINITIONS'][$kk])) {
                             $return['ALTER_DROP'][] = 'ALTER TABLE `'.$k.'` DROP INDEX `'.$kk.'`;';
                         }
                     }
                 }
 
                 // Fields
-                if (is_array($v['TABLE_FIELDS']))
-                {
-                    foreach ($v['TABLE_FIELDS'] as $kk=>$vv)
-                    {
-                        if (!isset($sql_target[$k]['TABLE_FIELDS'][$kk]))
-                        {
+                if (is_array($v['TABLE_FIELDS'])) {
+                    foreach ($v['TABLE_FIELDS'] as $kk=>$vv) {
+                        if (!isset($sql_target[$k]['TABLE_FIELDS'][$kk])) {
                             $return['ALTER_DROP'][] = 'ALTER TABLE `'.$k.'` DROP `'.$kk.'`;';
                         }
                     }
@@ -245,10 +207,8 @@ class Installer extends \Controller
         }
 
         // HOOK: allow third-party developers to modify the array (see #3281)
-        if (isset($GLOBALS['TL_HOOKS']['sqlCompileCommands']) && is_array($GLOBALS['TL_HOOKS']['sqlCompileCommands']))
-        {
-            foreach ($GLOBALS['TL_HOOKS']['sqlCompileCommands'] as $callback)
-            {
+        if (isset($GLOBALS['TL_HOOKS']['sqlCompileCommands']) && is_array($GLOBALS['TL_HOOKS']['sqlCompileCommands'])) {
+            foreach ($GLOBALS['TL_HOOKS']['sqlCompileCommands'] as $callback) {
                 $this->import($callback[0]);
                 $return = $this->$callback[0]->$callback[1]($return);
             }
@@ -273,28 +233,23 @@ class Installer extends \Controller
         \Config::set('bypassCache', true);
 
         // Only check the active modules (see #4541)
-        foreach (\ModuleLoader::getActive() as $strModule)
-        {
+        foreach (\ModuleLoader::getActive() as $strModule) {
             $strDir = 'system/modules/' . $strModule . '/dca';
 
-            if (!is_dir(TL_ROOT . '/' . $strDir))
-            {
+            if (!is_dir(TL_ROOT . '/' . $strDir)) {
                 continue;
             }
 
-            foreach (scan(TL_ROOT . '/' . $strDir) as $strFile)
-            {
+            foreach (scan(TL_ROOT . '/' . $strDir) as $strFile) {
                 // Ignore non PHP files and files which have been included before
-                if (substr($strFile, -4) != '.php' || in_array($strFile, $included))
-                {
+                if (substr($strFile, -4) != '.php' || in_array($strFile, $included)) {
                     continue;
                 }
 
                 $strTable = substr($strFile, 0, -4);
                 $objExtract = new \DcaExtractor($strTable);
 
-                if ($objExtract->isDbTable())
-                {
+                if ($objExtract->isDbTable()) {
                     $return[$strTable] = $objExtract->getDbInstallerArray();
                 }
 
@@ -306,10 +261,8 @@ class Installer extends \Controller
         \Config::set('bypassCache', $blnBypassCache);
 
         // HOOK: allow third-party developers to modify the array (see #6425)
-        if (isset($GLOBALS['TL_HOOKS']['sqlGetFromDca']) && is_array($GLOBALS['TL_HOOKS']['sqlGetFromDca']))
-        {
-            foreach ($GLOBALS['TL_HOOKS']['sqlGetFromDca'] as $callback)
-            {
+        if (isset($GLOBALS['TL_HOOKS']['sqlGetFromDca']) && is_array($GLOBALS['TL_HOOKS']['sqlGetFromDca'])) {
+            foreach ($GLOBALS['TL_HOOKS']['sqlGetFromDca'] as $callback) {
                 $this->import($callback[0]);
                 $return = $this->$callback[0]->$callback[1]($return);
             }
@@ -330,70 +283,57 @@ class Installer extends \Controller
         $return = array();
 
         // Only check the active modules (see #4541)
-        foreach (\ModuleLoader::getActive() as $strModule)
-        {
-            if (strncmp($strModule, '.', 1) === 0 || strncmp($strModule, '__', 2) === 0)
-            {
+        foreach (\ModuleLoader::getActive() as $strModule) {
+            if (strncmp($strModule, '.', 1) === 0 || strncmp($strModule, '__', 2) === 0) {
                 continue;
             }
 
             // Ignore the database.sql of the not renamed core modules
-            if (in_array($strModule, array('calendar', 'comments', 'faq', 'listing', 'news', 'newsletter')))
-            {
+            if (in_array($strModule, array('calendar', 'comments', 'faq', 'listing', 'news', 'newsletter'))) {
                 continue;
             }
 
             $strFile = TL_ROOT . '/system/modules/' . $strModule . '/config/database.sql';
 
-            if (!file_exists($strFile))
-            {
+            if (!file_exists($strFile)) {
                 continue;
             }
 
             $data = file($strFile);
 
-            foreach ($data as $k=>$v)
-            {
+            foreach ($data as $k=>$v) {
                 $key_name = array();
                 $subpatterns = array();
 
                 // Unset comments and empty lines
-                if (preg_match('/^[#-]+/', $v) || !strlen(trim($v)))
-                {
+                if (preg_match('/^[#-]+/', $v) || !strlen(trim($v))) {
                     unset($data[$k]);
                     continue;
                 }
 
                 // Store the table names
-                if (preg_match('/^CREATE TABLE `([^`]+)`/i', $v, $subpatterns))
-                {
+                if (preg_match('/^CREATE TABLE `([^`]+)`/i', $v, $subpatterns)) {
                     $table = $subpatterns[1];
                 }
                 // Get the table options
-                elseif ($table != '' && preg_match('/^\)([^;]+);/', $v, $subpatterns))
-                {
+                elseif ($table != '' && preg_match('/^\)([^;]+);/', $v, $subpatterns)) {
                     $return[$table]['TABLE_OPTIONS'] = $subpatterns[1];
                     $table = '';
                 }
                 // Add the fields
-                elseif ($table != '')
-                {
+                elseif ($table != '') {
                     preg_match('/^[^`]*`([^`]+)`/', trim($v), $key_name);
                     $first = preg_replace('/\s[^\n\r]+/', '', $key_name[0]);
                     $key = $key_name[1];
 
                     // Create definitions
-                    if (in_array($first, array('KEY', 'PRIMARY', 'PRIMARY KEY', 'FOREIGN', 'FOREIGN KEY', 'INDEX', 'UNIQUE', 'FULLTEXT', 'CHECK')))
-                    {
-                        if (strncmp($first, 'PRIMARY', 7) === 0)
-                        {
+                    if (in_array($first, array('KEY', 'PRIMARY', 'PRIMARY KEY', 'FOREIGN', 'FOREIGN KEY', 'INDEX', 'UNIQUE', 'FULLTEXT', 'CHECK'))) {
+                        if (strncmp($first, 'PRIMARY', 7) === 0) {
                             $key = 'PRIMARY';
                         }
 
                         $return[$table]['TABLE_CREATE_DEFINITIONS'][$key] = preg_replace('/,$/', '', trim($v));
-                    }
-                    else
-                    {
+                    } else {
                         $return[$table]['TABLE_FIELDS'][$key] = preg_replace('/,$/', '', trim($v));
                     }
                 }
@@ -401,10 +341,8 @@ class Installer extends \Controller
         }
 
         // HOOK: allow third-party developers to modify the array (see #3281)
-        if (isset($GLOBALS['TL_HOOKS']['sqlGetFromFile']) && is_array($GLOBALS['TL_HOOKS']['sqlGetFromFile']))
-        {
-            foreach ($GLOBALS['TL_HOOKS']['sqlGetFromFile'] as $callback)
-            {
+        if (isset($GLOBALS['TL_HOOKS']['sqlGetFromFile']) && is_array($GLOBALS['TL_HOOKS']['sqlGetFromFile'])) {
+            foreach ($GLOBALS['TL_HOOKS']['sqlGetFromFile'] as $callback) {
                 $this->import($callback[0]);
                 $return = $this->$callback[0]->$callback[1]($return);
             }
@@ -424,29 +362,24 @@ class Installer extends \Controller
         $this->import('Database');
         $tables = preg_grep('/^tl_/', $this->Database->listTables(null, true));
 
-        if (empty($tables))
-        {
+        if (empty($tables)) {
             return array();
         }
 
         $return = array();
 
-        foreach ($tables as $table)
-        {
+        foreach ($tables as $table) {
             $fields = $this->Database->listFields($table, true);
 
-            foreach ($fields as $field)
-            {
+            foreach ($fields as $field) {
                 $name = $field['name'];
                 $field['name'] = '`'.$field['name'].'`';
 
-                if ($field['type'] != 'index')
-                {
+                if ($field['type'] != 'index') {
                     unset($field['index']);
 
                     // Field type
-                    if ($field['length'] != '')
-                    {
+                    if ($field['length'] != '') {
                         $field['type'] .= '(' . $field['length'] . (($field['precision'] != '') ? ',' . $field['precision'] : '') . ')';
 
                         unset($field['length']);
@@ -454,28 +387,22 @@ class Installer extends \Controller
                     }
 
                     // Variant collation
-                    if ($field['collation'] != '' && $field['collation'] != \Config::get('dbCollation'))
-                    {
+                    if ($field['collation'] != '' && $field['collation'] != \Config::get('dbCollation')) {
                         $field['collation'] = 'COLLATE ' . $field['collation'];
-                    }
-                    else
-                    {
+                    } else {
                         unset($field['collation']);
                     }
 
                     // Default values
-                    if (in_array(strtolower($field['type']), array('text', 'tinytext', 'mediumtext', 'longtext', 'blob', 'tinyblob', 'mediumblob', 'longblob')) || stristr($field['extra'], 'auto_increment') || $field['default'] === null || strtolower($field['null']) == 'null')
-                    {
+                    if (in_array(strtolower($field['type']), array('text', 'tinytext', 'mediumtext', 'longtext', 'blob', 'tinyblob', 'mediumblob', 'longblob')) || stristr($field['extra'], 'auto_increment') || $field['default'] === null || strtolower($field['null']) == 'null') {
                         unset($field['default']);
                     }
                     // Date/time constants (see #5089)
-                    elseif (in_array(strtolower($field['default']), array('current_date', 'current_time', 'current_timestamp')))
-                    {
+                    elseif (in_array(strtolower($field['default']), array('current_date', 'current_time', 'current_timestamp'))) {
                         $field['default'] = "default " . $field['default'];
                     }
                     // Everything else
-                    else
-                    {
+                    else {
                         $field['default'] = "default '" . $field['default'] . "'";
                     }
 
@@ -483,19 +410,14 @@ class Installer extends \Controller
                 }
 
                 // Indices
-                if (isset($field['index']) && $field['index_fields'])
-                {
+                if (isset($field['index']) && $field['index_fields']) {
                     $index_fields = implode('`, `', $field['index_fields']);
 
-                    switch ($field['index'])
-                    {
+                    switch ($field['index']) {
                         case 'UNIQUE':
-                            if ($name == 'PRIMARY')
-                            {
+                            if ($name == 'PRIMARY') {
                                 $return[$table]['TABLE_CREATE_DEFINITIONS'][$name] = 'PRIMARY KEY  (`'.$index_fields.'`)';
-                            }
-                            else
-                            {
+                            } else {
                                 $return[$table]['TABLE_CREATE_DEFINITIONS'][$name] = 'UNIQUE KEY `'.$name.'` (`'.$index_fields.'`)';
                             }
                             break;
@@ -516,10 +438,8 @@ class Installer extends \Controller
         }
 
         // HOOK: allow third-party developers to modify the array (see #3281)
-        if (isset($GLOBALS['TL_HOOKS']['sqlGetFromDB']) && is_array($GLOBALS['TL_HOOKS']['sqlGetFromDB']))
-        {
-            foreach ($GLOBALS['TL_HOOKS']['sqlGetFromDB'] as $callback)
-            {
+        if (isset($GLOBALS['TL_HOOKS']['sqlGetFromDB']) && is_array($GLOBALS['TL_HOOKS']['sqlGetFromDB'])) {
+            foreach ($GLOBALS['TL_HOOKS']['sqlGetFromDB'] as $callback) {
                 $this->import($callback[0]);
                 $return = $this->$callback[0]->$callback[1]($return);
             }

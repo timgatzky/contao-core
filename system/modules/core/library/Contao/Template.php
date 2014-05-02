@@ -88,8 +88,7 @@ abstract class Template extends \Template\Base
      */
     public function __get($strKey)
     {
-        if (isset($this->arrData[$strKey]))
-        {
+        if (isset($this->arrData[$strKey])) {
             return $this->arrData[$strKey];
         }
 
@@ -109,8 +108,7 @@ abstract class Template extends \Template\Base
      */
     public function __call($strKey, $arrParams)
     {
-        if (!isset($this->arrData[$strKey]) || !is_callable($this->arrData[$strKey]))
-        {
+        if (!isset($this->arrData[$strKey]) || !is_callable($this->arrData[$strKey])) {
             throw new \InvalidArgumentException("$strKey is not set or not a callable");
         }
 
@@ -226,16 +224,13 @@ abstract class Template extends \Template\Base
      */
     public function parse()
     {
-        if ($this->strTemplate == '')
-        {
+        if ($this->strTemplate == '') {
             return '';
         }
 
         // HOOK: add custom parse filters
-        if (isset($GLOBALS['TL_HOOKS']['parseTemplate']) && is_array($GLOBALS['TL_HOOKS']['parseTemplate']))
-        {
-            foreach ($GLOBALS['TL_HOOKS']['parseTemplate'] as $callback)
-            {
+        if (isset($GLOBALS['TL_HOOKS']['parseTemplate']) && is_array($GLOBALS['TL_HOOKS']['parseTemplate'])) {
+            foreach ($GLOBALS['TL_HOOKS']['parseTemplate'] as $callback) {
                 $this->import($callback[0]);
                 $this->$callback[0]->$callback[1]($this);
             }
@@ -250,8 +245,7 @@ abstract class Template extends \Template\Base
      */
     public function output()
     {
-        if (!$this->strBuffer)
-        {
+        if (!$this->strBuffer) {
             $this->strBuffer = $this->parse();
         }
 
@@ -263,16 +257,13 @@ abstract class Template extends \Template\Base
         header('Content-Type: ' . $this->strContentType . '; charset=' . \Config::get('characterSet'));
 
         // Debug information
-        if (\Config::get('debugMode') && !isset($_GET['popup']))
-        {
+        if (\Config::get('debugMode') && !isset($_GET['popup'])) {
             $intReturned = 0;
             $intAffected = 0;
 
             // Count the totals (see #3884)
-            if (is_array($GLOBALS['TL_DEBUG']['database_queries']))
-            {
-                foreach ($GLOBALS['TL_DEBUG']['database_queries'] as $k=>$v)
-                {
+            if (is_array($GLOBALS['TL_DEBUG']['database_queries'])) {
+                foreach ($GLOBALS['TL_DEBUG']['database_queries'] as $k=>$v) {
                     $intReturned += $v['return_count'];
                     $intAffected += $v['affected_count'];
                     unset($GLOBALS['TL_DEBUG']['database_queries'][$k]['return_count']);
@@ -342,8 +333,7 @@ abstract class Template extends \Template\Base
     public function minifyHtml($strHtml)
     {
         // The feature has been disabled
-        if (!\Config::get('minifyMarkup') || \Config::get('debugMode'))
-        {
+        if (!\Config::get('minifyMarkup') || \Config::get('debugMode')) {
             return $strHtml;
         }
 
@@ -355,33 +345,22 @@ abstract class Template extends \Template\Base
         $blnOptimizeNext = false;
 
         // Recombine the markup
-        foreach ($arrChunks as $strChunk)
-        {
-            if (strncasecmp($strChunk, '<pre', 4) === 0 || strncasecmp($strChunk, '<textarea', 9) === 0)
-            {
+        foreach ($arrChunks as $strChunk) {
+            if (strncasecmp($strChunk, '<pre', 4) === 0 || strncasecmp($strChunk, '<textarea', 9) === 0) {
                 $blnPreserveNext = true;
-            }
-            elseif (strncasecmp($strChunk, '<script', 7) === 0 || strncasecmp($strChunk, '<style', 6) === 0)
-            {
+            } elseif (strncasecmp($strChunk, '<script', 7) === 0 || strncasecmp($strChunk, '<style', 6) === 0) {
                 $blnOptimizeNext = true;
-            }
-            elseif ($blnPreserveNext)
-            {
+            } elseif ($blnPreserveNext) {
                 $blnPreserveNext = false;
-            }
-            elseif ($blnOptimizeNext)
-            {
+            } elseif ($blnOptimizeNext) {
                 $blnOptimizeNext = false;
 
                 // Minify inline scripts
                 $strChunk = str_replace(array("/* <![CDATA[ */\n", "<!--\n", "\n//-->"), array('/* <![CDATA[ */', '', ''), $strChunk);
                 $strChunk = preg_replace(array('@(?<![:\'"])//(?!W3C|DTD|EN).*@', '/[ \n\t]*(;|=|\{|\}|\[|\]|&&|,|<|>|\',|",|\':|":|: |\|\|)[ \n\t]*/'), array('', '$1'), $strChunk);
                 $strChunk = trim($strChunk);
-            }
-            else
-            {
-                $arrReplace = array
-                (
+            } else {
+                $arrReplace = array(
                     '/\n ?\n+/'                   => "\n",    // Convert multiple line-breaks
                     '/^[\t ]+</m'                 => '<',     // Remove tag indentation
                     '/>\n<(a|input|select|span)/' => '> <$1', // Remove line-breaks between tags
@@ -428,12 +407,9 @@ abstract class Template extends \Template\Base
      */
     public static function generateInlineStyle($script, $xhtml=false)
     {
-        if ($xhtml)
-        {
+        if ($xhtml) {
             return '<style type="text/css">' . "\n/* <![CDATA[ */\n" . $script . "\n/* ]]> */\n" . '</style>';
-        }
-        else
-        {
+        } else {
             return '<style>' . $script . '</style>';
         }
     }
@@ -463,12 +439,9 @@ abstract class Template extends \Template\Base
      */
     public static function generateInlineScript($script, $xhtml=false)
     {
-        if ($xhtml)
-        {
+        if ($xhtml) {
             return '<script type="text/javascript">' . "\n/* <![CDATA[ */\n" . $script . "\n/* ]]> */\n" . '</script>';
-        }
-        else
-        {
+        } else {
             return '<script>' . $script . '</script>';
         }
     }

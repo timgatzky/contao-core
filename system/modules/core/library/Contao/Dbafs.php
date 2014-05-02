@@ -46,8 +46,7 @@ class Dbafs
         $strUploadPath = \Config::get('uploadPath') . '/';
 
         // Remove trailing slashes (see #5707)
-        if (substr($strResource, -1) == '/')
-        {
+        if (substr($strResource, -1) == '/') {
             $strResource = substr($strResource, 0, -1);
         }
 
@@ -55,8 +54,7 @@ class Dbafs
         $strResource = str_replace('//', '/', $strResource);
 
         // The resource does not exist or lies outside the upload directory
-        if ($strResource == '' || strncmp($strResource,  $strUploadPath, strlen($strUploadPath)) !== 0 || !file_exists(TL_ROOT . '/' . $strResource))
-        {
+        if ($strResource == '' || strncmp($strResource,  $strUploadPath, strlen($strUploadPath)) !== 0 || !file_exists(TL_ROOT . '/' . $strResource)) {
             throw new \InvalidArgumentException("Invalid resource $strResource");
         }
 
@@ -68,8 +66,7 @@ class Dbafs
         $objDatabase = \Database::getInstance();
 
         // Build the paths
-        while (count($arrChunks))
-        {
+        while (count($arrChunks)) {
             $strPath .= '/' . array_shift($arrChunks);
             $arrPaths[] = $strPath;
         }
@@ -80,35 +77,29 @@ class Dbafs
         $objModels = \FilesModel::findMultipleByPaths($arrPaths);
 
         // Unset the entries in $arrPaths if the DB entry exists
-        if ($objModels !== null)
-        {
-            while ($objModels->next())
-            {
-                if (($i = array_search($objModels->path, $arrPaths)) !== false)
-                {
+        if ($objModels !== null) {
+            while ($objModels->next()) {
+                if (($i = array_search($objModels->path, $arrPaths)) !== false) {
                     unset($arrPaths[$i]);
                     $arrPids[$objModels->path] = $objModels->uuid;
                 }
             }
 
             // Store the model if it exists
-            if ($objModels->path == $strResource)
-            {
+            if ($objModels->path == $strResource) {
                 $objModel = $objModels->current();
             }
         }
 
         // Return the model if it exists already
-        if (empty($arrPaths))
-        {
+        if (empty($arrPaths)) {
             return $objModel;
         }
 
         $arrPaths = array_values($arrPaths);
 
         // If the resource is a folder, also add its contents
-        if (is_dir(TL_ROOT . '/' . $strResource))
-        {
+        if (is_dir(TL_ROOT . '/' . $strResource)) {
             // Get a filtered list of all files
             $objFiles = new \RecursiveIteratorIterator(
                 new \Dbafs\Filter(
@@ -120,12 +111,10 @@ class Dbafs
             );
 
             // Add the relative path
-            foreach ($objFiles as $objFile)
-            {
+            foreach ($objFiles as $objFile) {
                 $strRelpath = str_replace(TL_ROOT . '/', '', $objFile->getPathname());
 
-                if ($objFile->isDir())
-                {
+                if ($objFile->isDir()) {
                     $arrUpdate[] = $strRelpath;
                 }
 
@@ -136,24 +125,19 @@ class Dbafs
         $objReturn = null;
 
         // Create the new resources
-        foreach ($arrPaths as $strPath)
-        {
+        foreach ($arrPaths as $strPath) {
             $strParent = dirname($strPath);
 
             // The parent ID should be in $arrPids
             // Do not use isset() here, because the PID can be null
-            if (array_key_exists($strParent, $arrPids))
-            {
+            if (array_key_exists($strParent, $arrPids)) {
                 $strPid = $arrPids[$strParent];
-            }
-            else
-            {
+            } else {
                 throw new \Exception("No parent entry for $strParent");
             }
 
             // Create the file or folder
-            if (is_file(TL_ROOT . '/' . $strPath))
-            {
+            if (is_file(TL_ROOT . '/' . $strPath)) {
                 $objFile = new \File($strPath, true);
 
                 $objModel = new \FilesModel();
@@ -168,9 +152,7 @@ class Dbafs
                 $objModel->save();
 
                 $arrPids[$objFile->path] = $objModel->uuid;
-            }
-            else
-            {
+            } else {
                 $objFolder = new \Folder($strPath);
 
                 $objModel = new \FilesModel();
@@ -188,15 +170,13 @@ class Dbafs
             }
 
             // Store the model to be returned (see #5979)
-            if ($objModel->path == $strResource)
-            {
+            if ($objModel->path == $strResource) {
                 $objReturn = $objModel;
             }
         }
 
         // Update the folder hashes
-        if ($blnUpdateFolders)
-        {
+        if ($blnUpdateFolders) {
             static::updateFolderHashes($arrUpdate);
         }
 
@@ -217,24 +197,19 @@ class Dbafs
         $objFile = \FilesModel::findByPath($strSource);
 
         // If there is no entry, directly add the destination
-        if ($objFile === null)
-        {
+        if ($objFile === null) {
             $objFile = static::addResource($strDestination);
         }
 
         $strFolder = dirname($strDestination);
 
         // Set the new parent ID
-        if ($strFolder == \Config::get('uploadPath'))
-        {
+        if ($strFolder == \Config::get('uploadPath')) {
             $objFile->pid = null;
-        }
-        else
-        {
+        } else {
             $objFolder = \FilesModel::findByPath($strFolder);
 
-            if ($objFolder === null)
-            {
+            if ($objFolder === null) {
                 $objFolder = static::addResource($strFolder);
             }
 
@@ -247,14 +222,11 @@ class Dbafs
         $objFile->save();
 
         // Update all child records
-        if ($objFile->type == 'folder')
-        {
+        if ($objFile->type == 'folder') {
             $objFiles = \FilesModel::findMultipleByBasepath($strSource . '/');
 
-            if ($objFiles !== null)
-            {
-                while ($objFiles->next())
-                {
+            if ($objFiles !== null) {
+                while ($objFiles->next()) {
                     $objFiles->path = preg_replace('@^' . $strSource . '/@', $strDestination . '/', $objFiles->path);
                     $objFiles->save();
                 }
@@ -262,12 +234,10 @@ class Dbafs
         }
 
         // Update the MD5 hash of the parent folders
-        if (($strPath = dirname($strSource)) != \Config::get('uploadPath'))
-        {
+        if (($strPath = dirname($strSource)) != \Config::get('uploadPath')) {
             static::updateFolderHashes($strPath);
         }
-        if (($strPath = dirname($strDestination)) != \Config::get('uploadPath'))
-        {
+        if (($strPath = dirname($strDestination)) != \Config::get('uploadPath')) {
             static::updateFolderHashes($strPath);
         }
 
@@ -289,8 +259,7 @@ class Dbafs
         $objFile = \FilesModel::findByPath($strSource);
 
         // Add the source entry
-        if ($objFile === null)
-        {
+        if ($objFile === null) {
             $objFile = static::addResource($strSource);
         }
 
@@ -298,16 +267,12 @@ class Dbafs
         $objNewFile = clone $objFile->current();
 
         // Set the new parent ID
-        if ($strFolder == \Config::get('uploadPath'))
-        {
+        if ($strFolder == \Config::get('uploadPath')) {
             $objNewFile->pid = null;
-        }
-        else
-        {
+        } else {
             $objFolder = \FilesModel::findByPath($strFolder);
 
-            if ($objFolder === null)
-            {
+            if ($objFolder === null) {
                 $objFolder = static::addResource($strFolder);
             }
 
@@ -322,14 +287,11 @@ class Dbafs
         $objNewFile->save();
 
         // Update all child records
-        if ($objFile->type == 'folder')
-        {
+        if ($objFile->type == 'folder') {
             $objFiles = \FilesModel::findMultipleByBasepath($strSource . '/');
 
-            if ($objFiles !== null)
-            {
-                while ($objFiles->next())
-                {
+            if ($objFiles !== null) {
+                while ($objFiles->next()) {
                     $objNew = clone $objFiles->current();
 
                     $objNew->pid    = $objNewFile->uuid;
@@ -342,12 +304,10 @@ class Dbafs
         }
 
         // Update the MD5 hash of the parent folders
-        if (($strPath = dirname($strSource)) != \Config::get('uploadPath'))
-        {
+        if (($strPath = dirname($strSource)) != \Config::get('uploadPath')) {
             static::updateFolderHashes($strPath);
         }
-        if (($strPath = dirname($strDestination)) != \Config::get('uploadPath'))
-        {
+        if (($strPath = dirname($strDestination)) != \Config::get('uploadPath')) {
             static::updateFolderHashes($strPath);
         }
 
@@ -365,8 +325,7 @@ class Dbafs
         $objModel = \FilesModel::findByPath($strResource);
 
         // Remove the resource
-        if ($objModel !== null)
-        {
+        if ($objModel !== null) {
             $objModel->delete();
         }
 
@@ -374,10 +333,8 @@ class Dbafs
         $objFiles = \FilesModel::findMultipleByBasepath($strResource . '/');
 
         // Remove subfolders and files as well
-        if ($objFiles !== null)
-        {
-            while ($objFiles->next())
-            {
+        if ($objFiles !== null) {
+            while ($objFiles->next()) {
                 $objFiles->delete();
             }
         }
@@ -395,25 +352,21 @@ class Dbafs
     {
         $arrPaths  = array();
 
-        if (!is_array($varResource))
-        {
+        if (!is_array($varResource)) {
             $varResource = array($varResource);
         }
 
-        foreach ($varResource as $strResource)
-        {
+        foreach ($varResource as $strResource) {
             $arrChunks = explode('/', $strResource);
             $strPath   = array_shift($arrChunks);
 
             // Do not check files
-            if (is_file(TL_ROOT . '/' . $strResource))
-            {
+            if (is_file(TL_ROOT . '/' . $strResource)) {
                 array_pop($arrChunks);
             }
 
             // Build the paths
-            while (count($arrChunks))
-            {
+            while (count($arrChunks)) {
                 $strPath .= '/' . array_shift($arrChunks);
                 $arrPaths[] = $strPath;
             }
@@ -424,14 +377,12 @@ class Dbafs
         $arrPaths = array_values(array_unique($arrPaths));
 
         // Store the hash of each folder
-        foreach (array_reverse($arrPaths) as $strPath)
-        {
+        foreach (array_reverse($arrPaths) as $strPath) {
             $objFolder = new \Folder($strPath);
             $objModel  = \FilesModel::findByPath($strPath);
 
             // The DB entry does not yet exist
-            if ($objModel === null)
-            {
+            if ($objModel === null) {
                 $objModel = static::addResource($strPath, false);
             }
 
@@ -477,36 +428,28 @@ class Dbafs
         $arrModels = array();
 
         // Create or update the database entries
-        foreach ($objFiles as $objFile)
-        {
+        foreach ($objFiles as $objFile) {
             $strRelpath = str_replace(TL_ROOT . '/', '', $objFile->getPathname());
 
             // Get all subfiles in a single query
-            if ($objFile->isDir())
-            {
+            if ($objFile->isDir()) {
                 $objSubfiles = \FilesModel::findMultipleFilesByFolder($strRelpath);
 
-                if ($objSubfiles !== null)
-                {
-                    while ($objSubfiles->next())
-                    {
+                if ($objSubfiles !== null) {
+                    while ($objSubfiles->next()) {
                         $arrModels[$objSubfiles->path] = $objSubfiles->current();
                     }
                 }
             }
 
             // Get the model
-            if (isset($arrModels[$strRelpath]))
-            {
+            if (isset($arrModels[$strRelpath])) {
                 $objModel = $arrModels[$strRelpath];
-            }
-            else
-            {
+            } else {
                 $objModel = \FilesModel::findByPath($strRelpath);
             }
 
-            if ($objModel === null)
-            {
+            if ($objModel === null) {
                 // Add a log entry
                 $objLog->append("[Added] $strRelpath");
 
@@ -514,16 +457,12 @@ class Dbafs
                 $strParent = dirname($strRelpath);
 
                 // Get the parent ID
-                if ($strParent == \Config::get('uploadPath'))
-                {
+                if ($strParent == \Config::get('uploadPath')) {
                     $strPid = null;
-                }
-                else
-                {
+                } else {
                     $objParent = \FilesModel::findByPath($strParent);
 
-                    if ($objParent === null)
-                    {
+                    if ($objParent === null) {
                         throw new \Exception("No parent entry for $strParent");
                     }
 
@@ -531,8 +470,7 @@ class Dbafs
                 }
 
                 // Create the file or folder
-                if (is_file(TL_ROOT . '/' . $strRelpath))
-                {
+                if (is_file(TL_ROOT . '/' . $strRelpath)) {
                     $objFile = new \File($strRelpath, true);
 
                     $objModel = new \FilesModel();
@@ -545,9 +483,7 @@ class Dbafs
                     $objModel->hash      = $objFile->hash;
                     $objModel->uuid      = $objDatabase->getUuid();
                     $objModel->save();
-                }
-                else
-                {
+                } else {
                     $objFolder = new \Folder($strRelpath);
 
                     $objModel = new \FilesModel();
@@ -561,9 +497,7 @@ class Dbafs
                     $objModel->uuid      = $objDatabase->getUuid();
                     $objModel->save();
                 }
-            }
-            else
-            {
+            } else {
                 // Check whether the MD5 hash has changed
                 $objResource = $objFile->isDir() ? new \Folder($strRelpath) : new \File($strRelpath);
                 $strType = ($objModel->hash != $objResource->hash) ? 'Changed' : 'Unchanged';
@@ -581,24 +515,18 @@ class Dbafs
         // Check for left-over entries in the DB
         $objFiles = \FilesModel::findByFound('');
 
-        if ($objFiles !== null)
-        {
+        if ($objFiles !== null) {
             $arrMapped = array();
             $arrPidUpdate = array();
 
-            while ($objFiles->next())
-            {
+            while ($objFiles->next()) {
                 $objFound = \FilesModel::findBy(array('hash=?', 'found=1'), $objFiles->hash);
 
-                if ($objFound !== null)
-                {
+                if ($objFound !== null) {
                     // Check for matching file names if the result is ambiguous (see #5644)
-                    if ($objFound->count() > 1)
-                    {
-                        while ($objFound->next())
-                        {
-                            if ($objFound->name == $objFiles->name)
-                            {
+                    if ($objFound->count() > 1) {
+                        while ($objFound->next()) {
+                            if ($objFound->name == $objFiles->name) {
                                 $objFound = $objFound->current();
                                 break;
                             }
@@ -606,8 +534,7 @@ class Dbafs
                     }
 
                     // If another file has been mapped already, delete the entry (see #6008)
-                    if (in_array($objFound->path, $arrMapped))
-                    {
+                    if (in_array($objFound->path, $arrMapped)) {
                         $objLog->append("[Deleted] {$objFiles->path}");
                         $objFiles->delete();
                         continue;
@@ -616,8 +543,7 @@ class Dbafs
                     $arrMapped[] = $objFound->path;
 
                     // Store the PID change
-                    if ($objFiles->type == 'folder')
-                    {
+                    if ($objFiles->type == 'folder') {
                         $arrPidUpdate[$objFound->uuid] = $objFiles->uuid;
                     }
 
@@ -637,9 +563,7 @@ class Dbafs
 
                     // Then save the modified original entry (prevents duplicate key errors)
                     $objFiles->save();
-                }
-                else
-                {
+                } else {
                     // Add a log entry BEFORE changing the object
                     $objLog->append("[Deleted] {$objFiles->path}");
 
@@ -649,16 +573,12 @@ class Dbafs
             }
 
             // Update the PID of the child records
-            if (!empty($arrPidUpdate))
-            {
-                foreach ($arrPidUpdate as $from=>$to)
-                {
+            if (!empty($arrPidUpdate)) {
+                foreach ($arrPidUpdate as $from=>$to) {
                     $objChildren = \FilesModel::findByPid($from);
 
-                    if ($objChildren !== null)
-                    {
-                        while ($objChildren->next())
-                        {
+                    if ($objChildren !== null) {
+                        while ($objChildren->next()) {
                             $objChildren->pid = $to;
                             $objChildren->save();
                         }

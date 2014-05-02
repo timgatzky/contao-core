@@ -147,8 +147,7 @@ class Request
      */
     public function __set($strKey, $varValue)
     {
-        switch ($strKey)
-        {
+        switch ($strKey) {
             case 'data':
                 $this->strData = $varValue;
                 break;
@@ -200,8 +199,7 @@ class Request
      */
     public function __get($strKey)
     {
-        switch ($strKey)
-        {
+        switch ($strKey) {
             case 'error':
                 return $this->strError;
                 break;
@@ -271,13 +269,11 @@ class Request
      */
     public function send($strUrl, $strData=null, $strMethod=null)
     {
-        if ($strData !== null)
-        {
+        if ($strData !== null) {
             $this->strData = $strData;
         }
 
-        if ($strMethod !== null)
-        {
+        if ($strMethod !== null) {
             $this->strMethod = $strMethod;
         }
 
@@ -285,8 +281,7 @@ class Request
         $errno = null;
         $uri = parse_url($strUrl);
 
-        switch ($uri['scheme'])
-        {
+        switch ($uri['scheme']) {
             case 'http':
                 $port = isset($uri['port']) ? $uri['port'] : 80;
                 $host = $uri['host'] . (($port != 80) ? ':' . $port : '');
@@ -305,38 +300,31 @@ class Request
                 break;
         }
 
-        if (!is_resource($fp))
-        {
+        if (!is_resource($fp)) {
             $this->strError = trim($errno .' '. $errstr);
             return;
         }
 
         $path = isset($uri['path']) ? $uri['path'] : '/';
 
-        if (isset($uri['query']))
-        {
+        if (isset($uri['query'])) {
             $path .= '?' . $uri['query'];
         }
 
-        $default = array
-        (
+        $default = array(
             'Host' => 'Host: ' . $host,
             'User-Agent' => 'User-Agent: Contao (+https://contao.org/)',
             'Content-Length' => 'Content-Length: '. strlen($this->strData),
             'Connection' => 'Connection: close'
         );
 
-        if (isset($uri['user']))
-        {
+        if (isset($uri['user'])) {
             $default['Authorization'] = 'Authorization: Basic ' . base64_encode($uri['user'] . ':' . $uri['pass']);
-        }
-        elseif ($this->strUsername != '')
-        {
+        } elseif ($this->strUsername != '') {
             $default['Authorization'] = 'Authorization: Basic ' . base64_encode($this->strUsername . ':' . $this->strPassword);
         }
 
-        foreach ($this->arrHeaders as $header=>$value)
-        {
+        foreach ($this->arrHeaders as $header=>$value) {
             $default[$header] = $header . ': ' . $value;
         }
 
@@ -344,8 +332,7 @@ class Request
         $request .= implode("\r\n", $default);
         $request .= "\r\n\r\n";
 
-        if ($this->strData != '')
-        {
+        if ($this->strData != '') {
             $request .= $this->strData . "\r\n";
         }
 
@@ -353,8 +340,7 @@ class Request
         fwrite($fp, $request);
         $response = '';
 
-        while (!feof($fp) && ($chunk = fread($fp, 1024)) != false)
-        {
+        while (!feof($fp) && ($chunk = fread($fp, 1024)) != false) {
             $response .= $chunk;
         }
 
@@ -365,22 +351,17 @@ class Request
         $this->arrResponseHeaders = array();
         list(, $code, $text) = explode(' ', trim(array_shift($split)), 3);
 
-        while (($line = trim(array_shift($split))) != false)
-        {
+        while (($line = trim(array_shift($split))) != false) {
             list($header, $value) = explode(':', $line, 2);
 
-            if (isset($this->arrResponseHeaders[$header]) && $header == 'Set-Cookie')
-            {
+            if (isset($this->arrResponseHeaders[$header]) && $header == 'Set-Cookie') {
                 $this->arrResponseHeaders[$header] .= ',' . trim($value);
-            }
-            else
-            {
+            } else {
                 $this->arrResponseHeaders[$header] = trim($value);
             }
         }
 
-        $responses = array
-        (
+        $responses = array(
             100 => 'Continue',
             101 => 'Switching Protocols',
             200 => 'OK',
@@ -423,15 +404,13 @@ class Request
             505 => 'HTTP Version Not Supported'
         );
 
-        if (!isset($responses[$code]))
-        {
+        if (!isset($responses[$code])) {
             $code = floor($code / 100) * 100;
         }
 
         $this->intCode = intval($code);
 
-        switch ($this->intCode)
-        {
+        switch ($this->intCode) {
             case 200:
             case 304:
                 // Ok
@@ -441,8 +420,7 @@ class Request
             case 302:
             case 303:
             case 307:
-                if ($this->blnFollowRedirects && $this->intRedirects < $this->intRedirectLimit && !empty($this->arrResponseHeaders['Location']))
-                {
+                if ($this->blnFollowRedirects && $this->intRedirects < $this->intRedirectLimit && !empty($this->arrResponseHeaders['Location'])) {
                     ++$this->intRedirects;
                     $this->send($this->arrResponseHeaders['Location']);
                 }

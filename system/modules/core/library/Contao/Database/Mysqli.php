@@ -39,15 +39,13 @@ class Mysqli extends \Database
     {
         $host = $this->arrConfig['dbHost'];
 
-        if ($this->arrConfig['dbPconnect'])
-        {
+        if ($this->arrConfig['dbPconnect']) {
             $host = 'p:' . $host;
         }
 
         $this->resConnection = new \mysqli($host, $this->arrConfig['dbUser'], $this->arrConfig['dbPass'], $this->arrConfig['dbDatabase'], $this->arrConfig['dbPort'], $this->arrConfig['dbSocket']);
 
-        if ($this->resConnection->connect_error)
-        {
+        if ($this->resConnection->connect_error) {
             throw new \Exception($this->resConnection->connect_error);
         }
 
@@ -86,12 +84,9 @@ class Mysqli extends \Database
      */
     protected function find_in_set($strKey, $varSet, $blnIsField=false)
     {
-        if ($blnIsField)
-        {
+        if ($blnIsField) {
             return "FIND_IN_SET(" . $strKey . ", " . $varSet . ")";
-        }
-        else
-        {
+        } else {
             return "FIND_IN_SET(" . $strKey . ", '" . $this->resConnection->real_escape_string($varSet) . "')";
         }
     }
@@ -121,44 +116,35 @@ class Mysqli extends \Database
         $arrReturn = array();
         $objFields = $this->query("SELECT * FROM `INFORMATION_SCHEMA`.`COLUMNS` WHERE `TABLE_SCHEMA` LIKE '{$this->arrConfig['dbDatabase']}' AND `TABLE_NAME` LIKE '%$strTable'");
 
-        while ($objFields->next())
-        {
+        while ($objFields->next()) {
             $arrTmp = array();
             $arrChunks = preg_split('/(\([^\)]+\))/', $objFields->COLUMN_TYPE, -1, PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
 
             $arrTmp['name'] = $objFields->COLUMN_NAME;
             $arrTmp['type'] = $arrChunks[0];
 
-            if (!empty($arrChunks[1]))
-            {
+            if (!empty($arrChunks[1])) {
                 $arrChunks[1] = str_replace(array('(', ')'), '', $arrChunks[1]);
 
                 // Handle enum fields (see #6387)
-                if ($arrChunks[0] == 'enum')
-                {
+                if ($arrChunks[0] == 'enum') {
                     $arrTmp['length'] = $arrChunks[1];
-                }
-                else
-                {
+                } else {
                     $arrSubChunks = explode(',', $arrChunks[1]);
                     $arrTmp['length'] = trim($arrSubChunks[0]);
 
-                    if (!empty($arrSubChunks[1]))
-                    {
+                    if (!empty($arrSubChunks[1])) {
                         $arrTmp['precision'] = trim($arrSubChunks[1]);
                     }
                 }
             }
 
-            if (!empty($arrChunks[2]))
-            {
+            if (!empty($arrChunks[2])) {
                 $arrTmp['attributes'] = trim($arrChunks[2]);
             }
 
-            if ($objFields->COLUMN_KEY != '')
-            {
-                switch ($objFields->COLUMN_KEY)
-                {
+            if ($objFields->COLUMN_KEY != '') {
+                switch ($objFields->COLUMN_KEY) {
                     case 'PRI':
                         $arrTmp['index'] = 'PRIMARY';
                         break;
@@ -188,8 +174,7 @@ class Mysqli extends \Database
 
         $objIndex = $this->query("SHOW INDEXES FROM `$strTable`");
 
-        while ($objIndex->next())
-        {
+        while ($objIndex->next()) {
             $arrReturn[$objIndex->Key_name]['name'] = $objIndex->Key_name;
             $arrReturn[$objIndex->Key_name]['type'] = 'index';
             $arrReturn[$objIndex->Key_name]['index_fields'][] = $objIndex->Column_name;
@@ -252,8 +237,7 @@ class Mysqli extends \Database
     {
         $arrLocks = array();
 
-        foreach ($arrTables as $table=>$mode)
-        {
+        foreach ($arrTables as $table=>$mode) {
             $arrLocks[] = $table .' '. $mode;
         }
 
@@ -311,12 +295,10 @@ class Mysqli extends \Database
     {
         static $ids;
 
-        if (empty($ids))
-        {
+        if (empty($ids)) {
             $res = $this->resConnection->query(implode(' UNION ALL ', array_fill(0, 10, "SELECT UNHEX(REPLACE(UUID(), '-', '')) AS uuid")));
 
-            while (($row = $res->fetch_object()) != false)
-            {
+            while (($row = $res->fetch_object()) != false) {
                 $ids[] = $row->uuid;
             }
         }

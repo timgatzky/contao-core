@@ -53,8 +53,7 @@ class String
         $strString = preg_replace('/[\t\n\r]+/', ' ', $strString);
         $strString = strip_tags($strString);
 
-        if (utf8_strlen($strString) <= $intNumberOfChars)
-        {
+        if (utf8_strlen($strString) <= $intNumberOfChars) {
             return $strString;
         }
 
@@ -63,25 +62,21 @@ class String
         $arrChunks = preg_split('/\s+/', $strString);
         $blnAddEllipsis = false;
 
-        foreach ($arrChunks as $strChunk)
-        {
+        foreach ($arrChunks as $strChunk) {
             $intCharCount += utf8_strlen(static::decodeEntities($strChunk));
 
-            if ($intCharCount++ <= $intNumberOfChars)
-            {
+            if ($intCharCount++ <= $intNumberOfChars) {
                 $arrWords[] = $strChunk;
                 continue;
             }
 
             // If the first word is longer than $intNumberOfChars already, shorten it
             // with utf8_substr() so the method does not return an empty string.
-            if (empty($arrWords))
-            {
+            if (empty($arrWords)) {
                 $arrWords[] = utf8_substr($strChunk, 0, $intNumberOfChars);
             }
 
-            if ($strEllipsis !== false)
-            {
+            if ($strEllipsis !== false) {
                 $blnAddEllipsis = true;
             }
 
@@ -89,8 +84,7 @@ class String
         }
 
         // Backwards compatibility
-        if ($strEllipsis === true)
-        {
+        if ($strEllipsis === true) {
             $strEllipsis = ' …';
         }
 
@@ -124,50 +118,39 @@ class String
         // Seperate tags and text
         $arrChunks = preg_split('/(<[^>]+>)/', $strString, -1, PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
 
-        for ($i=0, $c=count($arrChunks); $i<$c; $i++)
-        {
+        for ($i=0, $c=count($arrChunks); $i<$c; $i++) {
             // Buffer tags to include them later
-            if (preg_match('/<([^>]+)>/', $arrChunks[$i]))
-            {
+            if (preg_match('/<([^>]+)>/', $arrChunks[$i])) {
                 $arrTagBuffer[] = $arrChunks[$i];
                 continue;
             }
 
             // Get the substring of the current text
-            if (($arrChunks[$i] = static::substr($arrChunks[$i], ($intNumberOfChars - $intCharCount), false)) == false)
-            {
+            if (($arrChunks[$i] = static::substr($arrChunks[$i], ($intNumberOfChars - $intCharCount), false)) == false) {
                 break;
             }
 
             $intCharCount += utf8_strlen(static::decodeEntities($arrChunks[$i]));
 
-            if ($intCharCount <= $intNumberOfChars)
-            {
-                foreach ($arrTagBuffer as $strTag)
-                {
+            if ($intCharCount <= $intNumberOfChars) {
+                foreach ($arrTagBuffer as $strTag) {
                     $strTagName = strtolower(trim($strTag));
 
                     // Extract the tag name (see #5669)
-                    if (($pos = strpos($strTagName, ' ')) !== false)
-                    {
+                    if (($pos = strpos($strTagName, ' ')) !== false) {
                         $strTagName = substr($strTagName, 1, $pos - 1);
-                    }
-                    else
-                    {
+                    } else {
                         $strTagName = substr($strTagName, 1, -1);
                     }
 
                     // Skip empty tags
-                    if (in_array($strTagName, $arrEmptyTags))
-                    {
+                    if (in_array($strTagName, $arrEmptyTags)) {
                         continue;
                     }
 
                     // Store opening tags in the open_tags array
-                    if (strncmp($strTagName, '/', 1) !== 0)
-                    {
-                        if (!empty($arrChunks[$i]) || $i<$c)
-                        {
+                    if (strncmp($strTagName, '/', 1) !== 0) {
+                        if (!empty($arrChunks[$i]) || $i<$c) {
                             $arrOpenTags[] = $strTagName;
                         }
 
@@ -175,14 +158,11 @@ class String
                     }
 
                     // Closing tags will be removed from the "open tags" array
-                    if (!empty($arrChunks[$i]) || $i<$c)
-                    {
+                    if (!empty($arrChunks[$i]) || $i<$c) {
                         $arrOpenTags = array_values($arrOpenTags);
 
-                        for ($j=count($arrOpenTags)-1; $j>=0; $j--)
-                        {
-                            if ($strTagName == '/' . $arrOpenTags[$j])
-                            {
+                        for ($j=count($arrOpenTags)-1; $j>=0; $j--) {
+                            if ($strTagName == '/' . $arrOpenTags[$j]) {
                                 unset($arrOpenTags[$j]);
                                 break;
                             }
@@ -191,8 +171,7 @@ class String
                 }
 
                 // If the current chunk contains text, add tags and text to the return string
-                if (strlen($arrChunks[$i]) || $i<$c)
-                {
+                if (strlen($arrChunks[$i]) || $i<$c) {
                     $strReturn .= implode('', $arrTagBuffer) . $arrChunks[$i];
                 }
 
@@ -206,8 +185,7 @@ class String
         // Close all remaining open tags
         krsort($arrOpenTags);
 
-        foreach ($arrOpenTags as $strTag)
-        {
+        foreach ($arrOpenTags as $strTag) {
             $strReturn .= '</' . $strTag . '>';
         }
 
@@ -226,13 +204,11 @@ class String
      */
     public static function decodeEntities($strString, $strQuoteStyle=ENT_COMPAT, $strCharset=null)
     {
-        if ($strString == '')
-        {
+        if ($strString == '') {
             return '';
         }
 
-        if ($strCharset === null)
-        {
+        if ($strCharset === null) {
             $strCharset = \Config::get('characterSet');
         }
 
@@ -267,8 +243,7 @@ class String
      */
     public static function censor($strString, $varWords, $strReplace='')
     {
-        foreach ((array) $varWords as $strWord)
-        {
+        foreach ((array) $varWords as $strWord) {
             $strString = preg_replace('/\b(' . str_replace('\*', '\w*?', preg_quote($strWord, '/')) . ')\b/i', $strReplace, $strString);
         }
 
@@ -288,20 +263,15 @@ class String
         $arrEmails = array();
         preg_match_all('/\w([-._\w]*\w)?@\w([-._\w]*\w)?\.\w{2,6}/', $strString, $arrEmails);
 
-        foreach ((array) $arrEmails[0] as $strEmail)
-        {
+        foreach ((array) $arrEmails[0] as $strEmail) {
             $strEncoded = '';
 
-            for($i=0; $i<strlen($strEmail); ++$i)
-            {
+            for($i=0; $i<strlen($strEmail); ++$i) {
                 $blnHex = rand(0, 1);
 
-                if ($blnHex)
-                {
+                if ($blnHex) {
                     $strEncoded .= sprintf('&#x%X;', ord($strEmail{$i}));
-                }
-                else
-                {
+                } else {
                     $strEncoded .= sprintf('&#%s;', ord($strEmail{$i}));
                 }
             }
@@ -322,16 +292,11 @@ class String
      */
     public static function splitFriendlyEmail($strEmail)
     {
-        if (strpos($strEmail, '<') !== false)
-        {
+        if (strpos($strEmail, '<') !== false) {
             return array_map('trim', explode(' <', str_replace('>', '', $strEmail)));
-        }
-        elseif (strpos($strEmail, '[') !== false)
-        {
+        } elseif (strpos($strEmail, '[') !== false) {
             return array_map('trim', explode(' [', str_replace(']', '', $strEmail)));
-        }
-        else
-        {
+        } else {
             return array('', $strEmail);
         }
     }
@@ -364,8 +329,7 @@ class String
      */
     public static function highlight($strString, $strPhrase, $strOpeningTag='<strong>', $strClosingTag='</strong>')
     {
-        if ($strString == '' || $strPhrase == '')
-        {
+        if ($strString == '' || $strPhrase == '') {
             return $strString;
         }
 
@@ -385,8 +349,7 @@ class String
     {
         $arrValues = preg_split('/'.$strDelimiter.'(?=(?:[^"]*"[^"]*")*(?![^"]*"))/', $strString);
 
-        foreach ($arrValues as $k=>$v)
-        {
+        foreach ($arrValues as $k=>$v) {
             $arrValues[$k] = trim($v, ' "');
         }
 
@@ -403,14 +366,12 @@ class String
      */
     public static function toXhtml($strString)
     {
-        $arrPregReplace = array
-        (
+        $arrPregReplace = array(
             '/<(br|hr|img)([^>]*)>/i' => '<$1$2 />', // Close stand-alone tags
             '/ border="[^"]*"/'       => ''          // Remove deprecated attributes
         );
 
-        $arrStrReplace = array
-        (
+        $arrStrReplace = array(
             '/ />'             => ' />',        // Fix incorrectly closed tags
             '<b>'              => '<strong>',   // Replace <b> with <strong>
             '</b>'             => '</strong>',
@@ -438,15 +399,13 @@ class String
      */
     public static function toHtml5($strString)
     {
-        $arrPregReplace = array
-        (
+        $arrPregReplace = array(
             '/<(br|hr|img)([^>]*) \/>/i'                  => '<$1$2>',             // Close stand-alone tags
             '/ (cellpadding|cellspacing|border)="[^"]*"/' => '',                   // Remove deprecated attributes
             '/ rel="lightbox(\[([^\]]+)\])?"/'            => ' data-lightbox="$2"' // see #4073
         );
 
-        $arrStrReplace = array
-        (
+        $arrStrReplace = array(
             '<u>'                                              => '<span style="text-decoration:underline">',
             '</u>'                                             => '</span>',
             ' target="_self"'                                  => '',
@@ -481,26 +440,16 @@ class String
         $arrTags = preg_split('/(\{[^\}]+\})/', $strString, -1, PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
 
         // Replace the tags
-        foreach ($arrTags as $strTag)
-        {
-            if (strncmp($strTag, '{if', 3) === 0)
-            {
+        foreach ($arrTags as $strTag) {
+            if (strncmp($strTag, '{if', 3) === 0) {
                 $strReturn .= preg_replace('/\{if ([A-Za-z0-9_]+)([=!<>]+)([^;$\(\)\[\]\}]+).*\}/i', '<?php if ($arrData[\'$1\'] $2 $3): ?>', $strTag);
-            }
-            elseif (strncmp($strTag, '{elseif', 7) === 0)
-            {
+            } elseif (strncmp($strTag, '{elseif', 7) === 0) {
                 $strReturn .= preg_replace('/\{elseif ([A-Za-z0-9_]+)([=!<>]+)([^;$\(\)\[\]\}]+).*\}/i', '<?php elseif ($arrData[\'$1\'] $2 $3): ?>', $strTag);
-            }
-            elseif (strncmp($strTag, '{else', 5) === 0)
-            {
+            } elseif (strncmp($strTag, '{else', 5) === 0) {
                 $strReturn .= '<?php else: ?>';
-            }
-            elseif (strncmp($strTag, '{endif', 6) === 0)
-            {
+            } elseif (strncmp($strTag, '{endif', 6) === 0) {
                 $strReturn .= '<?php endif; ?>';
-            }
-            else
-            {
+            } else {
                 $strReturn .= $strTag;
             }
         }
@@ -516,8 +465,7 @@ class String
         ob_end_clean();
 
         // Throw an exception if there is an eval() error
-        if ($blnEval === false)
-        {
+        if ($blnEval === false) {
             throw new \Exception("Error parsing simple tokens ($strReturn)");
         }
 
@@ -564,23 +512,18 @@ class String
         $return = '';
         $paths = preg_split('/(src="([^"]+)")/i', $data, -1, PREG_SPLIT_DELIM_CAPTURE);
 
-        for ($i=0, $c=count($paths); $i<$c; $i=$i+3)
-        {
+        for ($i=0, $c=count($paths); $i<$c; $i=$i+3) {
             $return .= $paths[$i];
 
-            if (!isset($paths[$i+1]))
-            {
+            if (!isset($paths[$i+1])) {
                 continue;
             }
 
             $file = \FilesModel::findByPath($paths[$i+2]);
 
-            if ($file !== null)
-            {
+            if ($file !== null) {
                 $return .= 'src="{{file::' . static::binToUuid($file->uuid) . '}}"';
-            }
-            else
-            {
+            } else {
                 $return .= 'src="' . $paths[$i+2] . '"';
             }
         }
@@ -601,23 +544,18 @@ class String
         $return = '';
         $paths = preg_split('/(src="\{\{file::([^"\}]+)\}\}")/i', $data, -1, PREG_SPLIT_DELIM_CAPTURE);
 
-        for ($i=0, $c=count($paths); $i<$c; $i=$i+3)
-        {
+        for ($i=0, $c=count($paths); $i<$c; $i=$i+3) {
             $return .= $paths[$i];
 
-            if (!isset($paths[$i+1]))
-            {
+            if (!isset($paths[$i+1])) {
                 continue;
             }
 
             $file = \FilesModel::findByUuid($paths[$i+2]);
 
-            if ($file !== null)
-            {
+            if ($file !== null) {
                 $return .= 'src="' . $file->path . '"';
-            }
-            else
-            {
+            } else {
                 $return .= 'src="' . $paths[$i+2] . '"';
             }
         }
@@ -651,8 +589,7 @@ class String
      */
     public static function getInstance()
     {
-        if (static::$objInstance === null)
-        {
+        if (static::$objInstance === null) {
             static::$objInstance = new static();
         }
 

@@ -76,8 +76,7 @@ abstract class Database
         $this->arrConfig = $arrConfig;
         $this->connect();
 
-        if (!is_resource($this->resConnection) && !is_object($this->resConnection))
-        {
+        if (!is_resource($this->resConnection) && !is_object($this->resConnection)) {
             throw new \Exception(sprintf('Could not connect to database (%s)', $this->error));
         }
     }
@@ -88,8 +87,7 @@ abstract class Database
      */
     public function __destruct()
     {
-        if (!$this->arrConfig['dbPconnect'])
-        {
+        if (!$this->arrConfig['dbPconnect']) {
             $this->disconnect();
 
             // Unset the reference (see #4772)
@@ -114,8 +112,7 @@ abstract class Database
      */
     public function __get($strKey)
     {
-        if ($strKey == 'error')
-        {
+        if ($strKey == 'error') {
             return $this->get_error();
         }
 
@@ -132,8 +129,7 @@ abstract class Database
      */
     public static function getInstance(array $arrCustom=null)
     {
-        $arrConfig = array
-        (
+        $arrConfig = array(
             'dbDriver'   => \Config::get('dbDriver'),
             'dbHost'     => \Config::get('dbHost'),
             'dbUser'     => \Config::get('dbUser'),
@@ -145,8 +141,7 @@ abstract class Database
             'dbSocket'   => \Config::get('dbSocket')
         );
 
-        if (is_array($arrCustom))
-        {
+        if (is_array($arrCustom)) {
             $arrConfig = array_merge($arrConfig, $arrCustom);
         }
 
@@ -154,8 +149,7 @@ abstract class Database
         ksort($arrConfig);
         $strKey = md5(implode('', $arrConfig));
 
-        if (!isset(static::$arrInstances[$strKey]))
-        {
+        if (!isset(static::$arrInstances[$strKey])) {
             $strClass = 'Database\\' . str_replace(' ', '_', ucwords(str_replace('_', ' ', strtolower($arrConfig['dbDriver']))));
             static::$arrInstances[$strKey] = new $strClass($arrConfig);
         }
@@ -214,8 +208,7 @@ abstract class Database
      */
     public function findInSet($strKey, $varSet, $blnIsField=false)
     {
-        if (is_array($varSet))
-        {
+        if (is_array($varSet)) {
             $varSet = implode(',', $varSet);
         }
 
@@ -233,21 +226,18 @@ abstract class Database
      */
     public function listTables($strDatabase=null, $blnNoCache=false)
     {
-        if ($strDatabase === null)
-        {
+        if ($strDatabase === null) {
             $strDatabase = $this->arrConfig['dbDatabase'];
         }
 
-        if (!$blnNoCache && isset($this->arrCache[$strDatabase]))
-        {
+        if (!$blnNoCache && isset($this->arrCache[$strDatabase])) {
             return $this->arrCache[$strDatabase];
         }
 
         $arrReturn = array();
         $objTables = $this->query(sprintf($this->strListTables, $strDatabase));
 
-        while ($objTables->next())
-        {
+        while ($objTables->next()) {
             $arrReturn[] = current($objTables->row());
         }
 
@@ -267,8 +257,7 @@ abstract class Database
      */
     public function tableExists($strTable, $strDatabase=null, $blnNoCache=false)
     {
-        if ($strTable == '')
-        {
+        if ($strTable == '') {
             return false;
         }
 
@@ -286,8 +275,7 @@ abstract class Database
      */
     public function listFields($strTable, $blnNoCache=false)
     {
-        if (!$blnNoCache && isset($this->arrCache[$strTable]))
-        {
+        if (!$blnNoCache && isset($this->arrCache[$strTable])) {
             return $this->arrCache[$strTable];
         }
 
@@ -307,15 +295,12 @@ abstract class Database
      */
     public function fieldExists($strField, $strTable, $blnNoCache=false)
     {
-        if ($strField == '' || $strTable == '')
-        {
+        if ($strField == '' || $strTable == '') {
             return false;
         }
 
-        foreach ($this->listFields($strTable, $blnNoCache) as $arrField)
-        {
-            if ($arrField['name'] == $strField)
-            {
+        foreach ($this->listFields($strTable, $blnNoCache) as $arrField) {
+            if ($arrField['name'] == $strField) {
                 return true;
             }
         }
@@ -335,15 +320,12 @@ abstract class Database
      */
     public function indexExists($strName, $strTable, $blnNoCache=false)
     {
-        if ($strName == '' || $strTable == '')
-        {
+        if ($strName == '' || $strTable == '') {
             return false;
         }
 
-        foreach ($this->listFields($strTable, $blnNoCache) as $arrField)
-        {
-            if ($arrField['name'] == $strName && $arrField['type'] == 'index')
-            {
+        foreach ($this->listFields($strTable, $blnNoCache) as $arrField) {
+            if ($arrField['name'] == $strName && $arrField['type'] == 'index') {
                 return true;
             }
         }
@@ -365,8 +347,7 @@ abstract class Database
         $arrNames = array();
         $arrFields = $this->listFields($strTable, $blnNoCache);
 
-        foreach ($arrFields as $arrField)
-        {
+        foreach ($arrFields as $arrField) {
             $arrNames[] = $arrField['name'];
         }
 
@@ -388,8 +369,7 @@ abstract class Database
     {
         $strQuery = "SELECT * FROM $strTable WHERE $strField=?";
 
-        if ($intId !== null)
-        {
+        if ($intId !== null) {
             $strQuery .= " AND id!=?";
         }
 
@@ -416,42 +396,34 @@ abstract class Database
      */
     public function getChildRecords($arrParentIds, $strTable, $blnSorting=false, $arrReturn=array(), $strWhere='')
     {
-        if (!is_array($arrParentIds))
-        {
+        if (!is_array($arrParentIds)) {
             $arrParentIds = array($arrParentIds);
         }
 
-        if (empty($arrParentIds))
-        {
+        if (empty($arrParentIds)) {
             return $arrReturn;
         }
 
         $arrParentIds = array_map('intval', $arrParentIds);
         $objChilds = $this->query("SELECT id, pid FROM " . $strTable . " WHERE pid IN(" . implode(',', $arrParentIds) . ")" . ($strWhere ? " AND $strWhere" : "") . ($blnSorting ? " ORDER BY " . $this->findInSet('pid', $arrParentIds) . ", sorting" : ""));
 
-        if ($objChilds->numRows > 0)
-        {
-            if ($blnSorting)
-            {
+        if ($objChilds->numRows > 0) {
+            if ($blnSorting) {
                 $arrChilds = array();
                 $arrOrdered = array();
 
-                while ($objChilds->next())
-                {
+                while ($objChilds->next()) {
                     $arrChilds[] = $objChilds->id;
                     $arrOrdered[$objChilds->pid][] = $objChilds->id;
                 }
 
-                foreach (array_reverse(array_keys($arrOrdered)) as $pid)
-                {
+                foreach (array_reverse(array_keys($arrOrdered)) as $pid) {
                     $pos = (int) array_search($pid, $arrReturn);
                     array_insert($arrReturn, $pos+1, $arrOrdered[$pid]);
                 }
 
                 $arrReturn = $this->getChildRecords($arrChilds, $strTable, $blnSorting, $arrReturn, $strWhere);
-            }
-            else
-            {
+            } else {
                 $arrChilds = $objChilds->fetchEach('id');
                 $arrReturn = array_merge($arrChilds, $this->getChildRecords($arrChilds, $strTable, $blnSorting, $arrReturn, $strWhere));
             }
@@ -477,8 +449,7 @@ abstract class Database
         $objPages = $this->prepare("SELECT id, @pid:=pid FROM $strTable WHERE id=?" . str_repeat(" UNION SELECT id, @pid:=pid FROM $strTable WHERE id=@pid", 9))
                          ->execute($intId);
 
-        while ($objPages->next())
-        {
+        while ($objPages->next()) {
             $arrReturn[] = $objPages->id;
         }
 

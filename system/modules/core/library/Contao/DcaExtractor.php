@@ -94,8 +94,7 @@ class DcaExtractor extends \Controller
      */
     public function __construct($strTable)
     {
-        if ($strTable == '')
-        {
+        if ($strTable == '') {
             throw new \Exception('The table name must not be empty');
         }
 
@@ -105,12 +104,9 @@ class DcaExtractor extends \Controller
         $this->strFile = 'system/cache/sql/' . $strTable . '.php';
 
         // Try to load from cache
-        if (!\Config::get('bypassCache') && file_exists(TL_ROOT . '/' . $this->strFile))
-        {
+        if (!\Config::get('bypassCache') && file_exists(TL_ROOT . '/' . $this->strFile)) {
             include TL_ROOT . '/' . $this->strFile;
-        }
-        else
-        {
+        } else {
             $this->createExtract();
         }
     }
@@ -225,36 +221,26 @@ class DcaExtractor extends \Controller
         $return = array();
 
         // Fields
-        foreach ($this->arrFields as $k=>$v)
-        {
+        foreach ($this->arrFields as $k=>$v) {
             $return['TABLE_FIELDS'][$k] = '`' . $k . '` ' . $v;
         }
 
         // Keys
-        foreach ($this->arrKeys as $k=>$v)
-        {
+        foreach ($this->arrKeys as $k=>$v) {
             // Handle multi-column indexes (see #5556)
-            if (strpos($k, ',') !== false)
-            {
+            if (strpos($k, ',') !== false) {
                 $f = trimsplit(',', $k);
                 $k = str_replace(',', '_', $k);
-            }
-            else
-            {
+            } else {
                 $f = array($k);
             }
 
-            if ($v == 'primary')
-            {
+            if ($v == 'primary') {
                 $k = 'PRIMARY';
                 $v = 'PRIMARY KEY  (`' . implode('`, `', $f) . '`)';
-            }
-            elseif ($v == 'index')
-            {
+            } elseif ($v == 'index') {
                 $v = 'KEY `' . $k . '` (`' . implode('`, `', $f) . '`)';
-            }
-            else
-            {
+            } else {
                 $v = strtoupper($v) . ' KEY `' . $k . '` (`' . implode('`, `', $f) . '`)';
             }
 
@@ -264,14 +250,10 @@ class DcaExtractor extends \Controller
         $return['TABLE_OPTIONS'] = '';
 
         // Options
-        foreach ($this->arrMeta as $k=>$v)
-        {
-            if ($k == 'engine')
-            {
+        foreach ($this->arrMeta as $k=>$v) {
+            if ($k == 'engine') {
                 $return['TABLE_OPTIONS'] .= ' ENGINE=' . $v;
-            }
-            elseif ($k == 'charset')
-            {
+            } elseif ($k == 'charset') {
                 $return['TABLE_OPTIONS'] .= ' DEFAULT CHARSET=' . $v;
             }
         }
@@ -286,14 +268,12 @@ class DcaExtractor extends \Controller
     protected function createExtract()
     {
         // Load the data container
-        if (!isset($GLOBALS['loadDataContainer'][$this->strTable]))
-        {
+        if (!isset($GLOBALS['loadDataContainer'][$this->strTable])) {
             $this->loadDataContainer($this->strTable);
         }
 
         // Return if the DC type is "File"
-        if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dataContainer'] == 'File')
-        {
+        if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dataContainer'] == 'File') {
             return;
         }
 
@@ -301,25 +281,20 @@ class DcaExtractor extends \Controller
         $arrRelations = array();
 
         // Check whether there are fields (see #4826)
-        if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields']))
-        {
-            foreach ($GLOBALS['TL_DCA'][$this->strTable]['fields'] as $field=>$config)
-            {
+        if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'])) {
+            foreach ($GLOBALS['TL_DCA'][$this->strTable]['fields'] as $field=>$config) {
                 // Check whether all fields have an SQL definition
-                if (!isset($config['sql']) && isset($config['inputType']))
-                {
+                if (!isset($config['sql']) && isset($config['inputType'])) {
                     $blnFromFile = true;
                 }
 
                 // Check whether there is a relation (see #6524)
-                if (isset($config['relation']))
-                {
+                if (isset($config['relation'])) {
                     $table = substr($config['foreignKey'], 0, strrpos($config['foreignKey'], '.'));
                     $arrRelations[$field] = array_merge(array('table'=>$table, 'field'=>'id'), $config['relation']);
 
                     // Table name and field name are mandatory
-                    if (empty($arrRelations[$field]['table']) || empty($arrRelations[$field]['field']))
-                    {
+                    if (empty($arrRelations[$field]['table']) || empty($arrRelations[$field]['field'])) {
                         throw new \Exception('Incomplete relation defined for ' . $this->strTable . '.' . $field);
                     }
                 }
@@ -330,10 +305,8 @@ class DcaExtractor extends \Controller
         $fields = $GLOBALS['TL_DCA'][$this->strTable]['fields'] ?: array();
 
         // Get the SQL information from the database.sql files (backwards compatibility)
-        if ($blnFromFile)
-        {
-            if (!isset(static::$arrSql[$this->strTable]))
-            {
+        if ($blnFromFile) {
+            if (!isset(static::$arrSql[$this->strTable])) {
                 $objInstaller = new \Database\Installer();
                 static::$arrSql = $objInstaller->getFromFile();
             }
@@ -341,29 +314,23 @@ class DcaExtractor extends \Controller
             $arrTable = static::$arrSql[$this->strTable];
             list($engine,, $charset) = explode(' ', trim($arrTable['TABLE_OPTIONS']));
 
-            if ($engine != '')
-            {
+            if ($engine != '') {
                 $sql['engine'] = str_replace('ENGINE=', '', $engine);
             }
-            if ($charset != '')
-            {
+            if ($charset != '') {
                 $sql['charset'] = str_replace('CHARSET=', '', $charset);
             }
 
             // Fields
-            if (isset($arrTable['TABLE_FIELDS']))
-            {
-                foreach ($arrTable['TABLE_FIELDS'] as $k=>$v)
-                {
+            if (isset($arrTable['TABLE_FIELDS'])) {
+                foreach ($arrTable['TABLE_FIELDS'] as $k=>$v) {
                     $fields[$k]['sql'] = str_replace('`' . $k . '` ', '', $v);
                 }
             }
 
             // Keys
-            if (isset($arrTable['TABLE_CREATE_DEFINITIONS']))
-            {
-                foreach ($arrTable['TABLE_CREATE_DEFINITIONS'] as $strKey)
-                {
+            if (isset($arrTable['TABLE_CREATE_DEFINITIONS'])) {
+                foreach ($arrTable['TABLE_CREATE_DEFINITIONS'] as $strKey) {
                     $strKey = preg_replace('/^([A-Z]+ )?KEY .+\(`([^`]+)`\)$/', '$2 $1', $strKey);
                     list($field, $type) = explode(' ', $strKey);
                     $sql['keys'][$field] = ($type != '') ? strtolower($type) : 'index';
@@ -372,64 +339,52 @@ class DcaExtractor extends \Controller
         }
 
         // Not a database table or no field information
-        if (empty($sql) || empty($fields))
-        {
+        if (empty($sql) || empty($fields)) {
             return;
         }
 
         // Add the default engine and charset if none is given
-        if (empty($sql['engine']))
-        {
+        if (empty($sql['engine'])) {
             $sql['engine'] = 'MyISAM';
         }
-        if (empty($sql['charset']))
-        {
+        if (empty($sql['charset'])) {
             $sql['charset'] = 'utf8';
         }
 
         // Meta
-        $this->arrMeta = array
-        (
+        $this->arrMeta = array(
             'engine'  => $sql['engine'],
             'charset' => $sql['charset']
         );
 
         // Fields
-        if (!empty($fields))
-        {
+        if (!empty($fields)) {
             $this->arrFields = array();
 
-            foreach ($fields as $field=>$config)
-            {
-                if (isset($config['sql']))
-                {
+            foreach ($fields as $field=>$config) {
+                if (isset($config['sql'])) {
                     $this->arrFields[$field] = $config['sql'];
                 }
             }
         }
 
         // Keys
-        if (!empty($sql['keys']) && is_array($sql['keys']))
-        {
+        if (!empty($sql['keys']) && is_array($sql['keys'])) {
             $this->arrKeys = array();
 
-            foreach ($sql['keys'] as $field=>$type)
-            {
+            foreach ($sql['keys'] as $field=>$type) {
                 $this->arrKeys[$field] = $type;
             }
         }
 
         // Relations
-        if (!empty($arrRelations))
-        {
+        if (!empty($arrRelations)) {
             $this->arrRelations = array();
 
-            foreach ($arrRelations as $field=>$config)
-            {
+            foreach ($arrRelations as $field=>$config) {
                 $this->arrRelations[$field] = array();
 
-                foreach ($config as $k=>$v)
-                {
+                foreach ($config as $k=>$v) {
                     $this->arrRelations[$field][$k] = $v;
                 }
             }

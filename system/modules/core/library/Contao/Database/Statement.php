@@ -74,8 +74,7 @@ abstract class Statement
      */
     public function __construct($resConnection, $blnDisableAutocommit=false)
     {
-        if (!is_resource($resConnection) && !is_object($resConnection))
-        {
+        if (!is_resource($resConnection) && !is_object($resConnection)) {
             throw new \Exception('Invalid connection resource');
         }
 
@@ -100,8 +99,7 @@ abstract class Statement
      */
     public function __get($strKey)
     {
-        switch ($strKey)
-        {
+        switch ($strKey) {
             case 'query':
                 return $this->strQuery;
                 break;
@@ -134,8 +132,7 @@ abstract class Statement
      */
     public function prepare($strQuery)
     {
-        if ($strQuery == '')
-        {
+        if ($strQuery == '') {
             throw new \Exception('Empty query string');
         }
 
@@ -143,18 +140,15 @@ abstract class Statement
         $this->strQuery = $this->prepare_query(trim($strQuery));
 
         // Auto-generate the SET/VALUES subpart
-        if (strncasecmp($this->strQuery, 'INSERT', 6) === 0 || strncasecmp($this->strQuery, 'UPDATE', 6) === 0)
-        {
+        if (strncasecmp($this->strQuery, 'INSERT', 6) === 0 || strncasecmp($this->strQuery, 'UPDATE', 6) === 0) {
             $this->strQuery = str_replace('%s', '%p', $this->strQuery);
         }
 
         // Replace wildcards
         $arrChunks = preg_split("/('[^']*')/", $this->strQuery, -1, PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
 
-        foreach ($arrChunks as $k=>$v)
-        {
-            if (substr($v, 0, 1) == "'")
-            {
+        foreach ($arrChunks as $k=>$v) {
+            if (substr($v, 0, 1) == "'") {
                 continue;
             }
 
@@ -187,19 +181,16 @@ abstract class Statement
         $arrParams = $this->escapeParams($arrParams);
 
         // INSERT
-        if (strncasecmp($this->strQuery, 'INSERT', 6) === 0)
-        {
+        if (strncasecmp($this->strQuery, 'INSERT', 6) === 0) {
             $strQuery = sprintf('(%s) VALUES (%s)',
                                 implode(', ', array_keys($arrParams)),
                                 str_replace('%', '%%', implode(', ', array_values($arrParams))));
         }
         // UPDATE
-        elseif (strncasecmp($this->strQuery, 'UPDATE', 6) === 0)
-        {
+        elseif (strncasecmp($this->strQuery, 'UPDATE', 6) === 0) {
             $arrSet = array();
 
-            foreach ($arrParams as $k=>$v)
-            {
+            foreach ($arrParams as $k=>$v) {
                 $arrSet[] = $k . '=' . $v;
             }
 
@@ -221,13 +212,11 @@ abstract class Statement
      */
     public function limit($intRows, $intOffset=0)
     {
-        if ($intRows <= 0)
-        {
+        if ($intRows <= 0) {
             $intRows = 30;
         }
 
-        if ($intOffset < 0)
-        {
+        if ($intOffset < 0) {
             $intOffset = 0;
         }
 
@@ -245,8 +234,7 @@ abstract class Statement
     {
         $arrParams = func_get_args();
 
-        if (is_array($arrParams[0]))
-        {
+        if (is_array($arrParams[0])) {
             $arrParams = array_values($arrParams[0]);
         }
 
@@ -266,26 +254,22 @@ abstract class Statement
      */
     public function query($strQuery='')
     {
-        if (!empty($strQuery))
-        {
+        if (!empty($strQuery)) {
             $this->strQuery = trim($strQuery);
         }
 
         // Make sure there is a query string
-        if ($this->strQuery == '')
-        {
+        if ($this->strQuery == '') {
             throw new \Exception('Empty query string');
         }
 
         // Execute the query
-        if (($this->resResult = $this->execute_query()) == false)
-        {
+        if (($this->resResult = $this->execute_query()) == false) {
             throw new \Exception(sprintf('Query error: %s (%s)', $this->error, $this->strQuery));
         }
 
         // No result set available
-        if (!is_resource($this->resResult) && !is_object($this->resResult))
-        {
+        if (!is_resource($this->resResult) && !is_object($this->resResult)) {
             $this->debugQuery();
             return $this;
         }
@@ -311,8 +295,7 @@ abstract class Statement
         $this->strQuery = preg_replace('/(?<!%)%([^bcdufosxX%])/', '%%$1', $this->strQuery);
 
         // Replace wildcards
-        if (($this->strQuery = @vsprintf($this->strQuery, $arrValues)) == false)
-        {
+        if (($this->strQuery = @vsprintf($this->strQuery, $arrValues)) == false) {
             throw new \Exception('Too few arguments to build the query string');
         }
     }
@@ -327,10 +310,8 @@ abstract class Statement
      */
     protected function escapeParams($arrValues)
     {
-        foreach ($arrValues as $k=>$v)
-        {
-            switch (gettype($v))
-            {
+        foreach ($arrValues as $k=>$v) {
+            switch (gettype($v)) {
                 case 'string':
                     $arrValues[$k] = $this->string_escape($v);
                     break;
@@ -364,30 +345,22 @@ abstract class Statement
      */
     protected function debugQuery($objResult=null)
     {
-        if (!\Config::get('debugMode'))
-        {
+        if (!\Config::get('debugMode')) {
             return;
         }
 
         $arrData['query'] = specialchars($this->strQuery);
 
-        if ($objResult === null || strncasecmp($this->strQuery, 'SELECT', 6) !== 0)
-        {
-            if (strncasecmp($this->strQuery, 'SHOW', 4) === 0)
-            {
+        if ($objResult === null || strncasecmp($this->strQuery, 'SELECT', 6) !== 0) {
+            if (strncasecmp($this->strQuery, 'SHOW', 4) === 0) {
                 $arrData['return_count'] = $this->affectedRows;
                 $arrData['returned'] = sprintf('%s row(s) returned', $this->affectedRows);
-            }
-            else
-            {
+            } else {
                 $arrData['affected_count'] = $this->affectedRows;
                 $arrData['affected'] = sprintf('%d row(s) affected', $this->affectedRows);
             }
-        }
-        else
-        {
-            if (($arrExplain = $this->explain()) != false)
-            {
+        } else {
+            if (($arrExplain = $this->explain()) != false) {
                 $arrData['explain'] = $arrExplain;
             }
 

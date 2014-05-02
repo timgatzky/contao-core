@@ -37,28 +37,21 @@ class QueryBuilder
     {
         $objBase = new \DcaExtractor($arrOptions['table']);
 
-        if (!$objBase->hasRelations())
-        {
+        if (!$objBase->hasRelations()) {
             $strQuery = "SELECT * FROM " . $arrOptions['table'];
-        }
-        else
-        {
+        } else {
             $arrJoins = array();
             $arrFields = array($arrOptions['table'] . ".*");
             $intCount = 0;
 
-            foreach ($objBase->getRelations() as $strKey=>$arrConfig)
-            {
+            foreach ($objBase->getRelations() as $strKey=>$arrConfig) {
                 // Automatically join the single-relation records
-                if ($arrConfig['load'] == 'eager' || $arrOptions['eager'])
-                {
-                    if ($arrConfig['type'] == 'hasOne' || $arrConfig['type'] == 'belongsTo')
-                    {
+                if ($arrConfig['load'] == 'eager' || $arrOptions['eager']) {
+                    if ($arrConfig['type'] == 'hasOne' || $arrConfig['type'] == 'belongsTo') {
                         ++$intCount;
                         $objRelated = new \DcaExtractor($arrConfig['table']);
 
-                        foreach (array_keys($objRelated->getFields()) as $strField)
-                        {
+                        foreach (array_keys($objRelated->getFields()) as $strField) {
                             $arrFields[] = 'j' . $intCount . '.' . $strField . ' AS ' . $strKey . '__' . $strField;
                         }
 
@@ -72,26 +65,22 @@ class QueryBuilder
         }
 
         // Where condition
-        if ($arrOptions['column'] !== null)
-        {
+        if ($arrOptions['column'] !== null) {
             $strQuery .= " WHERE " . (is_array($arrOptions['column']) ? implode(" AND ", $arrOptions['column']) : $arrOptions['table'] . '.' . $arrOptions['column'] . "=?");
         }
 
         // Group by
-        if ($arrOptions['group'] !== null)
-        {
+        if ($arrOptions['group'] !== null) {
             $strQuery .= " GROUP BY " . $arrOptions['group'];
         }
 
         // Having (see #6446)
-        if ($arrOptions['having'] !== null)
-        {
+        if ($arrOptions['having'] !== null) {
             $strQuery .= " HAVING " . $arrOptions['having'];
         }
 
         // Order by
-        if ($arrOptions['order'] !== null)
-        {
+        if ($arrOptions['order'] !== null) {
             $strQuery .= " ORDER BY " . $arrOptions['order'];
         }
 
@@ -110,8 +99,7 @@ class QueryBuilder
     {
         $strQuery = "SELECT COUNT(*) AS count FROM " . $arrOptions['table'];
 
-        if ($arrOptions['column'] !== null)
-        {
+        if ($arrOptions['column'] !== null) {
             $strQuery .= " WHERE " . (is_array($arrOptions['column']) ? implode(" AND ", $arrOptions['column']) : $arrOptions['table'] . '.' . $arrOptions['column'] . "=?");
         }
 

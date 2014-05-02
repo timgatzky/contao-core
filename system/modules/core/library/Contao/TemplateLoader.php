@@ -57,8 +57,7 @@ class TemplateLoader
      */
     public static function addFiles($files)
     {
-        foreach ($files as $name=>$file)
-        {
+        foreach ($files as $name=>$file) {
             self::addFile($name, $file);
         }
     }
@@ -104,23 +103,19 @@ class TemplateLoader
         $file = $template .  '.' . $format;
 
         // Check the theme folder first
-        if (file_exists(TL_ROOT . '/' . $custom . '/' . $file))
-        {
+        if (file_exists(TL_ROOT . '/' . $custom . '/' . $file)) {
             return TL_ROOT . '/' . $custom . '/' . $file;
         }
 
         // Then check the global templates directory (see #5547)
-        if ($custom != 'templates')
-        {
-            if (file_exists(TL_ROOT . '/templates/' . $file))
-            {
+        if ($custom != 'templates') {
+            if (file_exists(TL_ROOT . '/templates/' . $file)) {
                 return TL_ROOT . '/templates/' . $file;
             }
         }
 
         // Load the default template
-        if (isset(self::$files[$template]))
-        {
+        if (isset(self::$files[$template])) {
             return TL_ROOT . '/' . self::$files[$template] . '/' . $file;
         }
 

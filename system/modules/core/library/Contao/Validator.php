@@ -52,12 +52,9 @@ class Validator
      */
     public static function isAlphabetic($varValue)
     {
-        if (function_exists('mb_eregi'))
-        {
+        if (function_exists('mb_eregi')) {
             return mb_eregi('^[[:alpha:] \.-]+$', $varValue);
-        }
-        else
-        {
+        } else {
             return preg_match('/^[\pL \.-]+$/u', $varValue);
         }
     }
@@ -72,12 +69,9 @@ class Validator
      */
     public static function isAlphanumeric($varValue)
     {
-        if (function_exists('mb_eregi'))
-        {
+        if (function_exists('mb_eregi')) {
             return mb_eregi('^[[:alnum:] \._-]+$', $varValue);
-        }
-        else
-        {
+        } else {
             return preg_match('/^[\pN\pL \._-]+$/u', $varValue);
         }
     }
@@ -157,12 +151,9 @@ class Validator
      */
     public static function isUrl($varValue)
     {
-        if (function_exists('mb_eregi'))
-        {
+        if (function_exists('mb_eregi')) {
             return mb_eregi('^[[:alnum:]\.\+\/\?#%:,;\{\}\(\)\[\]@&=~_-]+$', \Idna::encodeUrl($varValue));
-        }
-        else
-        {
+        } else {
             return preg_match('/^[\pN\pL\.\+\/\?#%:,;\{\}\(\)\[\]@&=~_-]+$/u', \Idna::encodeUrl($varValue));
         }
     }
@@ -177,12 +168,9 @@ class Validator
      */
     public static function isAlias($varValue)
     {
-        if (function_exists('mb_eregi'))
-        {
+        if (function_exists('mb_eregi')) {
             return mb_eregi('^[[:alnum:]\._-]+$', $varValue);
-        }
-        else
-        {
+        } else {
             return preg_match('/^[\pN\pL\._-]+$/u', $varValue);
         }
     }
@@ -197,12 +185,9 @@ class Validator
      */
     public static function isFolderAlias($varValue)
     {
-        if (function_exists('mb_eregi'))
-        {
+        if (function_exists('mb_eregi')) {
             return mb_eregi('^[[:alnum:]\/\._-]+$', $varValue);
-        }
-        else
-        {
+        } else {
             return preg_match('/^[\pN\pL\/\._-]+$/u', $varValue);
         }
     }
@@ -269,8 +254,7 @@ class Validator
      */
     public static function isUuid($varValue)
     {
-        if (strlen($varValue) == 16)
-        {
+        if (strlen($varValue) == 16) {
             $varValue = \String::binToUuid($varValue);
         }
 
