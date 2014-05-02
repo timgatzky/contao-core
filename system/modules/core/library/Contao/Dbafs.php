@@ -53,7 +53,7 @@ class Dbafs
         $strResource = str_replace('//', '/', $strResource);
 
         // The resource does not exist or lies outside the upload directory
-        if ($strResource == '' || strncmp($strResource,  $strUploadPath, strlen($strUploadPath)) !== 0 || !file_exists(TL_ROOT . '/' . $strResource)) {
+        if ($strResource == '' || strncmp($strResource, $strUploadPath, strlen($strUploadPath)) !== 0 || !file_exists(TL_ROOT . '/' . $strResource)) {
             throw new \InvalidArgumentException("Invalid resource $strResource");
         }
 
@@ -105,7 +105,7 @@ class Dbafs
                 new \Dbafs\Filter(
                     new \RecursiveDirectoryIterator(
                         TL_ROOT . '/' . $strResource,
-                        \FilesystemIterator::UNIX_PATHS|\FilesystemIterator::FOLLOW_SYMLINKS|\FilesystemIterator::SKIP_DOTS
+                        \FilesystemIterator::UNIX_PATHS | \FilesystemIterator::FOLLOW_SYMLINKS | \FilesystemIterator::SKIP_DOTS
                     )
                 ), \RecursiveIteratorIterator::SELF_FIRST
             );
@@ -346,7 +346,7 @@ class Dbafs
      */
     public static function updateFolderHashes($varResource)
     {
-        $arrPaths  = array();
+        $arrPaths = array();
 
         if (!is_array($varResource)) {
             $varResource = array($varResource);
@@ -409,7 +409,7 @@ class Dbafs
             new \Dbafs\Filter(
                 new \RecursiveDirectoryIterator(
                     TL_ROOT . '/' . \Config::get('uploadPath'),
-                    \FilesystemIterator::UNIX_PATHS|\FilesystemIterator::FOLLOW_SYMLINKS|\FilesystemIterator::SKIP_DOTS
+                    \FilesystemIterator::UNIX_PATHS | \FilesystemIterator::FOLLOW_SYMLINKS | \FilesystemIterator::SKIP_DOTS
                 )
             ), \RecursiveIteratorIterator::SELF_FIRST
         );

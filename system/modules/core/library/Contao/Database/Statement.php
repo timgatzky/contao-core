@@ -141,7 +141,7 @@ abstract class Statement
         }
 
         // Replace wildcards
-        $arrChunks = preg_split("/('[^']*')/", $this->strQuery, -1, PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
+        $arrChunks = preg_split("/('[^']*')/", $this->strQuery, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
 
         foreach ($arrChunks as $k => $v) {
             if (substr($v, 0, 1) == "'") {
@@ -178,10 +178,13 @@ abstract class Statement
 
         // INSERT
         if (strncasecmp($this->strQuery, 'INSERT', 6) === 0) {
-            $strQuery = sprintf('(%s) VALUES (%s)',
-                                implode(', ', array_keys($arrParams)),
-                                str_replace('%', '%%', implode(', ', array_values($arrParams))));
+            $strQuery = sprintf(
+                '(%s) VALUES (%s)',
+                implode(', ', array_keys($arrParams)),
+                str_replace('%', '%%', implode(', ', array_values($arrParams)))
+            );
         }
+
         // UPDATE
         elseif (strncasecmp($this->strQuery, 'UPDATE', 6) === 0) {
             $arrSet = array();

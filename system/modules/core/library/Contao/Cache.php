@@ -99,14 +99,18 @@ class Cache
      *
      * @deprecated Cache is now a static class
      */
-    protected function __construct() {}
+    protected function __construct()
+    {
+    }
 
     /**
      * Prevent cloning of the object (Singleton)
      *
      * @deprecated Cache is now a static class
      */
-    final public function __clone() {}
+    final public function __clone()
+    {
+    }
 
     /**
      * Check whether a key is set

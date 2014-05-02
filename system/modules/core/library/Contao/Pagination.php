@@ -254,26 +254,26 @@ class Pagination
         $objTemplate->total = sprintf($this->lblTotal, $this->intPage, $this->intTotalPages);
 
         $objTemplate->first = array(
-            'link' => $this->lblFirst,
-            'href' => $this->linkToPage(1),
+            'link'  => $this->lblFirst,
+            'href'  => $this->linkToPage(1),
             'title' => sprintf(specialchars($GLOBALS['TL_LANG']['MSC']['goToPage']), 1)
         );
 
         $objTemplate->previous = array(
-            'link' => $this->lblPrevious,
-            'href' => $this->linkToPage($this->intPage - 1),
+            'link'  => $this->lblPrevious,
+            'href'  => $this->linkToPage($this->intPage - 1),
             'title' => sprintf(specialchars($GLOBALS['TL_LANG']['MSC']['goToPage']), ($this->intPage - 1))
         );
 
         $objTemplate->next = array(
-            'link' => $this->lblNext,
-            'href' => $this->linkToPage($this->intPage + 1),
+            'link'  => $this->lblNext,
+            'href'  => $this->linkToPage($this->intPage + 1),
             'title' => sprintf(specialchars($GLOBALS['TL_LANG']['MSC']['goToPage']), ($this->intPage + 1))
         );
 
         $objTemplate->last = array(
-            'link' => $this->lblLast,
-            'href' => $this->linkToPage($this->intTotalPages),
+            'link'  => $this->lblLast,
+            'href'  => $this->linkToPage($this->intTotalPages),
             'title' => sprintf(specialchars($GLOBALS['TL_LANG']['MSC']['goToPage']), $this->intTotalPages)
         );
 
@@ -326,10 +326,12 @@ class Pagination
                 continue;
             }
 
-            $arrLinks[] = sprintf('<li><a href="%s" class="link" title="%s">%s</a></li>',
-                                $this->linkToPage($i),
-                                sprintf(specialchars($GLOBALS['TL_LANG']['MSC']['goToPage']), $i),
-                                $i);
+            $arrLinks[] = sprintf(
+                '<li><a href="%s" class="link" title="%s">%s</a></li>',
+                $this->linkToPage($i),
+                sprintf(specialchars($GLOBALS['TL_LANG']['MSC']['goToPage']), $i),
+                $i
+            );
         }
 
         return implode($strSeparator, $arrLinks);

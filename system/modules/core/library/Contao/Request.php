@@ -301,7 +301,7 @@ class Request
         }
 
         if (!is_resource($fp)) {
-            $this->strError = trim($errno .' '. $errstr);
+            $this->strError = trim($errno . ' ' . $errstr);
 
             return;
         }
@@ -313,10 +313,10 @@ class Request
         }
 
         $default = array(
-            'Host' => 'Host: ' . $host,
-            'User-Agent' => 'User-Agent: Contao (+https://contao.org/)',
-            'Content-Length' => 'Content-Length: '. strlen($this->strData),
-            'Connection' => 'Connection: close'
+            'Host'           => 'Host: ' . $host,
+            'User-Agent'     => 'User-Agent: Contao (+https://contao.org/)',
+            'Content-Length' => 'Content-Length: ' . strlen($this->strData),
+            'Connection'     => 'Connection: close'
         );
 
         if (isset($uri['user'])) {
@@ -329,7 +329,7 @@ class Request
             $default[$header] = $header . ': ' . $value;
         }
 
-        $request = strtoupper($this->strMethod) .' '. $path ." HTTP/1.0\r\n";
+        $request = strtoupper($this->strMethod) . ' ' . $path . " HTTP/1.0\r\n";
         $request .= implode("\r\n", $default);
         $request .= "\r\n\r\n";
 

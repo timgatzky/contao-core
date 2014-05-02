@@ -63,7 +63,7 @@ class Search
 
         // Get the file size from the raw content
         if (!$arrSet['filesize']) {
-            $arrSet['filesize'] = number_format((strlen($arrData['content']) / 1024 ), 2, '.', '');
+            $arrSet['filesize'] = number_format((strlen($arrData['content']) / 1024), 2, '.', '');
         }
 
         // Replace special characters
@@ -494,7 +494,9 @@ class Search
      *
      * @deprecated Search is now a static class
      */
-    final public function __clone() {}
+    final public function __clone()
+    {
+    }
 
     /**
      * Return the object instance (Singleton)

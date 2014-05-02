@@ -44,13 +44,13 @@ class ZipWriter
      * Central directory end marker
      * @var string
      */
-    const CENTRAL_DIR_END   = "\x50\x4b\x05\x06";
+    const CENTRAL_DIR_END = "\x50\x4b\x05\x06";
 
     /**
      * Temp folder path
      * @var string
      */
-    const TEMPORARY_FOLDER  = 'system/tmp';
+    const TEMPORARY_FOLDER = 'system/tmp';
 
     /**
      * File handle
@@ -94,7 +94,7 @@ class ZipWriter
         $this->strFile = $strFile;
 
         // Create temporary file
-        if (($this->strTemp = tempnam(TL_ROOT . '/' . self::TEMPORARY_FOLDER , 'zip')) == false) {
+        if (($this->strTemp = tempnam(TL_ROOT . '/' . self::TEMPORARY_FOLDER, 'zip')) == false) {
             throw new \Exception("Cannot create temporary file");
         }
 
@@ -263,11 +263,11 @@ class ZipWriter
         $hexTime = dechex
         (
             (($arrTime['year'] - 1980) << 25) |
-             ($arrTime['mon'] << 21) |
-             ($arrTime['mday'] << 16) |
-             ($arrTime['hours'] << 11) |
-             ($arrTime['minutes'] << 5) |
-             ($arrTime['seconds'] >> 1)
+            ($arrTime['mon'] << 21) |
+            ($arrTime['mday'] << 16) |
+            ($arrTime['hours'] << 11) |
+            ($arrTime['minutes'] << 5) |
+            ($arrTime['seconds'] >> 1)
         );
 
         $strTime = '\x' . $hexTime[6] . $hexTime[7] . '\x' . $hexTime[4] . $hexTime[5] . '\x' . $hexTime[2] . $hexTime[3] . '\x' . $hexTime[0] . $hexTime[1];

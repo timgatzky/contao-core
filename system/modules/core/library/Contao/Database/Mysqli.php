@@ -112,7 +112,7 @@ class Mysqli extends \Database
 
         while ($objFields->next()) {
             $arrTmp = array();
-            $arrChunks = preg_split('/(\([^\)]+\))/', $objFields->COLUMN_TYPE, -1, PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
+            $arrChunks = preg_split('/(\([^\)]+\))/', $objFields->COLUMN_TYPE, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
 
             $arrTmp['name'] = $objFields->COLUMN_NAME;
             $arrTmp['type'] = $arrChunks[0];
@@ -227,7 +227,7 @@ class Mysqli extends \Database
         $arrLocks = array();
 
         foreach ($arrTables as $table => $mode) {
-            $arrLocks[] = $table .' '. $mode;
+            $arrLocks[] = $table . ' ' . $mode;
         }
 
         $this->resConnection->query("LOCK TABLES " . implode(', ', $arrLocks));

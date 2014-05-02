@@ -280,7 +280,7 @@ class DcaExtractor extends \Controller
                 // Check whether there is a relation (see #6524)
                 if (isset($config['relation'])) {
                     $table = substr($config['foreignKey'], 0, strrpos($config['foreignKey'], '.'));
-                    $arrRelations[$field] = array_merge(array('table'=>$table, 'field'=>'id'), $config['relation']);
+                    $arrRelations[$field] = array_merge(array('table' => $table, 'field' => 'id'), $config['relation']);
 
                     // Table name and field name are mandatory
                     if (empty($arrRelations[$field]['table']) || empty($arrRelations[$field]['field'])) {
@@ -301,7 +301,7 @@ class DcaExtractor extends \Controller
             }
 
             $arrTable = static::$arrSql[$this->strTable];
-            list($engine,, $charset) = explode(' ', trim($arrTable['TABLE_OPTIONS']));
+            list($engine, , $charset) = explode(' ', trim($arrTable['TABLE_OPTIONS']));
 
             if ($engine != '') {
                 $sql['engine'] = str_replace('ENGINE=', '', $engine);

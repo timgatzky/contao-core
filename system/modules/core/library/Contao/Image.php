@@ -419,11 +419,11 @@ class Image
             }
         }
 
-        if (!file_exists(TL_ROOT .'/'. $src)) {
+        if (!file_exists(TL_ROOT . '/' . $src)) {
             return '';
         }
 
-        $size = getimagesize(TL_ROOT .'/'. $src);
+        $size = getimagesize(TL_ROOT . '/' . $src);
 
         return '<img src="' . $static . \System::urlEncode($src) . '" ' . $size[3] . ' alt="' . specialchars($alt) . '"' . (($attributes != '') ? ' ' . $attributes : '') . '>';
     }

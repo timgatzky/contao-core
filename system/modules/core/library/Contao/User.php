@@ -90,7 +90,9 @@ abstract class User extends \System
     /**
      * Prevent cloning of the object (Singleton)
      */
-    final public function __clone() {}
+    final public function __clone()
+    {
+    }
 
     /**
      * Set an object property

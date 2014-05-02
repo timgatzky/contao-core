@@ -113,9 +113,9 @@ class String
         $strString = preg_replace('/ +/', ' ', $strString);
 
         // Seperate tags and text
-        $arrChunks = preg_split('/(<[^>]+>)/', $strString, -1, PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
+        $arrChunks = preg_split('/(<[^>]+>)/', $strString, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
 
-        for ($i = 0, $c = count($arrChunks); $i<$c; $i++) {
+        for ($i = 0, $c = count($arrChunks); $i < $c; $i++) {
 
             // Buffer tags to include them later
             if (preg_match('/<([^>]+)>/', $arrChunks[$i])) {
@@ -148,7 +148,7 @@ class String
 
                     // Store opening tags in the open_tags array
                     if (strncmp($strTagName, '/', 1) !== 0) {
-                        if (!empty($arrChunks[$i]) || $i<$c) {
+                        if (!empty($arrChunks[$i]) || $i < $c) {
                             $arrOpenTags[] = $strTagName;
                         }
 
@@ -156,10 +156,10 @@ class String
                     }
 
                     // Closing tags will be removed from the "open tags" array
-                    if (!empty($arrChunks[$i]) || $i<$c) {
+                    if (!empty($arrChunks[$i]) || $i < $c) {
                         $arrOpenTags = array_values($arrOpenTags);
 
-                        for ($j = count($arrOpenTags)-1; $j >= 0; $j--) {
+                        for ($j = count($arrOpenTags) - 1; $j >= 0; $j--) {
                             if ($strTagName == '/' . $arrOpenTags[$j]) {
                                 unset($arrOpenTags[$j]);
                                 break;
@@ -169,7 +169,7 @@ class String
                 }
 
                 // If the current chunk contains text, add tags and text to the return string
-                if (strlen($arrChunks[$i]) || $i<$c) {
+                if (strlen($arrChunks[$i]) || $i < $c) {
                     $strReturn .= implode('', $arrTagBuffer) . $arrChunks[$i];
                 }
 
@@ -260,7 +260,7 @@ class String
         foreach ((array) $arrEmails[0] as $strEmail) {
             $strEncoded = '';
 
-            for ($i = 0; $i<strlen($strEmail); ++$i) {
+            for ($i = 0; $i < strlen($strEmail); ++$i) {
                 $blnHex = rand(0, 1);
 
                 if ($blnHex) {
@@ -337,7 +337,7 @@ class String
      */
     public static function splitCsv($strString, $strDelimiter = ',')
     {
-        $arrValues = preg_split('/'.$strDelimiter.'(?=(?:[^"]*"[^"]*")*(?![^"]*"))/', $strString);
+        $arrValues = preg_split('/' . $strDelimiter . '(?=(?:[^"]*"[^"]*")*(?![^"]*"))/', $strString);
 
         foreach ($arrValues as $k => $v) {
             $arrValues[$k] = trim($v, ' "');
@@ -424,7 +424,7 @@ class String
 
         // Remove any unwanted tags (especially PHP tags)
         $strString = strip_tags($strString, \Config::get('allowedTags'));
-        $arrTags = preg_split('/(\{[^\}]+\})/', $strString, -1, PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
+        $arrTags = preg_split('/(\{[^\}]+\})/', $strString, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
 
         // Replace the tags
         foreach ($arrTags as $strTag) {
@@ -496,19 +496,19 @@ class String
         $return = '';
         $paths = preg_split('/(src="([^"]+)")/i', $data, -1, PREG_SPLIT_DELIM_CAPTURE);
 
-        for ($i = 0, $c = count($paths); $i<$c; $i = $i+3) {
+        for ($i = 0, $c = count($paths); $i < $c; $i = $i + 3) {
             $return .= $paths[$i];
 
-            if (!isset($paths[$i+1])) {
+            if (!isset($paths[$i + 1])) {
                 continue;
             }
 
-            $file = \FilesModel::findByPath($paths[$i+2]);
+            $file = \FilesModel::findByPath($paths[$i + 2]);
 
             if ($file !== null) {
                 $return .= 'src="{{file::' . static::binToUuid($file->uuid) . '}}"';
             } else {
-                $return .= 'src="' . $paths[$i+2] . '"';
+                $return .= 'src="' . $paths[$i + 2] . '"';
             }
         }
 
@@ -527,19 +527,19 @@ class String
         $return = '';
         $paths = preg_split('/(src="\{\{file::([^"\}]+)\}\}")/i', $data, -1, PREG_SPLIT_DELIM_CAPTURE);
 
-        for ($i = 0, $c = count($paths); $i<$c; $i = $i+3) {
+        for ($i = 0, $c = count($paths); $i < $c; $i = $i + 3) {
             $return .= $paths[$i];
 
-            if (!isset($paths[$i+1])) {
+            if (!isset($paths[$i + 1])) {
                 continue;
             }
 
-            $file = \FilesModel::findByUuid($paths[$i+2]);
+            $file = \FilesModel::findByUuid($paths[$i + 2]);
 
             if ($file !== null) {
                 $return .= 'src="' . $file->path . '"';
             } else {
-                $return .= 'src="' . $paths[$i+2] . '"';
+                $return .= 'src="' . $paths[$i + 2] . '"';
             }
         }
 
@@ -551,14 +551,18 @@ class String
      *
      * @deprecated String is now a static class
      */
-    protected function __construct() {}
+    protected function __construct()
+    {
+    }
 
     /**
      * Prevent cloning of the object (Singleton)
      *
      * @deprecated String is now a static class
      */
-    final public function __clone() {}
+    final public function __clone()
+    {
+    }
 
     /**
      * Return the object instance (Singleton)

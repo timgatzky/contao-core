@@ -51,11 +51,11 @@ class Installer extends \Controller
         $_SESSION['sql_commands'] = array();
 
         $arrOperations = array(
-            'CREATE'        => $GLOBALS['TL_LANG']['tl_install']['CREATE'],
-            'ALTER_ADD'     => $GLOBALS['TL_LANG']['tl_install']['ALTER_ADD'],
-            'ALTER_CHANGE'  => $GLOBALS['TL_LANG']['tl_install']['ALTER_CHANGE'],
-            'ALTER_DROP'    => $GLOBALS['TL_LANG']['tl_install']['ALTER_DROP'],
-            'DROP'          => $GLOBALS['TL_LANG']['tl_install']['DROP']
+            'CREATE'       => $GLOBALS['TL_LANG']['tl_install']['CREATE'],
+            'ALTER_ADD'    => $GLOBALS['TL_LANG']['tl_install']['ALTER_ADD'],
+            'ALTER_CHANGE' => $GLOBALS['TL_LANG']['tl_install']['ALTER_CHANGE'],
+            'ALTER_DROP'   => $GLOBALS['TL_LANG']['tl_install']['ALTER_DROP'],
+            'DROP'         => $GLOBALS['TL_LANG']['tl_install']['DROP']
         );
 
         foreach ($arrOperations as $command => $label) {
@@ -64,7 +64,7 @@ class Installer extends \Controller
                 // Headline
                 $return .= '
     <tr>
-      <td colspan="2" class="tl_col_0">'.$label.'</td>
+      <td colspan="2" class="tl_col_0">' . $label . '</td>
     </tr>';
 
                 // Check all
@@ -81,8 +81,8 @@ class Installer extends \Controller
 
                     $return .= '
     <tr>
-      <td class="tl_col_1"><input type="checkbox" name="sql[]" id="sql_'.$count.'" class="tl_checkbox ' . strtolower($command) . '" value="'.$key.'"'.((stristr($command, 'DROP') === false) ? ' checked="checked"' : '').'></td>
-      <td class="tl_col_2"><pre><label for="sql_'.$count++.'">'.$vv.'</label></pre></td>
+      <td class="tl_col_1"><input type="checkbox" name="sql[]" id="sql_' . $count . '" class="tl_checkbox ' . strtolower($command) . '" value="' . $key . '"' . ((stristr($command, 'DROP') === false) ? ' checked="checked"' : '') . '></td>
+      <td class="tl_col_2"><pre><label for="sql_' . $count++ . '">' . $vv . '</label></pre></td>
     </tr>';
                 }
             }
@@ -90,7 +90,7 @@ class Installer extends \Controller
 
         return '
 <div id="sql_wrapper">
-  <table id="sql_table">'.$return.'
+  <table id="sql_table">' . $return . '
   </table>
 </div>';
     }
@@ -141,9 +141,9 @@ class Installer extends \Controller
             if (is_array($v['TABLE_FIELDS'])) {
                 foreach ($v['TABLE_FIELDS'] as $kk => $vv) {
                     if (!isset($sql_current[$k]['TABLE_FIELDS'][$kk])) {
-                        $return['ALTER_ADD'][] = 'ALTER TABLE `'.$k.'` ADD '.$vv.';';
+                        $return['ALTER_ADD'][] = 'ALTER TABLE `' . $k . '` ADD ' . $vv . ';';
                     } elseif ($sql_current[$k]['TABLE_FIELDS'][$kk] != $vv) {
-                        $return['ALTER_CHANGE'][] = 'ALTER TABLE `'.$k.'` CHANGE `'.$kk.'` '.$vv.';';
+                        $return['ALTER_CHANGE'][] = 'ALTER TABLE `' . $k . '` CHANGE `' . $kk . '` ' . $vv . ';';
                     }
                 }
             }
@@ -152,9 +152,9 @@ class Installer extends \Controller
             if (is_array($v['TABLE_CREATE_DEFINITIONS'])) {
                 foreach ($v['TABLE_CREATE_DEFINITIONS'] as $kk => $vv) {
                     if (!isset($sql_current[$k]['TABLE_CREATE_DEFINITIONS'][$kk])) {
-                        $return['ALTER_ADD'][] = 'ALTER TABLE `'.$k.'` ADD '.$vv.';';
+                        $return['ALTER_ADD'][] = 'ALTER TABLE `' . $k . '` ADD ' . $vv . ';';
                     } elseif ($sql_current[$k]['TABLE_CREATE_DEFINITIONS'][$kk] != str_replace('FULLTEXT ', '', $vv)) {
-                        $return['ALTER_CHANGE'][] = 'ALTER TABLE `'.$k.'` DROP INDEX `'.$kk.'`, ADD '.$vv.';';
+                        $return['ALTER_CHANGE'][] = 'ALTER TABLE `' . $k . '` DROP INDEX `' . $kk . '`, ADD ' . $vv . ';';
                     }
                 }
             }
@@ -177,7 +177,7 @@ class Installer extends \Controller
 
         // Drop tables
         foreach (array_diff(array_keys($sql_current), array_keys($sql_target)) as $table) {
-            $return['DROP'][] = 'DROP TABLE `'.$table.'`;';
+            $return['DROP'][] = 'DROP TABLE `' . $table . '`;';
             $drop[] = $table;
         }
 
@@ -189,7 +189,7 @@ class Installer extends \Controller
                 if (is_array($v['TABLE_CREATE_DEFINITIONS'])) {
                     foreach ($v['TABLE_CREATE_DEFINITIONS'] as $kk => $vv) {
                         if (!isset($sql_target[$k]['TABLE_CREATE_DEFINITIONS'][$kk])) {
-                            $return['ALTER_DROP'][] = 'ALTER TABLE `'.$k.'` DROP INDEX `'.$kk.'`;';
+                            $return['ALTER_DROP'][] = 'ALTER TABLE `' . $k . '` DROP INDEX `' . $kk . '`;';
                         }
                     }
                 }
@@ -198,7 +198,7 @@ class Installer extends \Controller
                 if (is_array($v['TABLE_FIELDS'])) {
                     foreach ($v['TABLE_FIELDS'] as $kk => $vv) {
                         if (!isset($sql_target[$k]['TABLE_FIELDS'][$kk])) {
-                            $return['ALTER_DROP'][] = 'ALTER TABLE `'.$k.'` DROP `'.$kk.'`;';
+                            $return['ALTER_DROP'][] = 'ALTER TABLE `' . $k . '` DROP `' . $kk . '`;';
                         }
                     }
                 }
@@ -370,7 +370,7 @@ class Installer extends \Controller
 
             foreach ($fields as $field) {
                 $name = $field['name'];
-                $field['name'] = '`'.$field['name'].'`';
+                $field['name'] = '`' . $field['name'] . '`';
 
                 if ($field['type'] != 'index') {
                     unset($field['index']);
@@ -413,18 +413,18 @@ class Installer extends \Controller
                     switch ($field['index']) {
                         case 'UNIQUE':
                             if ($name == 'PRIMARY') {
-                                $return[$table]['TABLE_CREATE_DEFINITIONS'][$name] = 'PRIMARY KEY  (`'.$index_fields.'`)';
+                                $return[$table]['TABLE_CREATE_DEFINITIONS'][$name] = 'PRIMARY KEY  (`' . $index_fields . '`)';
                             } else {
-                                $return[$table]['TABLE_CREATE_DEFINITIONS'][$name] = 'UNIQUE KEY `'.$name.'` (`'.$index_fields.'`)';
+                                $return[$table]['TABLE_CREATE_DEFINITIONS'][$name] = 'UNIQUE KEY `' . $name . '` (`' . $index_fields . '`)';
                             }
                             break;
 
                         case 'FULLTEXT':
-                            $return[$table]['TABLE_CREATE_DEFINITIONS'][$name] = 'FULLTEXT KEY `'.$name.'` (`'.$index_fields.'`)';
+                            $return[$table]['TABLE_CREATE_DEFINITIONS'][$name] = 'FULLTEXT KEY `' . $name . '` (`' . $index_fields . '`)';
                             break;
 
                         default:
-                            $return[$table]['TABLE_CREATE_DEFINITIONS'][$name] = 'KEY `'.$name.'` (`'.$index_fields.'`)';
+                            $return[$table]['TABLE_CREATE_DEFINITIONS'][$name] = 'KEY `' . $name . '` (`' . $index_fields . '`)';
                             break;
                     }
 

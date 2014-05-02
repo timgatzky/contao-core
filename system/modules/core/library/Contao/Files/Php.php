@@ -47,7 +47,7 @@ class Php extends \Files
     {
         $this->validate($strDirectory);
 
-        return @rmdir(TL_ROOT. '/' . $strDirectory);
+        return @rmdir(TL_ROOT . '/' . $strDirectory);
     }
 
     /**

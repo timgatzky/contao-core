@@ -76,9 +76,11 @@ class Folder extends \System
 
         // Check the excluded folders
         if ($this->blnSyncDb && \Config::get('fileSyncExclude') != '') {
-            $arrExempt = array_map(function ($e) {
-                return \Config::get('uploadPath') . '/' . $e;
-            }, trimsplit(',', \Config::get('fileSyncExclude')));
+            $arrExempt = array_map(
+                function ($e) {
+                    return \Config::get('uploadPath') . '/' . $e;
+                }, trimsplit(',', \Config::get('fileSyncExclude'))
+            );
 
             foreach ($arrExempt as $strExempt) {
                 if (strncmp($strExempt . '/', $strFolder . '/', strlen($strExempt) + 1) === 0) {
@@ -323,7 +325,7 @@ class Folder extends \System
         $it = new \RecursiveIteratorIterator(
             new \RecursiveDirectoryIterator(
                 TL_ROOT . '/' . $this->strFolder,
-                \FilesystemIterator::UNIX_PATHS|\FilesystemIterator::FOLLOW_SYMLINKS|\FilesystemIterator::SKIP_DOTS
+                \FilesystemIterator::UNIX_PATHS | \FilesystemIterator::FOLLOW_SYMLINKS | \FilesystemIterator::SKIP_DOTS
             ), \RecursiveIteratorIterator::SELF_FIRST
         );
 

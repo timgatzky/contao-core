@@ -409,12 +409,12 @@ class Automator extends \System
             }
 
             // Rotate the files (e.g. error.log.4 becomes error.log.5)
-            for ($i = 8; $i>0; $i--) {
+            for ($i = 8; $i > 0; $i--) {
                 $strGzName = 'system/logs/' . $strFile . '.' . $i;
 
                 if (file_exists(TL_ROOT . '/' . $strGzName)) {
                     $objFile = new \File($strGzName, true);
-                    $objFile->renameTo('system/logs/' . $strFile . '.' . ($i+1));
+                    $objFile->renameTo('system/logs/' . $strFile . '.' . ($i + 1));
                 }
             }
 
@@ -610,19 +610,19 @@ class Automator extends \System
 
                 // Add a short header with links to transifex.com
                 $strHeader = "<?php\n\n"
-                           . "/**\n"
-                           . " * Contao Open Source CMS\n"
-                           . " * \n"
-                           . " * Copyright (c) 2005-2014 Leo Feyer\n"
-                           . " * \n"
-                           . " * Core translations are managed using Transifex. To create a new translation\n"
-                           . " * or to help to maintain an existing one, please register at transifex.com.\n"
-                           . " * \n"
-                           . " * @link http://help.transifex.com/intro/translating.html\n"
-                           . " * @link https://www.transifex.com/projects/p/contao/language/%s/\n"
-                           . " * \n"
-                           . " * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL\n"
-                           . " */\n";
+                    . "/**\n"
+                    . " * Contao Open Source CMS\n"
+                    . " * \n"
+                    . " * Copyright (c) 2005-2014 Leo Feyer\n"
+                    . " * \n"
+                    . " * Core translations are managed using Transifex. To create a new translation\n"
+                    . " * or to help to maintain an existing one, please register at transifex.com.\n"
+                    . " * \n"
+                    . " * @link http://help.transifex.com/intro/translating.html\n"
+                    . " * @link https://www.transifex.com/projects/p/contao/language/%s/\n"
+                    . " * \n"
+                    . " * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL\n"
+                    . " */\n";
 
                 // Generate the cache file
                 $objCacheFile = new \File($strCacheFile, true);

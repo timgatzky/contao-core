@@ -306,14 +306,30 @@ class Updater extends \Controller
                     $angle = (abs(450 - intval($objStyle->gradientAngle)) % 360) . 'deg';
                 } else {
                     switch ($objStyle->gradientAngle) {
-                        case 'top':          $angle = 'to bottom';       break;
-                        case 'right':        $angle = 'to left';         break;
-                        case 'bottom':       $angle = 'to top';          break;
-                        case 'left':         $angle = 'to right';        break;
-                        case 'top left':     $angle = 'to bottom right'; break;
-                        case 'top right':    $angle = 'to bottom left';  break;
-                        case 'bottom left':  $angle = 'to top right';    break;
-                        case 'bottom right': $angle = 'to top left';     break;
+                        case 'top':
+                            $angle = 'to bottom';
+                            break;
+                        case 'right':
+                            $angle = 'to left';
+                            break;
+                        case 'bottom':
+                            $angle = 'to top';
+                            break;
+                        case 'left':
+                            $angle = 'to right';
+                            break;
+                        case 'top left':
+                            $angle = 'to bottom right';
+                            break;
+                        case 'top right':
+                            $angle = 'to bottom left';
+                            break;
+                        case 'bottom left':
+                            $angle = 'to top right';
+                            break;
+                        case 'bottom right':
+                            $angle = 'to top left';
+                            break;
                     }
                 }
 
@@ -577,7 +593,7 @@ class Updater extends \Controller
                 foreach ($arrData as $line) {
                     list($name, $info) = explode('=', $line, 2);
                     list($title, $link, $caption) = explode('|', $info);
-                    $arrMeta[trim($name)][$key] = array('title'=>trim($title), 'link'=>trim($link), 'caption'=>trim($caption));
+                    $arrMeta[trim($name)][$key] = array('title' => trim($title), 'link' => trim($link), 'caption' => trim($caption));
                 }
             }
 
@@ -836,7 +852,11 @@ class Updater extends \Controller
             $return->isUuid = (strlen($value) == 16 && !is_numeric($return->value) && strncmp($return->value, \Config::get('uploadPath') . '/', strlen(\Config::get('uploadPath')) + 1) !== 0);
             $return->isNumeric = (is_numeric($return->value) && $return->value > 0);
         } else {
-            $return->value = array_map(function ($var) { return rtrim($var, "\x00"); }, $value);
+            $return->value = array_map(
+                function ($var) {
+                    return rtrim($var, "\x00");
+                }, $value
+            );
             $return->isUuid = (strlen($value[0]) == 16 && !is_numeric($return->value[0]) && strncmp($return->value[0], \Config::get('uploadPath') . '/', strlen(\Config::get('uploadPath')) + 1) !== 0);
             $return->isNumeric = (is_numeric($return->value[0]) && $return->value[0] > 0);
         }

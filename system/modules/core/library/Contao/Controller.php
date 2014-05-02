@@ -106,7 +106,7 @@ abstract class Controller extends \System
 
         // Try to select the themes (see #5210)
         try {
-            $objTheme = \ThemeModel::findAll(array('order'=>'name'));
+            $objTheme = \ThemeModel::findAll(array('order' => 'name'));
         } catch (\Exception $e) {
             $objTheme = null;
         }
@@ -248,7 +248,7 @@ abstract class Controller extends \System
 
             // Return if the class does not exist
             if (!class_exists($strClass)) {
-                static::log('Module class "'.$strClass.'" (module "'.$objRow->type.'") does not exist', __METHOD__, TL_ERROR);
+                static::log('Module class "' . $strClass . '" (module "' . $objRow->type . '") does not exist', __METHOD__, TL_ERROR);
 
                 return '';
             }
@@ -266,7 +266,7 @@ abstract class Controller extends \System
 
             // Disable indexing if protected
             if ($objModule->protected && !preg_match('/^\s*<!-- indexer::stop/', $strBuffer)) {
-                $strBuffer = "\n<!-- indexer::stop -->". $strBuffer ."<!-- indexer::continue -->\n";
+                $strBuffer = "\n<!-- indexer::stop -->" . $strBuffer . "<!-- indexer::continue -->\n";
             }
 
             return $strBuffer;
@@ -338,7 +338,7 @@ abstract class Controller extends \System
 
         // Disable indexing if protected
         if ($objArticle->protected && !preg_match('/^\s*<!-- indexer::stop/', $strBuffer)) {
-            $strBuffer = "\n<!-- indexer::stop -->". $strBuffer ."<!-- indexer::continue -->\n";
+            $strBuffer = "\n<!-- indexer::stop -->" . $strBuffer . "<!-- indexer::continue -->\n";
         }
 
         return $strBuffer;
@@ -382,7 +382,7 @@ abstract class Controller extends \System
 
         // Return if the class does not exist
         if (!class_exists($strClass)) {
-            static::log('Content element class "'.$strClass.'" (content element "'.$objRow->type.'") does not exist', __METHOD__, TL_ERROR);
+            static::log('Content element class "' . $strClass . '" (content element "' . $objRow->type . '") does not exist', __METHOD__, TL_ERROR);
 
             return '';
         }
@@ -400,7 +400,7 @@ abstract class Controller extends \System
 
         // Disable indexing if protected
         if ($objElement->protected && !preg_match('/^\s*<!-- indexer::stop/', $strBuffer)) {
-            $strBuffer = "\n<!-- indexer::stop -->". $strBuffer ."<!-- indexer::continue -->\n";
+            $strBuffer = "\n<!-- indexer::stop -->" . $strBuffer . "<!-- indexer::continue -->\n";
         }
 
         return $strBuffer;
@@ -479,7 +479,7 @@ abstract class Controller extends \System
     public static function getPageStatusIcon($objPage)
     {
         $sub = 0;
-        $image = $objPage->type.'.gif';
+        $image = $objPage->type . '.gif';
 
         // Page not published or not active
         if (!$objPage->published || ($objPage->start != '' && $objPage->start > time()) || ($objPage->stop != '' && $objPage->stop < time())) {
@@ -498,7 +498,7 @@ abstract class Controller extends \System
 
         // Get the image name
         if ($sub > 0) {
-            $image = $objPage->type.'_'.$sub.'.gif';
+            $image = $objPage->type . '_' . $sub . '.gif';
         }
 
         return $image;
@@ -570,9 +570,9 @@ abstract class Controller extends \System
         $strBuffer = '';
         static $arrCache = array();
 
-        for ($_rit = 0, $_cnt = count($tags); $_rit<$_cnt; $_rit += 3) {
+        for ($_rit = 0, $_cnt = count($tags); $_rit < $_cnt; $_rit += 3) {
             $strBuffer .= $tags[$_rit];
-            $strTag = $tags[$_rit+1];
+            $strTag = $tags[$_rit + 1];
 
             // Skip empty tags
             if ($strTag == '') {
@@ -905,7 +905,7 @@ abstract class Controller extends \System
                         break;
                     }
 
-                    $strUrl = $this->generateFrontendUrl($objJumpTo->row(), ((\Config::get('useAutoItem') && !\Config::get('disableAlias')) ?  '/' : '/items/') . ((!\Config::get('disableAlias') && $objFaq->alias != '') ? $objFaq->alias : $objFaq->id));
+                    $strUrl = $this->generateFrontendUrl($objJumpTo->row(), ((\Config::get('useAutoItem') && !\Config::get('disableAlias')) ? '/' : '/items/') . ((!\Config::get('disableAlias') && $objFaq->alias != '') ? $objFaq->alias : $objFaq->id));
 
                     // Replace the tag
                     switch (strtolower($elements[0])) {
@@ -946,12 +946,12 @@ abstract class Controller extends \System
                             $strUrl = $this->generateFrontendUrl($objJumpTo->row());
                         }
                     } elseif ($objNews->source == 'article') {
-                        if (($objArticle = \ArticleModel::findByPk($objNews->articleId, array('eager'=>true))) !== null && ($objPid = $objArticle->getRelated('pid')) !== null) {
+                        if (($objArticle = \ArticleModel::findByPk($objNews->articleId, array('eager' => true))) !== null && ($objPid = $objArticle->getRelated('pid')) !== null) {
                             $strUrl = $this->generateFrontendUrl($objPid->row(), '/articles/' . ((!\Config::get('disableAlias') && $objArticle->alias != '') ? $objArticle->alias : $objArticle->id));
                         }
                     } else {
                         if (($objArchive = $objNews->getRelated('pid')) !== null && ($objJumpTo = $objArchive->getRelated('jumpTo')) !== null) {
-                            $strUrl = $this->generateFrontendUrl($objJumpTo->row(), ((\Config::get('useAutoItem') && !\Config::get('disableAlias')) ?  '/' : '/items/') . ((!\Config::get('disableAlias') && $objNews->alias != '') ? $objNews->alias : $objNews->id));
+                            $strUrl = $this->generateFrontendUrl($objJumpTo->row(), ((\Config::get('useAutoItem') && !\Config::get('disableAlias')) ? '/' : '/items/') . ((!\Config::get('disableAlias') && $objNews->alias != '') ? $objNews->alias : $objNews->id));
                         }
                     }
 
@@ -994,12 +994,12 @@ abstract class Controller extends \System
                             $strUrl = $this->generateFrontendUrl($objJumpTo->row());
                         }
                     } elseif ($objEvent->source == 'article') {
-                        if (($objArticle = \ArticleModel::findByPk($objEvent->articleId, array('eager'=>true))) !== null && ($objPid = $objArticle->getRelated('pid')) !== null) {
+                        if (($objArticle = \ArticleModel::findByPk($objEvent->articleId, array('eager' => true))) !== null && ($objPid = $objArticle->getRelated('pid')) !== null) {
                             $strUrl = $this->generateFrontendUrl($objPid->row(), '/articles/' . ((!\Config::get('disableAlias') && $objArticle->alias != '') ? $objArticle->alias : $objArticle->id));
                         }
                     } else {
                         if (($objCalendar = $objEvent->getRelated('pid')) !== null && ($objJumpTo = $objCalendar->getRelated('jumpTo')) !== null) {
-                            $strUrl = $this->generateFrontendUrl($objJumpTo->row(), ((\Config::get('useAutoItem') && !\Config::get('disableAlias')) ?  '/' : '/events/') . ((!\Config::get('disableAlias') && $objEvent->alias != '') ? $objEvent->alias : $objEvent->id));
+                            $strUrl = $this->generateFrontendUrl($objJumpTo->row(), ((\Config::get('useAutoItem') && !\Config::get('disableAlias')) ? '/' : '/events/') . ((!\Config::get('disableAlias') && $objEvent->alias != '') ? $objEvent->alias : $objEvent->id));
                         }
                     }
 
@@ -1131,8 +1131,8 @@ abstract class Controller extends \System
                 // Conditional tags (if)
                 case 'iflng':
                     if ($elements[1] != '' && $elements[1] != $objPage->language) {
-                        for (; $_rit<$_cnt; $_rit += 3) {
-                            if ($tags[$_rit+1] == 'iflng' || $tags[$_rit+1] == 'iflng::' . $objPage->language) {
+                        for (; $_rit < $_cnt; $_rit += 3) {
+                            if ($tags[$_rit + 1] == 'iflng' || $tags[$_rit + 1] == 'iflng::' . $objPage->language) {
                                 break;
                             }
                         }
@@ -1146,8 +1146,8 @@ abstract class Controller extends \System
                         $langs = trimsplit(',', $elements[1]);
 
                         if (in_array($objPage->language, $langs)) {
-                            for (; $_rit<$_cnt; $_rit += 3) {
-                                if ($tags[$_rit+1] == 'ifnlng') {
+                            for (; $_rit < $_cnt; $_rit += 3) {
+                                if ($tags[$_rit + 1] == 'ifnlng') {
                                     break;
                                 }
                             }
@@ -1228,7 +1228,7 @@ abstract class Controller extends \System
                 case 'acronym':
                     if ($objPage->outputFormat == 'xhtml') {
                         if ($elements[1] != '') {
-                            $arrCache[$strTag] = '<acronym title="'. $elements[1] .'">';
+                            $arrCache[$strTag] = '<acronym title="' . $elements[1] . '">';
                         } else {
                             $arrCache[$strTag] = '</acronym>';
                         }
@@ -1239,7 +1239,7 @@ abstract class Controller extends \System
                 // Abbreviations
                 case 'abbr':
                     if ($elements[1] != '') {
-                        $arrCache[$strTag] = '<abbr title="'. $elements[1] .'">';
+                        $arrCache[$strTag] = '<abbr title="' . $elements[1] . '">';
                     } else {
                         $arrCache[$strTag] = '</abbr>';
                     }
@@ -1335,7 +1335,7 @@ abstract class Controller extends \System
                         $dimensions = '';
 
                         // Add the image dimensions
-                        if (($imgSize = @getimagesize(TL_ROOT .'/'. rawurldecode($src))) !== false) {
+                        if (($imgSize = @getimagesize(TL_ROOT . '/' . rawurldecode($src))) !== false) {
                             $dimensions = $imgSize[3];
                         }
 
@@ -1667,7 +1667,7 @@ abstract class Controller extends \System
     {
         // Initialize an empty array (see #5217)
         if (!is_array($arrValues)) {
-            $arrValues = array('top'=>'', 'right'=>'', 'bottom'=>'', 'left'=>'', 'unit'=>'');
+            $arrValues = array('top' => '', 'right' => '', 'bottom' => '', 'left' => '', 'unit' => '');
         }
 
         $top = $arrValues['top'];
@@ -1689,7 +1689,7 @@ abstract class Controller extends \System
         }
 
         $return = array();
-        $arrDir = array('top'=>$top, 'right'=>$right, 'bottom'=>$bottom, 'left'=>$left);
+        $arrDir = array('top' => $top, 'right' => $right, 'bottom' => $bottom, 'left' => $left);
 
         foreach ($arrDir as $k => $v) {
             if ($v != '') {
@@ -1848,8 +1848,8 @@ abstract class Controller extends \System
             if ($strParams != '') {
                 $arrChunks = explode('/', preg_replace('@^/@', '', $strParams));
 
-                for ($i = 0, $c = count($arrChunks); $i<$c; $i = ($i+2)) {
-                    $strRequest .= sprintf('&%s=%s', $arrChunks[$i], $arrChunks[($i+1)]);
+                for ($i = 0, $c = count($arrChunks); $i < $c; $i = ($i + 2)) {
+                    $strRequest .= sprintf('&%s=%s', $arrChunks[$i], $arrChunks[($i + 1)]);
                 }
             }
 
@@ -1889,18 +1889,18 @@ abstract class Controller extends \System
         }
 
         $search = $blnHrefOnly ? 'href' : 'href|src';
-        $arrUrls = preg_split('/(('.$search.')="([^"]+)")/i', $strContent, -1, PREG_SPLIT_DELIM_CAPTURE);
+        $arrUrls = preg_split('/((' . $search . ')="([^"]+)")/i', $strContent, -1, PREG_SPLIT_DELIM_CAPTURE);
         $strContent = '';
 
-        for ($i = 0, $c = count($arrUrls); $i<$c; $i = $i+4) {
+        for ($i = 0, $c = count($arrUrls); $i < $c; $i = $i + 4) {
             $strContent .= $arrUrls[$i];
 
-            if (!isset($arrUrls[$i+2])) {
+            if (!isset($arrUrls[$i + 2])) {
                 continue;
             }
 
-            $strAttribute = $arrUrls[$i+2];
-            $strUrl = $arrUrls[$i+3];
+            $strAttribute = $arrUrls[$i + 2];
+            $strUrl = $arrUrls[$i + 3];
 
             if (!preg_match('@^(https?://|ftp://|mailto:|#)@i', $strUrl)) {
                 $strUrl = $strBase . (($strUrl != '/') ? $strUrl : '');
@@ -2034,7 +2034,7 @@ abstract class Controller extends \System
             $intId = $objParent->pid;
 
             // Add the log entry
-            $arrParent[] = $strTable .'.id=' . $intId;
+            $arrParent[] = $strTable . '.id=' . $intId;
 
             // Load the data container of the parent table
             $this->loadDataContainer($strTable);
@@ -2111,7 +2111,7 @@ abstract class Controller extends \System
         global $objPage;
 
         $size = deserialize($arrItem['size']);
-        $imgSize = getimagesize(TL_ROOT .'/'. $arrItem['singleSRC']);
+        $imgSize = getimagesize(TL_ROOT . '/' . $arrItem['singleSRC']);
 
         if ($intMaxWidth === null) {
             $intMaxWidth = (TL_MODE == 'BE') ? 320 : \Config::get('maxImageWidth');
@@ -2152,7 +2152,7 @@ abstract class Controller extends \System
         $src = \Image::get($arrItem['singleSRC'], $size[0], $size[1], $size[2]);
 
         // Image dimensions
-        if (($imgSize = @getimagesize(TL_ROOT .'/'. rawurldecode($src))) !== false) {
+        if (($imgSize = @getimagesize(TL_ROOT . '/' . rawurldecode($src))) !== false) {
             $objTemplate->arrSize = $imgSize;
             $objTemplate->imgSize = ' ' . $imgSize[3];
         }
@@ -2228,7 +2228,7 @@ abstract class Controller extends \System
             if (!\Validator::isUuid($arrEnclosures[0])) {
                 foreach (array('details', 'answer', 'text') as $key) {
                     if (isset($objTemplate->$key)) {
-                        $objTemplate->$key = '<p class="error">'.$GLOBALS['TL_LANG']['ERR']['version2format'].'</p>';
+                        $objTemplate->$key = '<p class="error">' . $GLOBALS['TL_LANG']['ERR']['version2format'] . '</p>';
                     }
                 }
             }

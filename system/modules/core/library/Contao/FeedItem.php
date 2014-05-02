@@ -108,9 +108,9 @@ class FeedItem
         $objFile = new \File($strFile, true);
 
         $this->arrData['enclosure'][] = array(
-            'url' => \Environment::get('base') . \System::urlEncode($strFile),
+            'url'    => \Environment::get('base') . \System::urlEncode($strFile),
             'length' => $objFile->size,
-            'type' => $objFile->mime
+            'type'   => $objFile->mime
         );
     }
 }

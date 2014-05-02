@@ -129,7 +129,9 @@ class RequestToken
      *
      * @deprecated RequestToken is now a static class
      */
-    final public function __clone() {}
+    final public function __clone()
+    {
+    }
 
     /**
      * Return the object instance (Singleton)

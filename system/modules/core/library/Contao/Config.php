@@ -76,7 +76,9 @@ class Config
     /**
      * Prevent direct instantiation (Singleton)
      */
-    protected function __construct() {}
+    protected function __construct()
+    {
+    }
 
     /**
      * Automatically save the local configuration
@@ -91,7 +93,9 @@ class Config
     /**
      * Prevent cloning of the object (Singleton)
      */
-    final public function __clone() {}
+    final public function __clone()
+    {
+    }
 
     /**
      * Return the current object instance (Singleton)
@@ -201,7 +205,7 @@ class Config
             $this->strTop = '<?php';
         }
 
-        $strFile  = trim($this->strTop) . "\n\n";
+        $strFile = trim($this->strTop) . "\n\n";
         $strFile .= "### INSTALL SCRIPT START ###\n";
 
         foreach ($this->arrData as $k => $v) {
@@ -255,7 +259,7 @@ class Config
         // Purge the XCache cache (thanks to Trenker)
         if (function_exists('xcache_count') && !ini_get('xcache.stat')) {
             if (($count = xcache_count(XC_TYPE_PHP)) > 0) {
-                for ($id = 0; $id<$count; $id++) {
+                for ($id = 0; $id < $count; $id++) {
                     xcache_clear_cache(XC_TYPE_PHP, $id);
                 }
             }

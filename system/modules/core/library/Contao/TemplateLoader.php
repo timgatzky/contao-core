@@ -94,7 +94,7 @@ class TemplateLoader
      */
     public static function getPath($template, $format, $custom = 'templates')
     {
-        $file = $template .  '.' . $format;
+        $file = $template . '.' . $format;
 
         // Check the theme folder first
         if (file_exists(TL_ROOT . '/' . $custom . '/' . $file)) {

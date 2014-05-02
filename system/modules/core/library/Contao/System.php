@@ -536,10 +536,12 @@ abstract class System
         }
 
         // die() statement
-        $strCode = str_replace(array(
-            " if (!defined('TL_ROOT')) die('You cannot access this file directly!');",
-            " if (!defined('TL_ROOT')) die('You can not access this file directly!');"
-        ), '', $strCode);
+        $strCode = str_replace(
+            array(
+                " if (!defined('TL_ROOT')) die('You cannot access this file directly!');",
+                " if (!defined('TL_ROOT')) die('You can not access this file directly!');"
+            ), '', $strCode
+        );
 
         // Closing tag
         if (substr($strCode, -2) == '?>') {

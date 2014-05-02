@@ -96,7 +96,9 @@ abstract class Database
     /**
      * Prevent cloning of the object (Singleton)
      */
-    final public function __clone() {}
+    final public function __clone()
+    {
+    }
 
     /**
      * Return an object property
@@ -402,8 +404,8 @@ abstract class Database
                 }
 
                 foreach (array_reverse(array_keys($arrOrdered)) as $pid) {
-                    $pos = (int) array_search($pid, $arrReturn);
-                    array_insert($arrReturn, $pos+1, $arrOrdered[$pid]);
+                    $pos = (int)array_search($pid, $arrReturn);
+                    array_insert($arrReturn, $pos + 1, $arrOrdered[$pid]);
                 }
 
                 $arrReturn = $this->getChildRecords($arrChilds, $strTable, $blnSorting, $arrReturn, $strWhere);

@@ -75,7 +75,7 @@ class Encryption
         $iv = mcrypt_create_iv(mcrypt_enc_get_iv_size(static::$resTd), MCRYPT_RAND);
         mcrypt_generic_init(static::$resTd, md5($strKey), $iv);
         $strEncrypted = mcrypt_generic(static::$resTd, $varValue);
-        $strEncrypted = base64_encode($iv.$strEncrypted);
+        $strEncrypted = base64_encode($iv . $strEncrypted);
         mcrypt_generic_deinit(static::$resTd);
 
         return $strEncrypted;
@@ -204,7 +204,9 @@ class Encryption
      *
      * @deprecated Encryption is now a static class
      */
-    final public function __clone() {}
+    final public function __clone()
+    {
+    }
 
     /**
      * Return the object instance (Singleton)

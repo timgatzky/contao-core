@@ -133,14 +133,14 @@ class Combiner extends \System
 
         // Default version
         if ($strVersion === null) {
-            $strVersion = VERSION .'.'. BUILD;
+            $strVersion = VERSION . '.' . BUILD;
         }
 
         // Store the file
         $arrFile = array(
-            'name' => $strFile,
-            'version' => $strVersion,
-            'media' => $strMedia,
+            'name'      => $strFile,
+            'version'   => $strVersion,
+            'media'     => $strMedia,
             'extension' => $strType
         );
 
@@ -317,14 +317,14 @@ class Combiner extends \System
         $chunks = preg_split('/url\(["\']??(.+)["\']??\)/U', $content, -1, PREG_SPLIT_DELIM_CAPTURE);
 
         // Check the URLs
-        for ($i = 0, $c = count($chunks); $i<$c; $i = $i+2) {
+        for ($i = 0, $c = count($chunks); $i < $c; $i = $i + 2) {
             $strBuffer .= $chunks[$i];
 
-            if (!isset($chunks[$i+1])) {
+            if (!isset($chunks[$i + 1])) {
                 break;
             }
 
-            $strData = $chunks[$i+1];
+            $strData = $chunks[$i + 1];
 
             // Skip absolute links and embedded images (see #5082)
             if (strncmp($strData, 'data:', 5) !== 0 && strncmp($strData, 'http://', 7) !== 0 && strncmp($strData, 'https://', 8) !== 0 && strncmp($strData, '/', 1) !== 0 && strncmp($strData, 'assets/css3pie/', 15) !== 0) {

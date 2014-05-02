@@ -549,12 +549,14 @@ abstract class Widget extends \Template\Base
             return '';
         }
 
-        return sprintf('<label%s%s>%s%s%s</label>',
-                        ($this->blnForAttribute ? ' for="ctrl_' . $this->strId . '"' : ''),
-                        (($this->strClass != '') ? ' class="' . $this->strClass . '"' : ''),
-                        ($this->mandatory ? '<span class="invisible">'.$GLOBALS['TL_LANG']['MSC']['mandatory'].'</span> ' : ''),
-                        $this->strLabel,
-                        ($this->mandatory ? '<span class="mandatory">*</span>' : ''));
+        return sprintf(
+            '<label%s%s>%s%s%s</label>',
+            ($this->blnForAttribute ? ' for="ctrl_' . $this->strId . '"' : ''),
+            (($this->strClass != '') ? ' class="' . $this->strClass . '"' : ''),
+            ($this->mandatory ? '<span class="invisible">' . $GLOBALS['TL_LANG']['MSC']['mandatory'] . '</span> ' : ''),
+            $this->strLabel,
+            ($this->mandatory ? '<span class="mandatory">*</span>' : '')
+        );
     }
 
 
@@ -589,7 +591,7 @@ abstract class Widget extends \Template\Base
      *
      * @return string The attributes string
      */
-    public function getAttributes($arrStrip=array())
+    public function getAttributes($arrStrip = array())
     {
         $blnIsXhtml = false;
 
@@ -644,10 +646,12 @@ abstract class Widget extends \Template\Base
             return '';
         }
 
-        return sprintf(' <input type="submit" id="ctrl_%s_submit" class="submit" value="%s"%s',
-                        $this->strId,
-                        specialchars($this->slabel),
-                        $this->strTagEnding);
+        return sprintf(
+            ' <input type="submit" id="ctrl_%s_submit" class="submit" value="%s"%s',
+            $this->strId,
+            specialchars($this->slabel),
+            $this->strTagEnding
+        );
     }
 
 
@@ -1118,9 +1122,9 @@ abstract class Widget extends \Template\Base
         // Internet Explorer does not support onchange for checkboxes and radio buttons
         if ($arrData['eval']['submitOnChange']) {
             if ($arrData['inputType'] == 'checkbox' || $arrData['inputType'] == 'checkboxWizard' || $arrData['inputType'] == 'radio' || $arrData['inputType'] == 'radioTable') {
-                $arrAttributes['onclick'] = trim($arrAttributes['onclick'] . " Backend.autoSubmit('".$strTable."')");
+                $arrAttributes['onclick'] = trim($arrAttributes['onclick'] . " Backend.autoSubmit('" . $strTable . "')");
             } else {
-                $arrAttributes['onchange'] = trim($arrAttributes['onchange'] . " Backend.autoSubmit('".$strTable."')");
+                $arrAttributes['onchange'] = trim($arrAttributes['onchange'] . " Backend.autoSubmit('" . $strTable . "')");
             }
         }
 
@@ -1133,7 +1137,7 @@ abstract class Widget extends \Template\Base
 
         // Add Ajax event
         if ($arrData['inputType'] == 'checkbox' && is_array($GLOBALS['TL_DCA'][$strTable]['subpalettes']) && in_array($strField, array_keys($GLOBALS['TL_DCA'][$strTable]['subpalettes'])) && $arrData['eval']['submitOnChange']) {
-            $arrAttributes['onclick'] = "AjaxRequest.toggleSubpalette(this, 'sub_".$strName."', '".$strField."')";
+            $arrAttributes['onclick'] = "AjaxRequest.toggleSubpalette(this, 'sub_" . $strName . "', '" . $strField . "')";
         }
 
         // Options callback
@@ -1158,9 +1162,9 @@ abstract class Widget extends \Template\Base
         // Add default option to single checkbox
         if ($arrData['inputType'] == 'checkbox' && !isset($arrData['options']) && !isset($arrData['options_callback']) && !isset($arrData['foreignKey'])) {
             if (TL_MODE == 'FE' && isset($arrAttributes['description'])) {
-                $arrAttributes['options'][] = array('value'=>1, 'label'=>$arrAttributes['description']);
+                $arrAttributes['options'][] = array('value' => 1, 'label' => $arrAttributes['description']);
             } else {
-                $arrAttributes['options'][] = array('value'=>1, 'label'=>$arrAttributes['label']);
+                $arrAttributes['options'][] = array('value' => 1, 'label' => $arrAttributes['label']);
             }
         }
 
@@ -1171,12 +1175,12 @@ abstract class Widget extends \Template\Base
 
             if ($arrData['eval']['includeBlankOption'] && !$arrData['eval']['multiple']) {
                 $strLabel = isset($arrData['eval']['blankOptionLabel']) ? $arrData['eval']['blankOptionLabel'] : '-';
-                $arrAttributes['options'][] = array('value'=>'', 'label'=>$strLabel);
+                $arrAttributes['options'][] = array('value' => '', 'label' => $strLabel);
             }
 
             foreach ($arrData['options'] as $k => $v) {
                 if (!is_array($v)) {
-                    $arrAttributes['options'][] = array('value'=>($blnIsAssociative ? $k : $v), 'label'=>($blnUseReference ? ((($ref = (is_array($arrData['reference'][$v]) ? $arrData['reference'][$v][0] : $arrData['reference'][$v])) != false) ? $ref : $v) : $v));
+                    $arrAttributes['options'][] = array('value' => ($blnIsAssociative ? $k : $v), 'label' => ($blnUseReference ? ((($ref = (is_array($arrData['reference'][$v]) ? $arrData['reference'][$v][0] : $arrData['reference'][$v])) != false) ? $ref : $v) : $v));
                     continue;
                 }
 
@@ -1184,7 +1188,7 @@ abstract class Widget extends \Template\Base
                 $blnIsAssoc = array_is_assoc($v);
 
                 foreach ($v as $kk => $vv) {
-                    $arrAttributes['options'][$key][] = array('value'=>($blnIsAssoc ? $kk : $vv), 'label'=>($blnUseReference ? ((($ref = (is_array($arrData['reference'][$vv]) ? $arrData['reference'][$vv][0] : $arrData['reference'][$vv])) != false) ? $ref : $vv) : $vv));
+                    $arrAttributes['options'][$key][] = array('value' => ($blnIsAssoc ? $kk : $vv), 'label' => ($blnUseReference ? ((($ref = (is_array($arrData['reference'][$vv]) ? $arrData['reference'][$vv][0] : $arrData['reference'][$vv])) != false) ? $ref : $vv) : $vv));
                 }
             }
         }

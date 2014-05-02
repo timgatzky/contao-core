@@ -58,7 +58,7 @@ class Environment
         if (in_array($strKey, get_class_methods('Environment'))) {
             static::$arrCache[$strKey] = static::$strKey();
         } else {
-            $arrChunks = preg_split('/([A-Z][a-z]*)/', $strKey, -1, PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
+            $arrChunks = preg_split('/([A-Z][a-z]*)/', $strKey, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
             $strServerKey = strtoupper(implode('_', $arrChunks));
             static::$arrCache[$strKey] = $_SERVER[$strServerKey];
         }
@@ -277,7 +277,7 @@ class Environment
 
         // SSL proxy
         if ($xhost != '' && $xhost == \Config::get('sslProxyDomain')) {
-            return 'https://' .  $xhost . '/' . $host;
+            return 'https://' . $xhost . '/' . $host;
         }
 
         return (static::get('ssl') ? 'https://' : 'http://') . $host;
@@ -506,14 +506,18 @@ class Environment
      *
      * @deprecated Environment is now a static class
      */
-    protected function __construct() {}
+    protected function __construct()
+    {
+    }
 
     /**
      * Prevent cloning of the object (Singleton)
      *
      * @deprecated Environment is now a static class
      */
-    final public function __clone() {}
+    final public function __clone()
+    {
+    }
 
     /**
      * Return an environment variable
