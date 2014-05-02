@@ -687,7 +687,7 @@ abstract class Widget extends \Template\Base
         if (!empty($arrParts)) {
             $varValue = \Input::$strMethod(array_shift($arrParts), $this->decodeEntities);
 
-            foreach($arrParts as $part) {
+            foreach ($arrParts as $part) {
                 if (!is_array($varValue)) {
                     break;
                 }
@@ -1151,7 +1151,7 @@ abstract class Widget extends \Template\Base
             $objOptions = \Database::getInstance()->query("SELECT id, " . $arrKey[1] . " AS value FROM " . $arrKey[0] . " WHERE tstamp>0 ORDER BY value");
             $arrData['options'] = array();
 
-            while($objOptions->next()) {
+            while ($objOptions->next()) {
                 $arrData['options'][$objOptions->id] = $objOptions->value;
             }
         }

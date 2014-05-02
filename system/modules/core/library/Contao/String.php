@@ -260,7 +260,7 @@ class String
         foreach ((array) $arrEmails[0] as $strEmail) {
             $strEncoded = '';
 
-            for($i=0; $i<strlen($strEmail); ++$i) {
+            for ($i=0; $i<strlen($strEmail); ++$i) {
                 $blnHex = rand(0, 1);
 
                 if ($blnHex) {

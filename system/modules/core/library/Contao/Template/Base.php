@@ -137,7 +137,7 @@ abstract class Base extends \Controller
 
             // Combine the contents of the child blocks
             elseif (is_array($this->arrBlocks[$name])) {
-                $callback = function($current, $parent) {
+                $callback = function ($current, $parent) {
                     return str_replace('[[TL_PARENT]]', $parent, $current);
                 };
 

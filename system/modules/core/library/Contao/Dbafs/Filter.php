@@ -45,7 +45,7 @@ class Filter extends \RecursiveFilterIterator
     public function __construct(\RecursiveIterator $iterator)
     {
         if (\Config::get('fileSyncExclude') != '') {
-            $this->arrExempt = array_map(function($e) {
+            $this->arrExempt = array_map(function ($e) {
                 return \Config::get('uploadPath') . '/' . $e;
             }, trimsplit(',', \Config::get('fileSyncExclude')));
         }

@@ -836,7 +836,7 @@ class Updater extends \Controller
             $return->isUuid = (strlen($value) == 16 && !is_numeric($return->value) && strncmp($return->value, \Config::get('uploadPath') . '/', strlen(\Config::get('uploadPath')) + 1) !== 0);
             $return->isNumeric = (is_numeric($return->value) && $return->value > 0);
         } else {
-            $return->value = array_map(function($var) { return rtrim($var, "\x00"); }, $value);
+            $return->value = array_map(function ($var) { return rtrim($var, "\x00"); }, $value);
             $return->isUuid = (strlen($value[0]) == 16 && !is_numeric($return->value[0]) && strncmp($return->value[0], \Config::get('uploadPath') . '/', strlen(\Config::get('uploadPath')) + 1) !== 0);
             $return->isNumeric = (is_numeric($return->value[0]) && $return->value[0] > 0);
         }

@@ -76,7 +76,7 @@ class Folder extends \System
 
         // Check the excluded folders
         if ($this->blnSyncDb && \Config::get('fileSyncExclude') != '') {
-            $arrExempt = array_map(function($e) {
+            $arrExempt = array_map(function ($e) {
                 return \Config::get('uploadPath') . '/' . $e;
             }, trimsplit(',', \Config::get('fileSyncExclude')));
 

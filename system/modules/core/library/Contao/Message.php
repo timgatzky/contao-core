@@ -110,7 +110,7 @@ class Message
     /**
      * Return all messages as HTML
      *
-     * @param boolean $blnDcLayout If true, the line breaks are different
+     * @param boolean $blnDcLayout  If true, the line breaks are different
      * @param boolean $blnNoWrapper If true, there will be no wrapping DIV
      *
      * @return string The messages HTML markup

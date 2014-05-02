@@ -568,7 +568,7 @@ abstract class System
         $units = $xml->getElementsByTagName('trans-unit');
 
         // Set up the quotekey function
-        $quotekey = function($key) {
+        $quotekey = function ($key) {
             if ($key === '0') {
                 return 0;
             } elseif (is_numeric($key)) {
@@ -795,7 +795,7 @@ abstract class System
     /**
      * Return all messages as HTML
      *
-     * @param boolean $blnDcLayout If true, the line breaks are different
+     * @param boolean $blnDcLayout  If true, the line breaks are different
      * @param boolean $blnNoWrapper If true, there will be no wrapping DIV
      *
      * @return string The messages HTML markup
