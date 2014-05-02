@@ -12,7 +12,6 @@
 
 namespace Contao\Database;
 
-
 /**
  * Handles database updates
  *
@@ -33,7 +32,6 @@ class Installer extends \Controller
     {
         parent::__construct();
     }
-
 
     /**
      * Generate a HTML form with queries and return it as string
@@ -96,7 +94,6 @@ class Installer extends \Controller
   </table>
 </div>';
     }
-
 
     /**
      * Compile a command array for each database modification
@@ -219,7 +216,6 @@ class Installer extends \Controller
         return $return;
     }
 
-
     /**
      * Get the DCA table settings from the DCA cache
      *
@@ -273,7 +269,6 @@ class Installer extends \Controller
 
         return $return;
     }
-
 
     /**
      * Get the DCA table settings from the database.sql files
@@ -353,7 +348,6 @@ class Installer extends \Controller
 
         return $return;
     }
-
 
     /**
      * Get the current database structure

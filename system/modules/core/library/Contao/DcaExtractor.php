@@ -12,7 +12,6 @@
 
 namespace Contao;
 
-
 /**
  * Extracts DCA information and cache it
  *
@@ -84,7 +83,6 @@ class DcaExtractor extends \Controller
      */
     protected $blnIsDbTable = false;
 
-
     /**
      * Load or create the extract
      *
@@ -111,7 +109,6 @@ class DcaExtractor extends \Controller
         }
     }
 
-
     /**
      * Return the meta data as array
      *
@@ -121,7 +118,6 @@ class DcaExtractor extends \Controller
     {
         return $this->arrMeta;
     }
-
 
     /**
      * Return true if there is meta data
@@ -133,7 +129,6 @@ class DcaExtractor extends \Controller
         return !empty($this->arrMeta);
     }
 
-
     /**
      * Return the fields as array
      *
@@ -143,7 +138,6 @@ class DcaExtractor extends \Controller
     {
         return $this->arrFields;
     }
-
 
     /**
      * Return true if there are fields
@@ -155,7 +149,6 @@ class DcaExtractor extends \Controller
         return !empty($this->arrFields);
     }
 
-
     /**
      * Return the keys as array
      *
@@ -165,7 +158,6 @@ class DcaExtractor extends \Controller
     {
         return $this->arrKeys;
     }
-
 
     /**
      * Return true if there are keys
@@ -177,7 +169,6 @@ class DcaExtractor extends \Controller
         return !empty($this->arrKeys);
     }
 
-
     /**
      * Return the relations as array
      *
@@ -187,7 +178,6 @@ class DcaExtractor extends \Controller
     {
         return $this->arrRelations;
     }
-
 
     /**
      * Return true if there are relations
@@ -199,7 +189,6 @@ class DcaExtractor extends \Controller
         return !empty($this->arrRelations);
     }
 
-
     /**
      * Return true if the extract relates to a database table
      *
@@ -209,7 +198,6 @@ class DcaExtractor extends \Controller
     {
         return $this->blnIsDbTable;
     }
-
 
     /**
      * Return an array that can be used by the database installer
@@ -261,7 +249,6 @@ class DcaExtractor extends \Controller
 
         return $return;
     }
-
 
     /**
      * Create the extract from the DCA or the database.sql files

@@ -12,7 +12,6 @@
 
 namespace Contao;
 
-
 /**
  * Loads and writes the local configuration file
  *
@@ -74,12 +73,10 @@ class Config
      */
     protected $arrCache = array();
 
-
     /**
      * Prevent direct instantiation (Singleton)
      */
     protected function __construct() {}
-
 
     /**
      * Automatically save the local configuration
@@ -91,12 +88,10 @@ class Config
         }
     }
 
-
     /**
      * Prevent cloning of the object (Singleton)
      */
     final public function __clone() {}
-
 
     /**
      * Return the current object instance (Singleton)
@@ -112,7 +107,6 @@ class Config
 
         return static::$objInstance;
     }
-
 
     /**
      * Load all configuration files
@@ -145,7 +139,6 @@ class Config
             include TL_ROOT . '/system/config/localconfig.php';
         }
     }
-
 
     /**
      * Mark the object as modified
@@ -198,7 +191,6 @@ class Config
             fclose($resFile);
         }
     }
-
 
     /**
      * Save the local configuration file
@@ -269,7 +261,6 @@ class Config
         }
     }
 
-
     /**
      * Return true if the installation is completed
      *
@@ -280,7 +271,6 @@ class Config
         return static::$blnHasLcf;
     }
 
-
     /**
      * Return all active modules as array
      *
@@ -290,7 +280,6 @@ class Config
     {
         return \ModuleLoader::getActive();
     }
-
 
     /**
      * Add a configuration variable to the local configuration file
@@ -304,7 +293,6 @@ class Config
         $this->arrData[$strKey] = $this->escape($varValue) . ';';
     }
 
-
     /**
      * Alias for Config::add()
      *
@@ -316,7 +304,6 @@ class Config
         $this->add($strKey, $varValue);
     }
 
-
     /**
      * Remove a configuration variable
      *
@@ -327,7 +314,6 @@ class Config
         $this->markModified();
         unset($this->arrData[$strKey]);
     }
-
 
     /**
      * Return a configuration value
@@ -345,7 +331,6 @@ class Config
         return null;
     }
 
-
     /**
      * Temporarily set a configuration value
      *
@@ -356,7 +341,6 @@ class Config
     {
         $GLOBALS['TL_CONFIG'][$strKey] = $varValue;
     }
-
 
     /**
      * Permanently set a configuration value
@@ -375,7 +359,6 @@ class Config
         $objConfig->add($strKey, $varValue);
     }
 
-
     /**
      * Permanently remove a configuration value
      *
@@ -391,7 +374,6 @@ class Config
 
         $objConfig->delete($strKey);
     }
-
 
     /**
      * Preload the default and local configuration
@@ -409,7 +391,6 @@ class Config
 
         static::$blnHasLcf = $blnHasLcf;
     }
-
 
     /**
      * Escape a value depending on its type

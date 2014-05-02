@@ -12,7 +12,6 @@
 
 namespace Contao\Files;
 
-
 /**
  * Manage files with the PHP functions
  *
@@ -36,7 +35,6 @@ class Php extends \Files
         return @mkdir(TL_ROOT . '/' . $strDirectory);
     }
 
-
     /**
      * Remove a directory
      *
@@ -49,7 +47,6 @@ class Php extends \Files
         $this->validate($strDirectory);
         return @rmdir(TL_ROOT. '/' . $strDirectory);
     }
-
 
     /**
      * Open a file and return the handle
@@ -65,7 +62,6 @@ class Php extends \Files
         return @fopen(TL_ROOT . '/' . $strFile, $strMode);
     }
 
-
     /**
      * Write content to a file
      *
@@ -76,7 +72,6 @@ class Php extends \Files
     {
         @fputs($resFile, $strContent);
     }
-
 
     /**
      * Close a file handle
@@ -89,7 +84,6 @@ class Php extends \Files
     {
         return @fclose($resFile);
     }
-
 
     /**
      * Rename a file or folder
@@ -122,7 +116,6 @@ class Php extends \Files
         return @rename(TL_ROOT . '/' . $strOldName, TL_ROOT . '/' . $strNewName);
     }
 
-
     /**
      * Copy a file or folder
      *
@@ -137,7 +130,6 @@ class Php extends \Files
         return @copy(TL_ROOT . '/' . $strSource, TL_ROOT . '/' . $strDestination);
     }
 
-
     /**
      * Delete a file
      *
@@ -150,7 +142,6 @@ class Php extends \Files
         $this->validate($strFile);
         return @unlink(TL_ROOT . '/' . $strFile);
     }
-
 
     /**
      * Change the file mode
@@ -166,7 +157,6 @@ class Php extends \Files
         return @chmod(TL_ROOT . '/' . $strFile, $varMode);
     }
 
-
     /**
      * Check whether a file is writeable
      *
@@ -179,7 +169,6 @@ class Php extends \Files
         $this->validate($strFile);
         return @is_writeable(TL_ROOT . '/' . $strFile);
     }
-
 
     /**
      * Move an uploaded file to a folder

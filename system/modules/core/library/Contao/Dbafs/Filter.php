@@ -12,7 +12,6 @@
 
 namespace Contao\Dbafs;
 
-
 /**
  * Filters a directory listing
  *
@@ -38,7 +37,6 @@ class Filter extends \RecursiveFilterIterator
      */
     protected $arrIgnore = array('.DS_Store', '.svn');
 
-
     /**
      * Exempt folders from the synchronisation (see #4522)
      *
@@ -54,7 +52,6 @@ class Filter extends \RecursiveFilterIterator
 
         parent::__construct($iterator);
     }
-
 
     /**
      * Check whether the current element of the iterator is acceptable

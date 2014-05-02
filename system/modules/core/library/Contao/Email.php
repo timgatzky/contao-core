@@ -12,7 +12,6 @@
 
 namespace Contao;
 
-
 /**
  * A SwiftMailer adapter class
  *
@@ -111,7 +110,6 @@ class Email
      */
     protected $strLogFile = 'email.log';
 
-
     /**
      * Instantiate the object and load the mailer framework
      */
@@ -148,7 +146,6 @@ class Email
         $this->objMessage = \Swift_Message::newInstance();
         $this->objMessage->getHeaders()->addTextHeader('X-Mailer', 'Contao Open Source CMS');
     }
-
 
     /**
      * Set an object property
@@ -241,7 +238,6 @@ class Email
         }
     }
 
-
     /**
      * Return an object property
      *
@@ -314,7 +310,6 @@ class Email
         return null;
     }
 
-
     /**
      * Return true if there are failures
      *
@@ -324,7 +319,6 @@ class Email
     {
         return !empty($this->arrFailures);
     }
-
 
     /**
      * Add a custom text header
@@ -337,7 +331,6 @@ class Email
         $this->objMessage->getHeaders()->addTextHeader($strKey, $strValue);
     }
 
-
     /**
      * Add CC e-mail addresses
      *
@@ -348,7 +341,6 @@ class Email
     {
         $this->objMessage->setCc($this->compileRecipients(func_get_args()));
     }
-
 
     /**
      * Add BCC e-mail addresses
@@ -361,7 +353,6 @@ class Email
         $this->objMessage->setBcc($this->compileRecipients(func_get_args()));
     }
 
-
     /**
      * Add ReplyTo e-mail addresses
      *
@@ -372,7 +363,6 @@ class Email
     {
         $this->objMessage->setReplyTo($this->compileRecipients(func_get_args()));
     }
-
 
     /**
      * Attach a file
@@ -385,7 +375,6 @@ class Email
         $this->objMessage->attach(\Swift_Attachment::fromPath($strFile, $strMime)->setFilename(basename($strFile)));
     }
 
-
     /**
      * Attach a file from a string
      *
@@ -397,7 +386,6 @@ class Email
     {
         $this->objMessage->attach(\Swift_Attachment::newInstance($strContent, $strFilename, $strMime));
     }
-
 
     /**
      * Send the e-mail
@@ -520,7 +508,6 @@ class Email
         log_message($strMessage, $this->strLogFile);
         return true;
     }
-
 
     /**
      * Extract the e-mail addresses from the func_get_args() arguments

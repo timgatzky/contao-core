@@ -12,7 +12,6 @@
 
 namespace Contao;
 
-
 /**
  * Abstract parent class for Controllers
  *
@@ -70,7 +69,6 @@ abstract class Controller extends \System
 
         return \TemplateLoader::getPath($strTemplate, $strFormat);
     }
-
 
     /**
      * Return all template files of a particular group as array
@@ -136,7 +134,6 @@ abstract class Controller extends \System
 
         return $arrTemplates;
     }
-
 
     /**
      * Generate a front end module and return it as string
@@ -274,7 +271,6 @@ abstract class Controller extends \System
         }
     }
 
-
     /**
      * Generate an article and return it as string
      *
@@ -346,7 +342,6 @@ abstract class Controller extends \System
         return $strBuffer;
     }
 
-
     /**
      * Generate a content element and return it as string
      *
@@ -408,7 +403,6 @@ abstract class Controller extends \System
         return $strBuffer;
     }
 
-
     /**
      * Generate a form and return it as string
      *
@@ -448,7 +442,6 @@ abstract class Controller extends \System
         return $strBuffer;
     }
 
-
     /**
      * Return the languages for the TinyMCE spellchecker
      *
@@ -472,7 +465,6 @@ abstract class Controller extends \System
 
         return '+' . implode(',', array_unique($return));
     }
-
 
     /**
      * Calculate the page status icon name based on the page parameters
@@ -508,7 +500,6 @@ abstract class Controller extends \System
 
         return $image;
     }
-
 
     /**
      * Check whether an element is visible in the front end
@@ -553,7 +544,6 @@ abstract class Controller extends \System
 
         return $blnReturn;
     }
-
 
     /**
      * Replace insert tags with their values
@@ -1503,7 +1493,6 @@ abstract class Controller extends \System
         return \String::restoreBasicEntities($strBuffer);
     }
 
-
     /**
      * Replace the dynamic script tags (see #4203)
      *
@@ -1662,7 +1651,6 @@ abstract class Controller extends \System
         return str_replace(array_keys($arrReplace), array_values($arrReplace), $strBuffer);
     }
 
-
     /**
      * Compile the margin format definition based on an array of values
      *
@@ -1708,7 +1696,6 @@ abstract class Controller extends \System
         return implode($return);
     }
 
-
     /**
      * Add a request string to the current URL
      *
@@ -1746,7 +1733,6 @@ abstract class Controller extends \System
         return TL_SCRIPT . $href . str_replace(' ', '%20', $strRequest);
     }
 
-
     /**
      * Reload the current page
      */
@@ -1769,7 +1755,6 @@ abstract class Controller extends \System
 
         exit;
     }
-
 
     /**
      * Redirect to another page
@@ -1820,7 +1805,6 @@ abstract class Controller extends \System
 
         exit;
     }
-
 
     /**
      * Generate an URL depending on the current rewriteURL setting
@@ -1885,7 +1869,6 @@ abstract class Controller extends \System
         return $strUrl;
     }
 
-
     /**
      * Convert relative URLs in href and src attributes to absolute URLs
      *
@@ -1924,7 +1907,6 @@ abstract class Controller extends \System
 
         return $strContent;
     }
-
 
     /**
      * Send a file to the browser so the "save as …" dialogue opens
@@ -1971,7 +1953,6 @@ abstract class Controller extends \System
         $objFile->sendToBrowser();
     }
 
-
     /**
      * Load a set of DCA files
      *
@@ -1983,7 +1964,6 @@ abstract class Controller extends \System
         $loader = new \DcaLoader($strTable);
         $loader->load($blnNoCache);
     }
-
 
     /**
      * Redirect to a front end page
@@ -2458,7 +2438,6 @@ abstract class Controller extends \System
         $this->Automator->purgeXmlFiles($blnReturn);
     }
 
-
     /**
      * Return true if a class exists (tries to autoload the class)
      *
@@ -2473,7 +2452,6 @@ abstract class Controller extends \System
         return class_exists($strClass);
     }
 
-
     /**
      * Restore basic entities
      *
@@ -2487,7 +2465,6 @@ abstract class Controller extends \System
     {
         return \String::restoreBasicEntities($strBuffer);
     }
-
 
     /**
      * Resize an image and crop it if necessary
@@ -2505,7 +2482,6 @@ abstract class Controller extends \System
     {
         return \Image::resize($image, $width, $height, $mode);
     }
-
 
     /**
      * Resize an image and crop it if necessary
@@ -2526,7 +2502,6 @@ abstract class Controller extends \System
         return \Image::get($image, $width, $height, $mode, $target, $force);
     }
 
-
     /**
      * Generate an image tag and return it as string
      *
@@ -2543,7 +2518,6 @@ abstract class Controller extends \System
         return \Image::getHtml($src, $alt, $attributes);
     }
 
-
     /**
      * Return true for backwards compatibility (see #3218)
      *
@@ -2556,7 +2530,6 @@ abstract class Controller extends \System
         return true;
     }
 
-
     /**
      * Return the installed back end languages as array
      *
@@ -2568,7 +2541,6 @@ abstract class Controller extends \System
     {
         return $this->getLanguages(true);
     }
-
 
     /**
      * Parse simple tokens that can be used to personalize newsletters
@@ -2584,7 +2556,6 @@ abstract class Controller extends \System
     {
         return \String::parseSimpleTokens($strBuffer, $arrData);
     }
-
 
     /**
      * Convert a DCA file configuration to be used with widgets
@@ -2603,7 +2574,6 @@ abstract class Controller extends \System
     {
         return \Widget::getAttributesFromDca($arrData, $strName, $varValue, $strField, $strTable);
     }
-
 
     /**
      * Return the IDs of all child records of a particular record (see #2475)
@@ -2625,7 +2595,6 @@ abstract class Controller extends \System
         return $this->Database->getChildRecords($arrParentIds, $strTable, $blnSorting, $arrReturn, $strWhere);
     }
 
-
     /**
      * Return the IDs of all parent records of a particular record
      *
@@ -2641,7 +2610,6 @@ abstract class Controller extends \System
         return $this->Database->getParentRecords($intId, $strTable);
     }
 
-
     /**
      * Print an article as PDF and stream it to the browser
      *
@@ -2655,7 +2623,6 @@ abstract class Controller extends \System
         $objArticle->generatePdf();
     }
 
-
     /**
      * Return all page sections as array
      *
@@ -2667,7 +2634,6 @@ abstract class Controller extends \System
     {
         return array('header', 'left', 'right', 'main', 'footer');
     }
-
 
     /**
      * Return a "selected" attribute if the option is selected
@@ -2684,7 +2650,6 @@ abstract class Controller extends \System
         return \Widget::optionSelected($strOption, $varValues);
     }
 
-
     /**
      * Return a "checked" attribute if the option is checked
      *
@@ -2700,7 +2665,6 @@ abstract class Controller extends \System
         return \Widget::optionChecked($strOption, $varValues);
     }
 
-
     /**
      * Find a content element in the TL_CTE array and return the class name
      *
@@ -2714,7 +2678,6 @@ abstract class Controller extends \System
     {
         return \ContentElement::findClass($strName);
     }
-
 
     /**
      * Find a front end module in the FE_MOD array and return the class name
@@ -2730,7 +2693,6 @@ abstract class Controller extends \System
         return \Module::findClass($strName);
     }
 
-
     /**
      * Create an initial version of a record
      *
@@ -2744,7 +2706,6 @@ abstract class Controller extends \System
         $objVersions = new \Versions($strTable, $intId);
         $objVersions->initialize();
     }
-
 
     /**
      * Create a new version of a record

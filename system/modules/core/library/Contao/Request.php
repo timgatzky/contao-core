@@ -12,7 +12,6 @@
 
 namespace Contao;
 
-
 /**
  * Sends HTTP requests and reads the response
  *

@@ -10,12 +10,10 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
-
 /**
  * Run in a custom namespace, so the class can be replaced
  */
 namespace Contao;
-
 
 /**
  * Class Pagination
@@ -130,7 +128,6 @@ class Pagination
      */
     protected $blnForceParam = false;
 
-
     /**
      * Set the number of rows, the number of results per pages and the number of links
      *
@@ -170,7 +167,6 @@ class Pagination
         $this->blnForceParam = $blnForceParam;
     }
 
-
     /**
      * Return true if the pagination menu has a "<< first" link
      *
@@ -180,7 +176,6 @@ class Pagination
     {
         return ($this->blnShowFirstLast && $this->intPage > 2) ? true : false;
     }
-
 
     /**
      * Return true if the pagination menu has a "< previous" link
@@ -192,7 +187,6 @@ class Pagination
         return ($this->intPage > 1) ? true : false;
     }
 
-
     /**
      * Return true if the pagination menu has a "next >" link
      *
@@ -203,7 +197,6 @@ class Pagination
         return ($this->intPage < $this->intTotalPages) ? true : false;
     }
 
-
     /**
      * Return true if the pagination menu has a "last >>" link
      *
@@ -213,7 +206,6 @@ class Pagination
     {
         return ($this->blnShowFirstLast && $this->intPage < ($this->intTotalPages - 1)) ? true : false;
     }
-
 
     /**
      * Generate the pagination menu and return it as HTML string
@@ -293,7 +285,6 @@ class Pagination
         return $objTemplate->parse();
     }
 
-
     /**
      * Generate all page links separated with the given argument and return them as string
      *
@@ -344,7 +335,6 @@ class Pagination
 
         return implode($strSeparator, $arrLinks);
     }
-
 
     /**
      * Generate a link and return the URL

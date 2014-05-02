@@ -12,7 +12,6 @@
 
 namespace Contao\Database;
 
-
 /**
  * Adjust the database if the system is updated
  *
@@ -31,7 +30,6 @@ class Updater extends \Controller
         parent::__construct();
         $this->import('Database');
     }
-
 
     /**
      * Version 2.8.0 update
@@ -102,7 +100,6 @@ class Updater extends \Controller
         $this->import('Files');
         $this->Files->delete('system/modules/news/Comments.php');
     }
-
 
     /**
      * Version 2.9.0 update
@@ -188,7 +185,6 @@ class Updater extends \Controller
         $this->Database->query("UPDATE tl_user SET useCE=1");
     }
 
-
     /**
      * Version 2.9.2 update
      */
@@ -201,7 +197,6 @@ class Updater extends \Controller
         $this->Database->query("UPDATE tl_calendar_events SET endDate=null WHERE endDate=0");
     }
 
-
     /**
      * Version 2.10.0 update
      */
@@ -212,7 +207,6 @@ class Updater extends \Controller
         $this->Database->query("UPDATE `tl_module` SET `guests`=1 WHERE `type`='lostPassword' OR `type`='registration'");
         $this->Database->query("UPDATE `tl_news` SET `teaser`=CONCAT('<p>', teaser, '</p>') WHERE `teaser`!='' AND `teaser` NOT LIKE '<p>%'");
     }
-
 
     /**
      * Version 3.0.0 update
@@ -437,7 +431,6 @@ class Updater extends \Controller
         $this->Database->query("ALTER TABLE `tl_content` DROP `mooType`");
     }
 
-
     /**
      * Version 3.2.0 update
      */
@@ -504,7 +497,6 @@ class Updater extends \Controller
         $this->updateFileTreeFields();
     }
 
-
     /**
      * Version 3.3.0 update
      */
@@ -531,7 +523,6 @@ class Updater extends \Controller
         // Add the "viewport" field (triggers the version 3.3 update)
         $this->Database->query("ALTER TABLE `tl_layout` ADD `viewport` varchar(64) NOT NULL default ''");
     }
-
 
     /**
      * Scan the upload folder and create the database entries
@@ -609,7 +600,6 @@ class Updater extends \Controller
             }
         }
     }
-
 
     /**
      * Update all FileTree fields
@@ -704,7 +694,6 @@ class Updater extends \Controller
         }
     }
 
-
     /**
      * Convert a single source field to UUIDs
      *
@@ -752,7 +741,6 @@ class Updater extends \Controller
             }
         }
     }
-
 
     /**
      * Convert a multi source field to UUIDs
@@ -810,7 +798,6 @@ class Updater extends \Controller
         }
     }
 
-
     /**
      * Convert an order source field to UUIDs
      *
@@ -832,7 +819,6 @@ class Updater extends \Controller
 
         static::convertMultiField($table, $field);
     }
-
 
     /**
      * Generate a helper object based on a field value
@@ -857,7 +843,6 @@ class Updater extends \Controller
 
         return $return;
     }
-
 
     /**
      * Create a content element

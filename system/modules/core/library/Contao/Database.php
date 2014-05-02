@@ -12,7 +12,6 @@
 
 namespace Contao;
 
-
 /**
  * Abstract parent class to handle database communication
  *
@@ -63,7 +62,6 @@ abstract class Database
      */
     protected $arrCache = array();
 
-
     /**
      * Establish the database connection
      *
@@ -81,7 +79,6 @@ abstract class Database
         }
     }
 
-
     /**
      * Close the database connection if it is not permanent
      */
@@ -96,12 +93,10 @@ abstract class Database
         }
     }
 
-
     /**
      * Prevent cloning of the object (Singleton)
      */
     final public function __clone() {}
-
 
     /**
      * Return an object property
@@ -118,7 +113,6 @@ abstract class Database
 
         return null;
     }
-
 
     /**
      * Instantiate the Database object (Factory)
@@ -157,7 +151,6 @@ abstract class Database
         return static::$arrInstances[$strKey];
     }
 
-
     /**
      * Prepare a query and return a Database\Statement object
      *
@@ -169,7 +162,6 @@ abstract class Database
     {
         return $this->createStatement($this->resConnection, $this->blnDisableAutocommit)->prepare($strQuery);
     }
-
 
     /**
      * Execute a query and return a Database\Result object
@@ -183,7 +175,6 @@ abstract class Database
         return $this->prepare($strQuery)->execute();
     }
 
-
     /**
      * Execute a raw query and return a Database\Result object
      *
@@ -195,7 +186,6 @@ abstract class Database
     {
         return $this->createStatement($this->resConnection, $this->blnDisableAutocommit)->query($strQuery);
     }
-
 
     /**
      * Auto-generate a FIND_IN_SET() statement
@@ -214,7 +204,6 @@ abstract class Database
 
         return $this->find_in_set($strKey, $varSet, $blnIsField);
     }
-
 
     /**
      * Return all tables of a database as array
@@ -245,7 +234,6 @@ abstract class Database
         return $this->arrCache[$strDatabase];
     }
 
-
     /**
      * Determine if a particular database table exists
      *
@@ -264,7 +252,6 @@ abstract class Database
         return in_array($strTable, $this->listTables($strDatabase, $blnNoCache));
     }
 
-
     /**
      * Return all columns of a particular table as array
      *
@@ -282,7 +269,6 @@ abstract class Database
         $this->arrCache[$strTable] = $this->list_fields($strTable);
         return $this->arrCache[$strTable];
     }
-
 
     /**
      * Determine if a particular column exists
@@ -308,7 +294,6 @@ abstract class Database
         return false;
     }
 
-
     /**
      * Determine if a particular index exists
      *
@@ -333,7 +318,6 @@ abstract class Database
         return false;
     }
 
-
     /**
      * Return the field names of a particular table as array
      *
@@ -353,7 +337,6 @@ abstract class Database
 
         return $arrNames;
     }
-
 
     /**
      * Check whether a field value in the database is unique
@@ -379,7 +362,6 @@ abstract class Database
 
         return $objUnique->numRows ? false : true;
     }
-
 
     /**
      * Return the IDs of all child records of a particular record (see #2475)
@@ -432,7 +414,6 @@ abstract class Database
         return $arrReturn;
     }
 
-
     /**
      * Return the IDs of all parent records of a particular record
      *
@@ -456,7 +437,6 @@ abstract class Database
         return $arrReturn;
     }
 
-
     /**
      * Change the current database
      *
@@ -469,7 +449,6 @@ abstract class Database
         return $this->set_database($strDatabase);
     }
 
-
     /**
      * Begin a transaction
      */
@@ -477,7 +456,6 @@ abstract class Database
     {
         $this->begin_transaction();
     }
-
 
     /**
      * Commit a transaction
@@ -487,7 +465,6 @@ abstract class Database
         $this->commit_transaction();
     }
 
-
     /**
      * Rollback a transaction
      */
@@ -495,7 +472,6 @@ abstract class Database
     {
         $this->rollback_transaction();
     }
-
 
     /**
      * Lock one or more tables
@@ -507,7 +483,6 @@ abstract class Database
         $this->lock_tables($arrTables);
     }
 
-
     /**
      * Unlock all tables
      */
@@ -515,7 +490,6 @@ abstract class Database
     {
         $this->unlock_tables();
     }
-
 
     /**
      * Return the table size in bytes
@@ -529,7 +503,6 @@ abstract class Database
         return $this->get_size_of($strTable);
     }
 
-
     /**
      * Return the next autoincrement ID of a table
      *
@@ -542,7 +515,6 @@ abstract class Database
         return $this->get_next_id($strTable);
     }
 
-
     /**
      * Return a universal unique identifier
      *
@@ -553,18 +525,15 @@ abstract class Database
         return $this->get_uuid();
     }
 
-
     /**
      * Connect to the database server and select the database
      */
     abstract protected function connect();
 
-
     /**
      * Disconnect from the database
      */
     abstract protected function disconnect();
-
 
     /**
      * Return the last error message
@@ -572,7 +541,6 @@ abstract class Database
      * @return string The error message
      */
     abstract protected function get_error();
-
 
     /**
      * Auto-generate a FIND_IN_SET() statement
@@ -584,7 +552,6 @@ abstract class Database
      * @return string The FIND_IN_SET() statement
      */
     abstract protected function find_in_set($strKey, $varSet, $blnIsField=false);
-
 
     /**
      * Return a standardized array with the field information
@@ -607,7 +574,6 @@ abstract class Database
      */
     abstract protected function list_fields($strTable);
 
-
     /**
      * Change the current database
      *
@@ -617,24 +583,20 @@ abstract class Database
      */
     abstract protected function set_database($strDatabase);
 
-
     /**
      * Begin a transaction
      */
     abstract protected function begin_transaction();
-
 
     /**
      * Commit a transaction
      */
     abstract protected function commit_transaction();
 
-
     /**
      * Rollback a transaction
      */
     abstract protected function rollback_transaction();
-
 
     /**
      * Lock one or more tables
@@ -643,12 +605,10 @@ abstract class Database
      */
     abstract protected function lock_tables($arrTables);
 
-
     /**
      * Unlock all tables
      */
     abstract protected function unlock_tables();
-
 
     /**
      * Return the table size in bytes
@@ -659,7 +619,6 @@ abstract class Database
      */
     abstract protected function get_size_of($strTable);
 
-
     /**
      * Return the next autoincrement ID of a table
      *
@@ -669,14 +628,12 @@ abstract class Database
      */
     abstract protected function get_next_id($strTable);
 
-
     /**
      * Return a universal unique identifier
      *
      * @return string The UUID string
      */
     abstract protected function get_uuid();
-
 
     /**
      * Create a Database\Statement object
@@ -687,7 +644,6 @@ abstract class Database
      * @return \Database\Statement The Database\Statement object
      */
     abstract protected function createStatement($resConnection, $blnDisableAutocommit);
-
 
     /**
      * Execute a query and do not cache the result
@@ -702,7 +658,6 @@ abstract class Database
     {
         return $this->execute($strQuery);
     }
-
 
     /**
      * Always execute the query and add or replace an existing cache entry

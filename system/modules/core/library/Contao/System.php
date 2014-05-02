@@ -12,7 +12,6 @@
 
 namespace Contao;
 
-
 /**
  * Abstract library base class
  *
@@ -67,7 +66,6 @@ abstract class System
      */
     protected static $arrLanguageFiles = array();
 
-
     /**
      * Import the Config and Session instances
      */
@@ -76,7 +74,6 @@ abstract class System
         $this->import('Config');
         $this->import('Session');
     }
-
 
     /**
      * Get an object property
@@ -101,7 +98,6 @@ abstract class System
         return $this->arrObjects[$strKey];
     }
 
-
     /**
      * Import a library and make it accessible by its name or an optional key
      *
@@ -117,7 +113,6 @@ abstract class System
             $this->arrObjects[$strKey] = (in_array('getInstance', get_class_methods($strClass))) ? call_user_func(array($strClass, 'getInstance')) : new $strClass();
         }
     }
-
 
     /**
      * Import a library in non-object context
@@ -138,7 +133,6 @@ abstract class System
 
         return static::$arrStaticObjects[$strKey];
     }
-
 
     /**
      * Add a log entry to the database
@@ -169,7 +163,6 @@ abstract class System
             }
         }
     }
-
 
     /**
      * Return the referer URL and optionally encode ampersands
@@ -216,7 +209,6 @@ abstract class System
         // Do not urldecode here!
         return ampersand($return, $blnEncodeAmpersands);
     }
-
 
     /**
      * Load a set of language files
@@ -302,7 +294,6 @@ abstract class System
         }
     }
 
-
     /**
      * Check whether a language is installed
      *
@@ -318,7 +309,6 @@ abstract class System
 
         return static::$arrLanguages[$strLanguage];
     }
-
 
     /**
      * Return the countries as array
@@ -353,7 +343,6 @@ abstract class System
 
         return $return;
     }
-
 
     /**
      * Return the available languages as array
@@ -401,7 +390,6 @@ abstract class System
         return $return;
     }
 
-
     /**
      * Return the timezones as array
      *
@@ -423,7 +411,6 @@ abstract class System
         return $arrReturn;
     }
 
-
     /**
      * Urlencode a file path preserving slashes
      *
@@ -435,7 +422,6 @@ abstract class System
     {
         return str_replace('%2F', '/', rawurlencode($strPath));
     }
-
 
     /**
      * Set a cookie
@@ -474,7 +460,6 @@ abstract class System
         setcookie($objCookie->strName, $objCookie->varValue, $objCookie->intExpires, $objCookie->strPath, $objCookie->strDomain, $objCookie->blnSecure, $objCookie->blnHttpOnly);
     }
 
-
     /**
      * Convert a byte value into a human readable format
      *
@@ -492,7 +477,6 @@ abstract class System
         return static::getFormattedNumber($intSize, $intDecimals) . ' ' . $GLOBALS['TL_LANG']['UNITS'][$i];
     }
 
-
     /**
      * Format a number
      *
@@ -505,7 +489,6 @@ abstract class System
     {
         return number_format(round($varNumber, $intDecimals), $intDecimals, $GLOBALS['TL_LANG']['MSC']['decimalSeparator'], $GLOBALS['TL_LANG']['MSC']['thousandsSeparator']);
     }
-
 
     /**
      * Anonymize an IP address by overriding the last chunk
@@ -536,7 +519,6 @@ abstract class System
         }
     }
 
-
     /**
      * Read the contents of a PHP file, stripping the opening and closing PHP tags
      *
@@ -566,7 +548,6 @@ abstract class System
 
         return rtrim($strCode);
     }
-
 
     /**
      * Convert an .xlf file into a PHP language file
@@ -645,7 +626,6 @@ abstract class System
         return rtrim($return);
     }
 
-
     /**
      * Enable a back end module
      *
@@ -664,7 +644,6 @@ abstract class System
         $objFile->delete();
         return true;
     }
-
 
     /**
      * Disable a back end module
@@ -687,7 +666,6 @@ abstract class System
         return true;
     }
 
-
     /**
      * Parse a date format string and translate textual representations
      *
@@ -703,7 +681,6 @@ abstract class System
         return \Date::parse($strFormat, $intTstamp);
     }
 
-
     /**
      * Add a request string to the current URL
      *
@@ -718,7 +695,6 @@ abstract class System
         return \Controller::addToUrl($strRequest);
     }
 
-
     /**
      * Reload the current page
      *
@@ -728,7 +704,6 @@ abstract class System
     {
         \Controller::reload();
     }
-
 
     /**
      * Redirect to another page
@@ -743,7 +718,6 @@ abstract class System
         \Controller::redirect($strLocation, $intStatus);
     }
 
-
     /**
      * Add an error message
      *
@@ -755,7 +729,6 @@ abstract class System
     {
         \Message::addError($strMessage);
     }
-
 
     /**
      * Add a confirmation message
@@ -769,7 +742,6 @@ abstract class System
         \Message::addConfirmation($strMessage);
     }
 
-
     /**
      * Add a new message
      *
@@ -781,7 +753,6 @@ abstract class System
     {
         \Message::addNew($strMessage);
     }
-
 
     /**
      * Add an info message
@@ -795,7 +766,6 @@ abstract class System
         \Message::addInfo($strMessage);
     }
 
-
     /**
      * Add an unformatted message
      *
@@ -807,7 +777,6 @@ abstract class System
     {
         \Message::addRaw($strMessage);
     }
-
 
     /**
      * Add a message
@@ -821,7 +790,6 @@ abstract class System
     {
         \Message::add($strMessage, $strType);
     }
-
 
     /**
      * Return all messages as HTML
@@ -838,7 +806,6 @@ abstract class System
         return \Message::generate($blnDcLayout, $blnNoWrapper);
     }
 
-
     /**
      * Reset the message system
      *
@@ -848,7 +815,6 @@ abstract class System
     {
         \Message::reset();
     }
-
 
     /**
      * Return all available message types
@@ -861,7 +827,6 @@ abstract class System
     {
         return \Message::getTypes();
     }
-
 
     /**
      * Encode an internationalized domain name
@@ -877,7 +842,6 @@ abstract class System
         return \Idna::encode($strDomain);
     }
 
-
     /**
      * Decode an internationalized domain name
      *
@@ -891,7 +855,6 @@ abstract class System
     {
         return \Idna::decode($strDomain);
     }
-
 
     /**
      * Encode the domain in an e-mail address
@@ -907,7 +870,6 @@ abstract class System
         return \Idna::encodeEmail($strEmail);
     }
 
-
     /**
      * Encode the domain in an URL
      *
@@ -921,7 +883,6 @@ abstract class System
     {
         return \Idna::encodeUrl($strUrl);
     }
-
 
     /**
      * Validate an e-mail address
@@ -937,7 +898,6 @@ abstract class System
         return \Validator::isEmail($strEmail);
     }
 
-
     /**
      * Split a friendly-name e-address and return name and e-mail as array
      *
@@ -952,7 +912,6 @@ abstract class System
         return \String::splitFriendlyEmail($strEmail);
     }
 
-
     /**
      * Return the request string without the index.php fragment
      *
@@ -966,7 +925,6 @@ abstract class System
     {
         return ampersand(\Environment::get('indexFreeRequest'), $blnAmpersand);
     }
-
 
     /**
      * Compile a Model class name from a table name (e.g. tl_form_field becomes FormFieldModel)

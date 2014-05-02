@@ -12,7 +12,6 @@
 
 namespace Contao\Database;
 
-
 /**
  * MySQL-specific database class
  *
@@ -28,7 +27,6 @@ class Mysql extends \Database
      * @var string
      */
     protected $strListTables = "SHOW TABLES FROM `%s`";
-
 
     /**
      * Connect to the database server and select the database
@@ -62,7 +60,6 @@ class Mysql extends \Database
         mysql_select_db($this->arrConfig['dbDatabase'], $this->resConnection);
     }
 
-
     /**
      * Disconnect from the database
      */
@@ -70,7 +67,6 @@ class Mysql extends \Database
     {
         mysql_close($this->resConnection);
     }
-
 
     /**
      * Return the last error message
@@ -85,7 +81,6 @@ class Mysql extends \Database
 
         return mysql_error();
     }
-
 
     /**
      * Auto-generate a FIND_IN_SET() statement
@@ -104,7 +99,6 @@ class Mysql extends \Database
             return "FIND_IN_SET(" . $strKey . ", '" . mysql_real_escape_string($varSet, $this->resConnection) . "')";
         }
     }
-
 
     /**
      * Return a standardized array with the field information
@@ -199,7 +193,6 @@ class Mysql extends \Database
         return $arrReturn;
     }
 
-
     /**
      * Change the current database
      *
@@ -212,7 +205,6 @@ class Mysql extends \Database
         return mysql_select_db($strDatabase, $this->resConnection);
     }
 
-
     /**
      * Begin a transaction
      */
@@ -221,7 +213,6 @@ class Mysql extends \Database
         mysql_query("SET AUTOCOMMIT=0", $this->resConnection);
         mysql_query("BEGIN", $this->resConnection);
     }
-
 
     /**
      * Commit a transaction
@@ -232,7 +223,6 @@ class Mysql extends \Database
         mysql_query("SET AUTOCOMMIT=1", $this->resConnection);
     }
 
-
     /**
      * Rollback a transaction
      */
@@ -241,7 +231,6 @@ class Mysql extends \Database
         mysql_query("ROLLBACK", $this->resConnection);
         mysql_query("SET AUTOCOMMIT=1", $this->resConnection);
     }
-
 
     /**
      * Lock one or more tables
@@ -259,7 +248,6 @@ class Mysql extends \Database
         mysql_query("LOCK TABLES " . implode(', ', $arrLocks));
     }
 
-
     /**
      * Unlock all tables
      */
@@ -267,7 +255,6 @@ class Mysql extends \Database
     {
         mysql_query("UNLOCK TABLES");
     }
-
 
     /**
      * Return the table size in bytes
@@ -284,7 +271,6 @@ class Mysql extends \Database
         return ($objStatus->Data_length + $objStatus->Index_length);
     }
 
-
     /**
      * Return the next autoincrement ID of a table
      *
@@ -299,7 +285,6 @@ class Mysql extends \Database
 
         return $objStatus->Auto_increment;
     }
-
 
     /**
      * Return a universal unique identifier
@@ -320,7 +305,6 @@ class Mysql extends \Database
 
         return array_pop($ids);
     }
-
 
     /**
      * Create a Database\Statement object

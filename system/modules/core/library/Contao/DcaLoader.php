@@ -12,7 +12,6 @@
 
 namespace Contao;
 
-
 /**
  * Loads a set of DCA files
  *
@@ -37,7 +36,6 @@ class DcaLoader extends \Controller
      */
     protected $strTable;
 
-
     /**
      * Store the table name
      *
@@ -55,7 +53,6 @@ class DcaLoader extends \Controller
 
         $this->strTable = $strTable;
     }
-
 
     /**
      * Load a set of DCA files

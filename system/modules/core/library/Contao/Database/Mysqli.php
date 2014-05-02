@@ -12,7 +12,6 @@
 
 namespace Contao\Database;
 
-
 /**
  * MySQLi-specific database class
  *
@@ -28,7 +27,6 @@ class Mysqli extends \Database
      * @var string
      */
     protected $strListTables = "SHOW TABLES FROM `%s`";
-
 
     /**
      * Connect to the database server and select the database
@@ -52,7 +50,6 @@ class Mysqli extends \Database
         $this->resConnection->set_charset($this->arrConfig['dbCharset']);
     }
 
-
     /**
      * Disconnect from the database
      */
@@ -60,7 +57,6 @@ class Mysqli extends \Database
     {
         $this->resConnection->close();
     }
-
 
     /**
      * Return the last error message
@@ -71,7 +67,6 @@ class Mysqli extends \Database
     {
         return $this->resConnection->error;
     }
-
 
     /**
      * Auto-generate a FIND_IN_SET() statement
@@ -90,7 +85,6 @@ class Mysqli extends \Database
             return "FIND_IN_SET(" . $strKey . ", '" . $this->resConnection->real_escape_string($varSet) . "')";
         }
     }
-
 
     /**
      * Return a standardized array with the field information
@@ -184,7 +178,6 @@ class Mysqli extends \Database
         return $arrReturn;
     }
 
-
     /**
      * Change the current database
      *
@@ -197,7 +190,6 @@ class Mysqli extends \Database
         $this->resConnection->query("USE $strDatabase");
     }
 
-
     /**
      * Begin a transaction
      */
@@ -206,7 +198,6 @@ class Mysqli extends \Database
         $this->resConnection->query("SET AUTOCOMMIT=0");
         $this->resConnection->query("BEGIN");
     }
-
 
     /**
      * Commit a transaction
@@ -217,7 +208,6 @@ class Mysqli extends \Database
         $this->resConnection->query("SET AUTOCOMMIT=1");
     }
 
-
     /**
      * Rollback a transaction
      */
@@ -226,7 +216,6 @@ class Mysqli extends \Database
         $this->resConnection->query("ROLLBACK");
         $this->resConnection->query("SET AUTOCOMMIT=1");
     }
-
 
     /**
      * Lock one or more tables
@@ -244,7 +233,6 @@ class Mysqli extends \Database
         $this->resConnection->query("LOCK TABLES " . implode(', ', $arrLocks));
     }
 
-
     /**
      * Unlock all tables
      */
@@ -252,7 +240,6 @@ class Mysqli extends \Database
     {
         $this->resConnection->query("UNLOCK TABLES");
     }
-
 
     /**
      * Return the table size in bytes
@@ -269,7 +256,6 @@ class Mysqli extends \Database
         return ($objStatus->Data_length + $objStatus->Index_length);
     }
 
-
     /**
      * Return the next autoincrement ID of a table
      *
@@ -284,7 +270,6 @@ class Mysqli extends \Database
 
         return $objStatus->Auto_increment;
     }
-
 
     /**
      * Return a universal unique identifier
@@ -305,7 +290,6 @@ class Mysqli extends \Database
 
         return array_pop($ids);
     }
-
 
     /**
      * Create a Database\Statement object

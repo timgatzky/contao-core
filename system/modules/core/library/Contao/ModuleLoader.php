@@ -12,7 +12,6 @@
 
 namespace Contao;
 
-
 /**
  * Loads modules based on their autoload.ini configuration
  *
@@ -43,7 +42,6 @@ class ModuleLoader
      */
     protected static $disabled;
 
-
     /**
      * Return the active modules as array
      *
@@ -58,7 +56,6 @@ class ModuleLoader
         return static::$active;
     }
 
-
     /**
      * Return the disabled modules as array
      *
@@ -72,7 +69,6 @@ class ModuleLoader
 
         return static::$disabled;
     }
-
 
     /**
      * Scan the modules and resolve their dependencies

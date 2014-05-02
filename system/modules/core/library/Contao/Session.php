@@ -12,7 +12,6 @@
 
 namespace Contao;
 
-
 /**
  * Handles reading and updating the session data
  *
@@ -44,7 +43,6 @@ class Session
      */
     protected $arrSession;
 
-
     /**
      * Get the session data
      */
@@ -64,7 +62,6 @@ class Session
                 break;
         }
     }
-
 
     /**
      * Save the session data
@@ -86,12 +83,10 @@ class Session
         }
     }
 
-
     /**
      * Prevent cloning of the object (Singleton)
      */
     final public function __clone() {}
-
 
     /**
      * Return the object instance (Singleton)
@@ -107,7 +102,6 @@ class Session
         return static::$objInstance;
     }
 
-
     /**
      * Return a session variable
      *
@@ -120,7 +114,6 @@ class Session
         return $this->arrSession[$strKey];
     }
 
-
     /**
      * Set a session variable
      *
@@ -132,7 +125,6 @@ class Session
         $this->arrSession[$strKey] = $varValue;
     }
 
-
     /**
      * Remove a session variable
      *
@@ -143,7 +135,6 @@ class Session
         unset($this->arrSession[$strKey]);
     }
 
-
     /**
      * Return the session data as array
      *
@@ -153,7 +144,6 @@ class Session
     {
         return (array) $this->arrSession;
     }
-
 
     /**
      * Set the session data from an array
@@ -170,7 +160,6 @@ class Session
 
         $this->arrSession = $arrData;
     }
-
 
     /**
      * Append data to the session

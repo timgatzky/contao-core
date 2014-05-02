@@ -12,7 +12,6 @@
 
 namespace Contao;
 
-
 /**
  * Parses and outputs template files
  *
@@ -51,7 +50,6 @@ abstract class Template extends \Template\Base
      */
     protected $arrData = array();
 
-
     /**
      * Create a new template object
      *
@@ -66,7 +64,6 @@ abstract class Template extends \Template\Base
         $this->strContentType = $strContentType;
     }
 
-
     /**
      * Set an object property
      *
@@ -77,7 +74,6 @@ abstract class Template extends \Template\Base
     {
         $this->arrData[$strKey] = $varValue;
     }
-
 
     /**
      * Return an object property
@@ -94,7 +90,6 @@ abstract class Template extends \Template\Base
 
         return parent::__get($strKey);
     }
-
 
     /**
      * Execute a callable and return the result
@@ -115,7 +110,6 @@ abstract class Template extends \Template\Base
         return call_user_func_array($this->arrData[$strKey], $arrParams);
     }
 
-
     /**
      * Check whether a property is set
      *
@@ -128,7 +122,6 @@ abstract class Template extends \Template\Base
         return isset($this->arrData[$strKey]);
     }
 
-
     /**
      * Set the template data from an array
      *
@@ -138,7 +131,6 @@ abstract class Template extends \Template\Base
     {
         $this->arrData = $arrData;
     }
-
 
     /**
      * Return the template data as array
@@ -150,7 +142,6 @@ abstract class Template extends \Template\Base
         return $this->arrData;
     }
 
-
     /**
      * Set the template name
      *
@@ -160,7 +151,6 @@ abstract class Template extends \Template\Base
     {
         $this->strTemplate = $strTemplate;
     }
-
 
     /**
      * Return the template name
@@ -172,7 +162,6 @@ abstract class Template extends \Template\Base
         return $this->strTemplate;
     }
 
-
     /**
      * Set the output format
      *
@@ -182,7 +171,6 @@ abstract class Template extends \Template\Base
     {
         $this->strFormat = $strFormat;
     }
-
 
     /**
      * Return the output format
@@ -194,7 +182,6 @@ abstract class Template extends \Template\Base
         return $this->strFormat;
     }
 
-
     /**
      * Print all template variables to the screen using print_r
      */
@@ -205,7 +192,6 @@ abstract class Template extends \Template\Base
         echo "</pre>\n";
     }
 
-
     /**
      * Print all template variables to the screen using var_dump
      */
@@ -215,7 +201,6 @@ abstract class Template extends \Template\Base
         var_dump($this->arrData);
         echo "</pre>\n";
     }
-
 
     /**
      * Parse the template file and return it as string
@@ -238,7 +223,6 @@ abstract class Template extends \Template\Base
 
         return parent::parse();
     }
-
 
     /**
      * Parse the template file and print it to the screen
@@ -322,7 +306,6 @@ abstract class Template extends \Template\Base
         echo $this->strBuffer;
     }
 
-
     /**
      * Minify the HTML markup preserving pre, script, style and textarea tags
      *
@@ -381,7 +364,6 @@ abstract class Template extends \Template\Base
         return $strHtml;
     }
 
-
     /**
      * Generate the markup for a style sheet tag
      *
@@ -395,7 +377,6 @@ abstract class Template extends \Template\Base
     {
         return '<link' . ($xhtml ? ' type="text/css"' : '') . ' rel="stylesheet" href="' . $href . '"' . (($media != '' && $media != 'all') ? ' media="' . $media . '"' : '') . ($xhtml ? ' />' : '>');
     }
-
 
     /**
      * Generate the markup for inline CSS code
@@ -414,7 +395,6 @@ abstract class Template extends \Template\Base
         }
     }
 
-
     /**
      * Generate the markup for a JavaScript tag
      *
@@ -427,7 +407,6 @@ abstract class Template extends \Template\Base
     {
         return '<script' . ($xhtml ? ' type="text/javascript"' : '') . ' src="' . $src . '"></script>';
     }
-
 
     /**
      * Generate the markup for an inline JavaScript
@@ -446,7 +425,6 @@ abstract class Template extends \Template\Base
         }
     }
 
-
     /**
      * Generate the markup for an RSS feed tag
      *
@@ -461,7 +439,6 @@ abstract class Template extends \Template\Base
     {
         return '<link type="application/' . $format . '+xml" rel="alternate" href="' . $href . '" title="' . specialchars($title) . '"' . ($xhtml ? ' />' : '>');
     }
-
 
     /**
      * Print the IE6 warning

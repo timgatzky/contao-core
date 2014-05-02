@@ -12,7 +12,6 @@
 
 namespace Contao;
 
-
 /**
  * Creates, reads, writes and deletes files
  *
@@ -75,7 +74,6 @@ class File extends \System
      */
     protected $blnDoNotCreate = false;
 
-
     /**
      * Instantiate a new file object
      *
@@ -124,7 +122,6 @@ class File extends \System
         }
     }
 
-
     /**
      * Close the file handle if it has not been done yet
      */
@@ -134,7 +131,6 @@ class File extends \System
             $this->Files->fclose($this->resFile);
         }
     }
-
 
     /**
      * Return an object property

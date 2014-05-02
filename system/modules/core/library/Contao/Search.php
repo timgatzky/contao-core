@@ -12,7 +12,6 @@
 
 namespace Contao;
 
-
 /**
  * Creates and queries the search index
  *
@@ -42,7 +41,6 @@ class Search
      * @var \Search
      */
     protected static $objInstance;
-
 
     /**
      * Index a page
@@ -256,7 +254,6 @@ class Search
         $objDatabase->prepare("DELETE FROM tl_search_index WHERE pid=?")
                     ->execute($intInsertId);
 
-
         // Create new index
         foreach ($arrIndex as $k=>$v) {
             $objDatabase->prepare("INSERT INTO tl_search_index (pid, word, relevance, language) VALUES (?, ?, ?, ?)")
@@ -265,7 +262,6 @@ class Search
 
         return true;
     }
-
 
     /**
      * Search the index and return the result object
@@ -472,7 +468,6 @@ class Search
         return $objResultStmt->execute($arrValues);
     }
 
-
     /**
      * Remove an entry from the search index
      *
@@ -494,14 +489,12 @@ class Search
         }
     }
 
-
     /**
      * Prevent cloning of the object (Singleton)
      *
      * @deprecated Search is now a static class
      */
     final public function __clone() {}
-
 
     /**
      * Return the object instance (Singleton)

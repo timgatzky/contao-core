@@ -12,7 +12,6 @@
 
 namespace Contao;
 
-
 /**
  * Reads the environment variables
  *
@@ -43,7 +42,6 @@ class Environment
      */
     protected static $arrCache = array();
 
-
     /**
      * Return an environment variable
      *
@@ -68,7 +66,6 @@ class Environment
         return static::$arrCache[$strKey];
     }
 
-
     /**
      * Set an environment variable
      *
@@ -80,7 +77,6 @@ class Environment
         static::$arrCache[$strKey] = $varValue;
     }
 
-
     /**
      * Return the absolute path to the script (e.g. /home/www/html/website/index.php)
      *
@@ -90,7 +86,6 @@ class Environment
     {
         return str_replace('//', '/', str_replace('\\', '/', (PHP_SAPI == 'cgi' || PHP_SAPI == 'isapi' || PHP_SAPI == 'cgi-fcgi' || PHP_SAPI == 'fpm-fcgi') && ($_SERVER['ORIG_PATH_TRANSLATED'] ? $_SERVER['ORIG_PATH_TRANSLATED'] : $_SERVER['PATH_TRANSLATED']) ? ($_SERVER['ORIG_PATH_TRANSLATED'] ? $_SERVER['ORIG_PATH_TRANSLATED'] : $_SERVER['PATH_TRANSLATED']) : ($_SERVER['ORIG_SCRIPT_FILENAME'] ? $_SERVER['ORIG_SCRIPT_FILENAME'] : $_SERVER['SCRIPT_FILENAME'])));
     }
-
 
     /**
      * Return the relative path to the script (e.g. /website/index.php)
@@ -102,7 +97,6 @@ class Environment
         return (PHP_SAPI == 'cgi' || PHP_SAPI == 'isapi' || PHP_SAPI == 'cgi-fcgi' || PHP_SAPI == 'fpm-fcgi') && ($_SERVER['ORIG_PATH_INFO'] ? $_SERVER['ORIG_PATH_INFO'] : $_SERVER['PATH_INFO']) ? ($_SERVER['ORIG_PATH_INFO'] ? $_SERVER['ORIG_PATH_INFO'] : $_SERVER['PATH_INFO']) : ($_SERVER['ORIG_SCRIPT_NAME'] ? $_SERVER['ORIG_SCRIPT_NAME'] : $_SERVER['SCRIPT_NAME']);
     }
 
-
     /**
      * Alias for scriptName()
      *
@@ -112,7 +106,6 @@ class Environment
     {
         return static::scriptName();
     }
-
 
     /**
      * Return the document root (e.g. /home/www/user/)
@@ -156,7 +149,6 @@ class Environment
         return str_replace('//', '/', str_replace('\\', '/', realpath($strDocumentRoot)));
     }
 
-
     /**
      * Return the request URI [path]?[query] (e.g. /contao/index.php?id=2)
      *
@@ -170,7 +162,6 @@ class Environment
             return '/' . preg_replace('/^\//', '', static::get('scriptName')) . (!empty($_SERVER['QUERY_STRING']) ? '?' . $_SERVER['QUERY_STRING'] : '');
         }
     }
-
 
     /**
      * Return the first eight accepted languages as array
@@ -211,7 +202,6 @@ class Environment
         return array_slice(array_unique($arrLanguages), 0, 8);
     }
 
-
     /**
      * Return accepted encoding types as array
      *
@@ -221,7 +211,6 @@ class Environment
     {
         return array_values(array_unique(explode(',', strtolower($_SERVER['HTTP_ACCEPT_ENCODING']))));
     }
-
 
     /**
      * Return the user agent as string
@@ -235,7 +224,6 @@ class Environment
 
         return substr($ua, 0, 255);
     }
-
 
     /**
      * Return the HTTP Host
@@ -257,7 +245,6 @@ class Environment
         return preg_replace('/[^A-Za-z0-9\[\]\.:-]/', '', $host);
     }
 
-
     /**
      * Return the HTTP X-Forwarded-Host
      *
@@ -268,7 +255,6 @@ class Environment
         return preg_replace('/[^A-Za-z0-9\[\]\.:-]/', '', $_SERVER['HTTP_X_FORWARDED_HOST']);
     }
 
-
     /**
      * Return true if the current page was requested via an SSL connection
      *
@@ -278,7 +264,6 @@ class Environment
     {
         return ($_SERVER['SSL_SESSION_ID'] || $_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] == 1);
     }
-
 
     /**
      * Return the current URL without path or query string
@@ -298,7 +283,6 @@ class Environment
         return (static::get('ssl') ? 'https://' : 'http://') . $host;
     }
 
-
     /**
      * Return the current URL with path or query string
      *
@@ -308,7 +292,6 @@ class Environment
     {
         return static::get('url') . static::get('requestUri');
     }
-
 
     /**
      * Return the real REMOTE_ADDR even if a proxy server is used
@@ -345,7 +328,6 @@ class Environment
         return substr($_SERVER['REMOTE_ADDR'], 0, 64);
     }
 
-
     /**
      * Return the SERVER_ADDR
      *
@@ -363,7 +345,6 @@ class Environment
         return $strServer;
     }
 
-
     /**
      * Return the relative path to the base directory (e.g. /path)
      *
@@ -374,7 +355,6 @@ class Environment
         return TL_PATH;
     }
 
-
     /**
      * Return the relativ path to the script (e.g. index.php)
      *
@@ -384,7 +364,6 @@ class Environment
     {
         return preg_replace('/^' . preg_quote(TL_PATH, '/') . '\/?/', '', static::get('scriptName'));
     }
-
 
     /**
      * Return the relativ path to the script and include the request (e.g. index.php?id=2)
@@ -405,7 +384,6 @@ class Environment
         return $strRequest;
     }
 
-
     /**
      * Return the request string without the index.php fragment
      *
@@ -422,7 +400,6 @@ class Environment
         return $strRequest;
     }
 
-
     /**
      * Return the URL and path that can be used in a <base> tag
      *
@@ -432,7 +409,6 @@ class Environment
     {
         return static::get('url') . TL_PATH . '/';
     }
-
 
     /**
      * Return the host name
@@ -444,7 +420,6 @@ class Environment
         return static::get('httpHost');
     }
 
-
     /**
      * Return true on Ajax requests
      *
@@ -454,7 +429,6 @@ class Environment
     {
         return (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest');
     }
-
 
     /**
      * Return the operating system and the browser name and version
@@ -527,7 +501,6 @@ class Environment
         return $return;
     }
 
-
     /**
      * Prevent direct instantiation (Singleton)
      *
@@ -535,14 +508,12 @@ class Environment
      */
     protected function __construct() {}
 
-
     /**
      * Prevent cloning of the object (Singleton)
      *
      * @deprecated Environment is now a static class
      */
     final public function __clone() {}
-
 
     /**
      * Return an environment variable
@@ -558,7 +529,6 @@ class Environment
         return static::get($strKey);
     }
 
-
     /**
      * Set an environment variable
      *
@@ -571,7 +541,6 @@ class Environment
     {
         static::set($strKey, $varValue);
     }
-
 
     /**
      * Return the object instance (Singleton)

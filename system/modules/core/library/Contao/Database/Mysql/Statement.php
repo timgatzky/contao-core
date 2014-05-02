@@ -12,7 +12,6 @@
 
 namespace Contao\Database\Mysql;
 
-
 /**
  * MySQL-specific database statement class
  *
@@ -35,7 +34,6 @@ class Statement extends \Database\Statement
         return $strQuery;
     }
 
-
     /**
      * Escape a string
      *
@@ -47,7 +45,6 @@ class Statement extends \Database\Statement
     {
         return "'" . mysql_real_escape_string($strString, $this->resConnection) . "'";
     }
-
 
     /**
      * Add limit and offset to the query string
@@ -64,7 +61,6 @@ class Statement extends \Database\Statement
         }
     }
 
-
     /**
      * Execute the query
      *
@@ -74,7 +70,6 @@ class Statement extends \Database\Statement
     {
         return mysql_query($this->strQuery, $this->resConnection);
     }
-
 
     /**
      * Return the last error message
@@ -86,7 +81,6 @@ class Statement extends \Database\Statement
         return mysql_error($this->resConnection);
     }
 
-
     /**
      * Return the number of affected rows
      *
@@ -96,7 +90,6 @@ class Statement extends \Database\Statement
     {
         return mysql_affected_rows($this->resConnection);
     }
-
 
     /**
      * Return the last insert ID
@@ -108,7 +101,6 @@ class Statement extends \Database\Statement
         return mysql_insert_id($this->resConnection);
     }
 
-
     /**
      * Explain the current query
      *
@@ -118,7 +110,6 @@ class Statement extends \Database\Statement
     {
         return mysql_fetch_assoc(mysql_query('EXPLAIN ' . $this->strQuery, $this->resConnection));
     }
-
 
     /**
      * Create a Database\Result object

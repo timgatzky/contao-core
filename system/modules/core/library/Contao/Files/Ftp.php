@@ -12,7 +12,6 @@
 
 namespace Contao\Files;
 
-
 /**
  * Manage files via FTP ("Safe Mode Hack")
  *
@@ -41,7 +40,6 @@ class Ftp extends \Files
      */
     protected $arrFiles = array();
 
-
     /**
      * Disconnect from FTP server
      */
@@ -51,7 +49,6 @@ class Ftp extends \Files
             @ftp_close($this->resConnection);
         }
     }
-
 
     /**
      * Establish an FTP connection
@@ -92,7 +89,6 @@ class Ftp extends \Files
         $this->resConnection = $resConnection;
     }
 
-
     /**
      * Create a directory
      *
@@ -110,7 +106,6 @@ class Ftp extends \Files
         return $return;
     }
 
-
     /**
      * Remove a directory
      *
@@ -125,7 +120,6 @@ class Ftp extends \Files
 
         return @ftp_rmdir($this->resConnection, \Config::get('ftpPath') . $strDirectory);
     }
-
 
     /**
      * Open a file and return the handle
@@ -155,7 +149,6 @@ class Ftp extends \Files
         return $resFile;
     }
 
-
     /**
      * Write content to a file
      *
@@ -166,7 +159,6 @@ class Ftp extends \Files
     {
         @fputs($resFile, $strContent);
     }
-
 
     /**
      * Close a file handle
@@ -191,7 +183,6 @@ class Ftp extends \Files
 
         return $fclose;
     }
-
 
     /**
      * Rename a file or folder
@@ -238,7 +229,6 @@ class Ftp extends \Files
         return $return;
     }
 
-
     /**
      * Copy a file or folder
      *
@@ -262,7 +252,6 @@ class Ftp extends \Files
         return $return;
     }
 
-
     /**
      * Delete a file
      *
@@ -277,7 +266,6 @@ class Ftp extends \Files
 
         return @ftp_delete($this->resConnection, \Config::get('ftpPath') . $strFile);
     }
-
 
     /**
      * Change the file mode
@@ -295,7 +283,6 @@ class Ftp extends \Files
         return @ftp_chmod($this->resConnection, $varMode, \Config::get('ftpPath') . $strFile);
     }
 
-
     /**
      * Check whether a file is writeable
      *
@@ -307,7 +294,6 @@ class Ftp extends \Files
     {
         return true;
     }
-
 
     /**
      * Move an uploaded file to a folder

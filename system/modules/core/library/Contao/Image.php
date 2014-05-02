@@ -12,7 +12,6 @@
 
 namespace Contao;
 
-
 /**
  * Resizes images
  *
@@ -65,7 +64,6 @@ class Image
     {
         return static::get($image, $width, $height, $mode, $image, true) ? true : false;
     }
-
 
     /**
      * Resize an image and store the resized version in the assets/images folder
@@ -393,7 +391,6 @@ class Image
         // Return the path to new image
         return \System::urlEncode($strCacheName);
     }
-
 
     /**
      * Generate an image tag and return it as string

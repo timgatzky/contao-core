@@ -12,7 +12,6 @@
 
 namespace Contao;
 
-
 /**
  * Generates and validates form fields
  *
@@ -121,7 +120,6 @@ abstract class Widget extends \Template\Base
      */
     protected $objDca;
 
-
     /**
      * Initialize the object
      *
@@ -143,7 +141,6 @@ abstract class Widget extends \Template\Base
 
         $this->addAttributes($arrAttributes);
     }
-
 
     /**
      * Set an object property
@@ -964,7 +961,6 @@ abstract class Widget extends \Template\Base
         }
     }
 
-
     /**
      * Check whether an option is checked
      *
@@ -981,7 +977,6 @@ abstract class Widget extends \Template\Base
         return static::optionChecked($arrOption['value'], $this->varValue);
     }
 
-
     /**
      * Check whether an option is selected
      *
@@ -997,7 +992,6 @@ abstract class Widget extends \Template\Base
 
         return static::optionSelected($arrOption['value'], $this->varValue);
     }
-
 
     /**
      * Return a "selected" attribute if the option is selected
@@ -1026,7 +1020,6 @@ abstract class Widget extends \Template\Base
         return (is_array($varValues) ? in_array($strOption, $varValues) : $strOption == $varValues) ? $attribute : '';
     }
 
-
     /**
      * Return a "checked" attribute if the option is checked
      *
@@ -1053,7 +1046,6 @@ abstract class Widget extends \Template\Base
 
         return (is_array($varValues) ? in_array($strOption, $varValues) : $strOption == $varValues) ? $attribute : '';
     }
-
 
     /**
      * Check whether an input is one of the given options
@@ -1097,7 +1089,6 @@ abstract class Widget extends \Template\Base
 
         return true;
     }
-
 
     /**
      * Extract the Widget attributes from a Data Container array
@@ -1221,7 +1212,6 @@ abstract class Widget extends \Template\Base
         return $arrAttributes;
     }
 
-
     /**
      * Return the empty value based on the SQL string
      *
@@ -1235,7 +1225,6 @@ abstract class Widget extends \Template\Base
 
         return static::getEmptyValueByFieldType($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['sql']);
     }
-
 
     /**
      * Return the empty value based on the SQL string

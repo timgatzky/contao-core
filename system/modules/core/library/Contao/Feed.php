@@ -12,7 +12,6 @@
 
 namespace Contao;
 
-
 /**
  * Creates RSS or Atom feeds
  *
@@ -56,7 +55,6 @@ class Feed
      */
     protected $arrItems = array();
 
-
     /**
      * Store the feed name (without file extension)
      *
@@ -66,7 +64,6 @@ class Feed
     {
         $this->strName = $strName;
     }
-
 
     /**
      * Set an object property
@@ -78,7 +75,6 @@ class Feed
     {
         $this->arrData[$strKey] = str_replace(array('[-]', '&shy;', '[nbsp]', '&nbsp;'), array('', '', ' ', ' '), $varValue);
     }
-
 
     /**
      * Return an object property
@@ -96,7 +92,6 @@ class Feed
         return null;
     }
 
-
     /**
      * Check whether a property is set
      *
@@ -109,7 +104,6 @@ class Feed
         return isset($this->arrData[$strKey]);
     }
 
-
     /**
      * Add an item
      *
@@ -119,7 +113,6 @@ class Feed
     {
         $this->arrItems[] = $objItem;
     }
-
 
     /**
      * Generate an RSS 2.0 feed and return it as XML string
@@ -177,7 +170,6 @@ class Feed
         return $xml;
     }
 
-
     /**
      * Generate an Atom feed and return it as XML string
      *
@@ -218,7 +210,6 @@ class Feed
 
         return $xml . '</feed>';
     }
-
 
     /**
      * Adjust the publication date

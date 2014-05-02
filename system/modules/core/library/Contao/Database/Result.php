@@ -12,7 +12,6 @@
 
 namespace Contao\Database;
 
-
 /**
  * Lazy load the result set rows
  *
@@ -70,7 +69,6 @@ abstract class Result
      */
     protected $arrCache = array();
 
-
     /**
      * Validate the connection resource and store the query string
      *
@@ -89,7 +87,6 @@ abstract class Result
         $this->strQuery = $strQuery;
     }
 
-
     /**
      * Automatically free the result
      */
@@ -97,7 +94,6 @@ abstract class Result
     {
         $this->free();
     }
-
 
     /**
      * Set a particular field of the current row
@@ -115,7 +111,6 @@ abstract class Result
         $this->arrCache[$strKey] = $varValue;
     }
 
-
     /**
      * Check whether a field exists
      *
@@ -131,7 +126,6 @@ abstract class Result
 
         return isset($this->arrCache[$strKey]);
     }
-
 
     /**
      * Return an object property or a field of the current row
@@ -179,7 +173,6 @@ abstract class Result
         return null;
     }
 
-
     /**
      * Fetch the current row as enumerated array
      *
@@ -197,7 +190,6 @@ abstract class Result
         return $arrRow;
     }
 
-
     /**
      * Fetch the current row as associative array
      *
@@ -214,7 +206,6 @@ abstract class Result
 
         return $arrRow;
     }
-
 
     /**
      * Fetch a particular field of each row of the result
@@ -239,7 +230,6 @@ abstract class Result
         return $arrReturn;
     }
 
-
     /**
      * Fetch all rows as associative array
      *
@@ -256,7 +246,6 @@ abstract class Result
 
         return $arrReturn;
     }
-
 
     /**
      * Get the column information and return it as array
@@ -275,7 +264,6 @@ abstract class Result
 
         return $arrFields;
     }
-
 
     /**
      * Go to the first row of the current result
@@ -296,7 +284,6 @@ abstract class Result
 
         return $this;
     }
-
 
     /**
      * Go to the previous row of the current result
@@ -322,7 +309,6 @@ abstract class Result
         return $this;
     }
 
-
     /**
      * Go to the next row of the current result
      *
@@ -345,7 +331,6 @@ abstract class Result
         return $this;
     }
 
-
     /**
      * Go to the last row of the current result
      *
@@ -366,7 +351,6 @@ abstract class Result
         return $this;
     }
 
-
     /**
      * Return the number of rows in the result set
      *
@@ -376,7 +360,6 @@ abstract class Result
     {
         return $this->num_rows();
     }
-
 
     /**
      * Return the current row as associative array
@@ -394,7 +377,6 @@ abstract class Result
         return $blnEnumerated ? array_values($this->arrCache) : $this->arrCache;
     }
 
-
     /**
      * Reset the current result
      *
@@ -410,14 +392,12 @@ abstract class Result
         return $this;
     }
 
-
     /**
      * Fetch the current row as enumerated array
      *
      * @return array The row as array
      */
     abstract protected function fetch_row();
-
 
     /**
      * Fetch the current row as associative array
@@ -426,7 +406,6 @@ abstract class Result
      */
     abstract protected function fetch_assoc();
 
-
     /**
      * Return the number of rows in the result set
      *
@@ -434,14 +413,12 @@ abstract class Result
      */
     abstract protected function num_rows();
 
-
     /**
      * Return the number of fields of the result set
      *
      * @return integer The number of fields
      */
     abstract protected function num_fields();
-
 
     /**
      * Get the column information and return it as array
@@ -452,7 +429,6 @@ abstract class Result
      */
     abstract protected function fetch_field($intOffset);
 
-
     /**
      * Navigate to a certain row in the result set
      *
@@ -461,7 +437,6 @@ abstract class Result
      * @throws \OutOfBoundsException If $intIndex is out of bounds
      */
     abstract protected function data_seek($intIndex);
-
 
     /**
      * Free the result

@@ -12,7 +12,6 @@
 
 namespace Contao\Model;
 
-
 /**
  * Turn relations into query string
  *
@@ -87,7 +86,6 @@ class QueryBuilder
 
         return $strQuery;
     }
-
 
     /**
      * Build a query based on the given options to count the number of records

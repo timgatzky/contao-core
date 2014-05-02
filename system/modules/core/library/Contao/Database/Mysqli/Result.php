@@ -12,7 +12,6 @@
 
 namespace Contao\Database\Mysqli;
 
-
 /**
  * MySQLi-specific database result class
  *
@@ -33,7 +32,6 @@ class Result extends \Database\Result
         return $this->resResult->fetch_row();
     }
 
-
     /**
      * Fetch the current row as associative array
      *
@@ -43,7 +41,6 @@ class Result extends \Database\Result
     {
         return $this->resResult->fetch_assoc();
     }
-
 
     /**
      * Return the number of rows in the result set
@@ -55,7 +52,6 @@ class Result extends \Database\Result
         return $this->resResult->num_rows;
     }
 
-
     /**
      * Return the number of fields of the result set
      *
@@ -65,7 +61,6 @@ class Result extends \Database\Result
     {
         return $this->resResult->field_count;
     }
-
 
     /**
      * Get the column information and return it as array
@@ -78,7 +73,6 @@ class Result extends \Database\Result
     {
         return $this->resResult->fetch_field_direct($intOffset);
     }
-
 
     /**
      * Navigate to a certain row in the result set
@@ -105,7 +99,6 @@ class Result extends \Database\Result
 
         $this->resResult->data_seek($intIndex);
     }
-
 
     /**
      * Free the result

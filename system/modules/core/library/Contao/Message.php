@@ -12,7 +12,6 @@
 
 namespace Contao;
 
-
 /**
  * Stores and outputs messages
  *
@@ -43,7 +42,6 @@ class Message
         static::add($strMessage, 'TL_ERROR');
     }
 
-
     /**
      * Add a confirmation message
      *
@@ -53,7 +51,6 @@ class Message
     {
         static::add($strMessage, 'TL_CONFIRM');
     }
-
 
     /**
      * Add a new message
@@ -65,7 +62,6 @@ class Message
         static::add($strMessage, 'TL_NEW');
     }
 
-
     /**
      * Add an info message
      *
@@ -76,7 +72,6 @@ class Message
         static::add($strMessage, 'TL_INFO');
     }
 
-
     /**
      * Add a preformatted message
      *
@@ -86,7 +81,6 @@ class Message
     {
         static::add($strMessage, 'TL_RAW');
     }
-
 
     /**
      * Add a message
@@ -112,7 +106,6 @@ class Message
 
         $_SESSION[$strType][] = $strMessage;
     }
-
 
     /**
      * Return all messages as HTML
@@ -158,7 +151,6 @@ class Message
         return $strMessages;
     }
 
-
     /**
      * Reset the message system
      */
@@ -168,7 +160,6 @@ class Message
             $_SESSION[$strType] = array();
         }
     }
-
 
     /**
      * Return all available message types

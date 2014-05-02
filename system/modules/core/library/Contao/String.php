@@ -12,7 +12,6 @@
 
 namespace Contao;
 
-
 /**
  * Provides string manipulation methods
  *
@@ -34,7 +33,6 @@ class String
      * @var \String
      */
     protected static $objInstance;
-
 
     /**
      * Shorten a string to a given number of characters
@@ -90,7 +88,6 @@ class String
 
         return implode(' ', $arrWords) . ($blnAddEllipsis ? $strEllipsis : '');
     }
-
 
     /**
      * Shorten a HTML string to a given number of characters
@@ -193,7 +190,6 @@ class String
         return trim($strReturn);
     }
 
-
     /**
      * Decode all entities
      *
@@ -219,7 +215,6 @@ class String
         return html_entity_decode($strString, $strQuoteStyle, $strCharset);
     }
 
-
     /**
      * Restore basic entities
      *
@@ -231,7 +226,6 @@ class String
     {
         return str_replace(array('[&]', '[&amp;]', '[lt]', '[gt]', '[nbsp]', '[-]'), array('&amp;', '&amp;', '&lt;', '&gt;', '&nbsp;', '&shy;'), $strBuffer);
     }
-
 
     /**
      * Censor a single word or an array of words within a string
@@ -250,7 +244,6 @@ class String
 
         return $strString;
     }
-
 
     /**
      * Encode all e-mail addresses within a string
@@ -283,7 +276,6 @@ class String
         return str_replace('mailto:', '&#109;&#97;&#105;&#108;&#116;&#111;&#58;', $strString);
     }
 
-
     /**
      * Split a friendly-name e-address and return name and e-mail as array
      *
@@ -302,7 +294,6 @@ class String
         }
     }
 
-
     /**
      * Wrap words after a particular number of characers
      *
@@ -316,7 +307,6 @@ class String
     {
         return wordwrap($strString, $strLength, $strBreak);
     }
-
 
     /**
      * Highlight a phrase within a string
@@ -337,7 +327,6 @@ class String
         return preg_replace('/(' . preg_quote($strPhrase, '/') . ')/i', $strOpeningTag . '\\1' . $strClosingTag, $strString);
     }
 
-
     /**
      * Split a string of comma separated values
      *
@@ -356,7 +345,6 @@ class String
 
         return $arrValues;
     }
-
 
     /**
      * Convert a string to XHTML
@@ -390,7 +378,6 @@ class String
         return $strString;
     }
 
-
     /**
      * Convert a string to HTML5
      *
@@ -420,7 +407,6 @@ class String
 
         return $strString;
     }
-
 
     /**
      * Parse simple tokens that can be used to personalize newsletters
@@ -474,7 +460,6 @@ class String
         return $strReturn;
     }
 
-
     /**
      * Convert a UUID string to binary data
      *
@@ -487,7 +472,6 @@ class String
         return pack('H*', str_replace('-', '', $uuid));
     }
 
-
     /**
      * Get a UUID string from binary data
      *
@@ -499,7 +483,6 @@ class String
     {
         return implode('-', unpack('H8time_low/H4time_mid/H4time_high/H4clock_seq/H12node', $data));
     }
-
 
     /**
      * Convert file paths inside "src" attributes to insert tags
@@ -532,7 +515,6 @@ class String
         return $return;
     }
 
-
     /**
      * Convert insert tags inside "src" attributes to file paths
      *
@@ -564,7 +546,6 @@ class String
         return $return;
     }
 
-
     /**
      * Prevent direct instantiation (Singleton)
      *
@@ -572,14 +553,12 @@ class String
      */
     protected function __construct() {}
 
-
     /**
      * Prevent cloning of the object (Singleton)
      *
      * @deprecated String is now a static class
      */
     final public function __clone() {}
-
 
     /**
      * Return the object instance (Singleton)

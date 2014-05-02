@@ -12,7 +12,6 @@
 
 namespace Contao;
 
-
 /**
  * Generates and validates request tokens
  *
@@ -47,7 +46,6 @@ class RequestToken
      */
     protected static $strToken;
 
-
     /**
      * Read the token from the session or generate a new one
      */
@@ -73,7 +71,6 @@ class RequestToken
         }
     }
 
-
     /**
      * Return the token
      *
@@ -83,7 +80,6 @@ class RequestToken
     {
         return static::$strToken;
     }
-
 
     /**
      * Validate a token
@@ -118,7 +114,6 @@ class RequestToken
         return false;
     }
 
-
     /**
      * Load the token or generate a new one
      *
@@ -129,14 +124,12 @@ class RequestToken
         static::initialize();
     }
 
-
     /**
      * Prevent cloning of the object (Singleton)
      *
      * @deprecated RequestToken is now a static class
      */
     final public function __clone() {}
-
 
     /**
      * Return the object instance (Singleton)

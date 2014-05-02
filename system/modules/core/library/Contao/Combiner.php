@@ -12,7 +12,6 @@
 
 namespace Contao;
 
-
 /**
  * Combines .css or .js files into one single file
  *
@@ -75,7 +74,6 @@ class Combiner extends \System
      */
     protected $arrFiles = array();
 
-
     /**
      * Public constructor required
      */
@@ -83,7 +81,6 @@ class Combiner extends \System
     {
         parent::__construct();
     }
-
 
     /**
      * Add a file to the combined file
@@ -151,7 +148,6 @@ class Combiner extends \System
         $this->strKey .= '-f' . $strFile . '-v' . $strVersion . '-m' . $strMedia;
     }
 
-
     /**
      * Add multiple files from an array
      *
@@ -166,7 +162,6 @@ class Combiner extends \System
         }
     }
 
-
     /**
      * Check whether files have been added
      *
@@ -176,7 +171,6 @@ class Combiner extends \System
     {
         return !empty($this->arrFiles);
     }
-
 
     /**
      * Generate the combined file and return its path
@@ -263,7 +257,6 @@ class Combiner extends \System
         return $strUrl . 'assets/' . $strTarget . '/' . $strKey . $this->strMode;
     }
 
-
     /**
      * Handle CSS files
      *
@@ -283,7 +276,6 @@ class Combiner extends \System
 
         return $content;
     }
-
 
     /**
      * Handle SCSS/LESS files
@@ -307,7 +299,6 @@ class Combiner extends \System
 
         return $this->fixPaths($objCompiler->compile($content), $arrFile);
     }
-
 
     /**
      * Fix the paths

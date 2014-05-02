@@ -12,7 +12,6 @@
 
 namespace Contao\Template;
 
-
 /**
  * Provides shared logic for template classes
  *
@@ -59,7 +58,6 @@ abstract class Base extends \Controller
      */
     protected $arrBlockNames = array();
 
-
     /**
      * Parse the template file and return it as string
      *
@@ -100,7 +98,6 @@ abstract class Base extends \Controller
         return $strBuffer;
     }
 
-
     /**
      * Extend another template
      *
@@ -111,7 +108,6 @@ abstract class Base extends \Controller
         $this->strParent = $name;
     }
 
-
     /**
      * Insert the content of the parent block
      */
@@ -119,7 +115,6 @@ abstract class Base extends \Controller
     {
         echo '[[TL_PARENT]]';
     }
-
 
     /**
      * Start a new block
@@ -182,7 +177,6 @@ abstract class Base extends \Controller
         }
     }
 
-
     /**
      * End a block
      *
@@ -228,7 +222,6 @@ abstract class Base extends \Controller
             ob_start();
         }
     }
-
 
     /**
      * Insert a template

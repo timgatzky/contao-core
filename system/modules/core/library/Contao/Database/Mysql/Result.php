@@ -12,7 +12,6 @@
 
 namespace Contao\Database\Mysql;
 
-
 /**
  * MySQL-specific database result class
  *
@@ -33,7 +32,6 @@ class Result extends \Database\Result
         return mysql_fetch_row($this->resResult);
     }
 
-
     /**
      * Fetch the current row as associative array
      *
@@ -43,7 +41,6 @@ class Result extends \Database\Result
     {
         return mysql_fetch_assoc($this->resResult);
     }
-
 
     /**
      * Return the number of rows in the result set
@@ -55,7 +52,6 @@ class Result extends \Database\Result
         return mysql_num_rows($this->resResult);
     }
 
-
     /**
      * Return the number of fields of the result set
      *
@@ -65,7 +61,6 @@ class Result extends \Database\Result
     {
         return mysql_num_fields($this->resResult);
     }
-
 
     /**
      * Get the column information and return it as array
@@ -78,7 +73,6 @@ class Result extends \Database\Result
     {
         return mysql_fetch_field($this->resResult, $intOffset);
     }
-
 
     /**
      * Navigate to a certain row in the result set
@@ -105,7 +99,6 @@ class Result extends \Database\Result
 
         mysql_data_seek($this->resResult, $intIndex);
     }
-
 
     /**
      * Free the result

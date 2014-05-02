@@ -12,7 +12,6 @@
 
 namespace Contao;
 
-
 /**
  * Handles the database assisted file system (DBAFS)
  *
@@ -184,7 +183,6 @@ class Dbafs
         return $objReturn;
     }
 
-
     /**
      * Moves a file or folder to a new location
      *
@@ -244,7 +242,6 @@ class Dbafs
 
         return $objFile;
     }
-
 
     /**
      * Copies a file or folder to a new location
@@ -315,7 +312,6 @@ class Dbafs
         return $objNewFile;
     }
 
-
     /**
      * Removes a file or folder
      *
@@ -342,7 +338,6 @@ class Dbafs
 
         static::updateFolderHashes(dirname($strResource));
     }
-
 
     /**
      * Update the hashes of all parent folders of a resource
@@ -391,7 +386,6 @@ class Dbafs
             $objModel->save();
         }
     }
-
 
     /**
      * Synchronize the file system with the database

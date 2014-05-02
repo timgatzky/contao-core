@@ -12,7 +12,6 @@
 
 namespace Contao;
 
-
 /**
  * Creates items to be appended to RSS or Atom feeds
  *
@@ -44,7 +43,6 @@ class FeedItem
      */
     protected $arrData = array();
 
-
     /**
      * Set the data from an array
      *
@@ -57,7 +55,6 @@ class FeedItem
         }
     }
 
-
     /**
      * Set an object property
      *
@@ -68,7 +65,6 @@ class FeedItem
     {
         $this->arrData[$strKey] = str_replace(array('[-]', '&shy;', '[nbsp]', '&nbsp;'), array('', '', ' ', ' '), $varValue);
     }
-
 
     /**
      * Return an object property
@@ -86,7 +82,6 @@ class FeedItem
         return null;
     }
 
-
     /**
      * Check whether a property is set
      *
@@ -98,7 +93,6 @@ class FeedItem
     {
         return isset($this->arrData[$strKey]);
     }
-
 
     /**
      * Add an enclosure

@@ -12,7 +12,6 @@
 
 namespace Contao;
 
-
 /**
  * A wrapper class for accessing the file system
  *
@@ -46,18 +45,15 @@ abstract class Files
      */
     protected static $objInstance;
 
-
     /**
      * Prevent direct instantiation (Singleton)
      */
     protected function __construct() {}
 
-
     /**
      * Prevent cloning of the object (Singleton)
      */
     final public function __clone() {}
-
 
     /**
      * Instantiate the object (Factory)
@@ -87,7 +83,6 @@ abstract class Files
         return self::$objInstance;
     }
 
-
     /**
      * Create a directory
      *
@@ -97,7 +92,6 @@ abstract class Files
      */
     abstract public function mkdir($strDirectory);
 
-
     /**
      * Remove a directory
      *
@@ -106,7 +100,6 @@ abstract class Files
      * @return boolean True if the operation was successful
      */
     abstract public function rmdir($strDirectory);
-
 
     /**
      * Recursively remove a directory
@@ -132,7 +125,6 @@ abstract class Files
         }
     }
 
-
     /**
      * Open a file and return the handle
      *
@@ -143,7 +135,6 @@ abstract class Files
      */
     abstract public function fopen($strFile, $strMode);
 
-
     /**
      * Write content to a file
      *
@@ -151,7 +142,6 @@ abstract class Files
      * @param string   $strContent The content to store in the file
      */
     abstract public function fputs($resFile, $strContent);
-
 
     /**
      * Close a file handle
@@ -161,7 +151,6 @@ abstract class Files
      * @return boolean True if the operation was successful
      */
     abstract public function fclose($resFile);
-
 
     /**
      * Rename a file or folder
@@ -173,7 +162,6 @@ abstract class Files
      */
     abstract public function rename($strOldName, $strNewName);
 
-
     /**
      * Copy a file or folder
      *
@@ -183,7 +171,6 @@ abstract class Files
      * @return boolean True if the operation was successful
      */
     abstract public function copy($strSource, $strDestination);
-
 
     /**
      * Recursively copy a directory
@@ -207,7 +194,6 @@ abstract class Files
         }
     }
 
-
     /**
      * Delete a file
      *
@@ -216,7 +202,6 @@ abstract class Files
      * @return boolean True if the operation was successful
      */
     abstract public function delete($strFile);
-
 
     /**
      * Change the file mode
@@ -228,7 +213,6 @@ abstract class Files
      */
     abstract public function chmod($strFile, $varMode);
 
-
     /**
      * Check whether a file is writeable
      *
@@ -237,7 +221,6 @@ abstract class Files
      * @return boolean True if the file is writeable
      */
     abstract public function is_writeable($strFile);
-
 
     /**
      * Move an uploaded file to a folder
@@ -248,7 +231,6 @@ abstract class Files
      * @return boolean True if the operation was successful
      */
     abstract public function move_uploaded_file($strSource, $strDestination);
-
 
     /**
      * Validate a path (must not contain ../ fragments)

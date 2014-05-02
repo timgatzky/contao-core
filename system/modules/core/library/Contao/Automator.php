@@ -10,12 +10,10 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
-
 /**
  * Run in a custom namespace, so the class can be replaced
  */
 namespace Contao;
-
 
 /**
  * Class Automator
@@ -35,7 +33,6 @@ class Automator extends \System
     {
         parent::__construct();
     }
-
 
     /**
      * Check for new \Contao versions
@@ -58,7 +55,6 @@ class Automator extends \System
         $this->log('Checked for Contao updates', __METHOD__, TL_CRON);
     }
 
-
     /**
      * Purge the search tables
      */
@@ -78,7 +74,6 @@ class Automator extends \System
         $this->log('Purged the search tables', __METHOD__, TL_CRON);
     }
 
-
     /**
      * Purge the undo table
      */
@@ -92,7 +87,6 @@ class Automator extends \System
         // Add a log entry
         $this->log('Purged the undo table', __METHOD__, TL_CRON);
     }
-
 
     /**
      * Purge the version table
@@ -108,7 +102,6 @@ class Automator extends \System
         $this->log('Purged the undo table', __METHOD__, TL_CRON);
     }
 
-
     /**
      * Purge the system log
      */
@@ -122,7 +115,6 @@ class Automator extends \System
         // Add a log entry
         $this->log('Purged the system log', __METHOD__, TL_CRON);
     }
-
 
     /**
      * Purge the image cache
@@ -149,7 +141,6 @@ class Automator extends \System
         // Add a log entry
         $this->log('Purged the image cache', __METHOD__, TL_CRON);
     }
-
 
     /**
      * Purge the script cache
@@ -179,7 +170,6 @@ class Automator extends \System
         $this->log('Purged the script cache', __METHOD__, TL_CRON);
     }
 
-
     /**
      * Purge the page cache
      */
@@ -193,7 +183,6 @@ class Automator extends \System
         $this->log('Purged the page cache', __METHOD__, TL_CRON);
     }
 
-
     /**
      * Purge the search cache
      */
@@ -206,7 +195,6 @@ class Automator extends \System
         // Add a log entry
         $this->log('Purged the search cache', __METHOD__, TL_CRON);
     }
-
 
     /**
      * Purge the internal cache
@@ -227,7 +215,6 @@ class Automator extends \System
         $this->log('Purged the internal cache', __METHOD__, TL_CRON);
     }
 
-
     /**
      * Purge the temp folder
      */
@@ -244,7 +231,6 @@ class Automator extends \System
         // Add a log entry
         $this->log('Purged the temp folder', __METHOD__, TL_CRON);
     }
-
 
     /**
      * Regenerate the XML files
@@ -268,7 +254,6 @@ class Automator extends \System
         // Add a log entry
         $this->log('Regenerated the XML files', __METHOD__, TL_CRON);
     }
-
 
     /**
      * Remove old XML files from the share directory

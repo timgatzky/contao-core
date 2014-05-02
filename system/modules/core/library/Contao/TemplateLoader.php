@@ -12,7 +12,6 @@
 
 namespace Contao;
 
-
 /**
  * Automatically loads template files based on a mapper array
  *
@@ -37,7 +36,6 @@ class TemplateLoader
      */
     protected static $files = array();
 
-
     /**
      * Add a new template with its file path
      *
@@ -48,7 +46,6 @@ class TemplateLoader
     {
         self::$files[$name] = $file;
     }
-
 
     /**
      * Add multiple new templates with their file paths
@@ -62,7 +59,6 @@ class TemplateLoader
         }
     }
 
-
     /**
      * Return the template files as array
      *
@@ -72,7 +68,6 @@ class TemplateLoader
     {
         return self::$files;
     }
-
 
     /**
      * Return the files matching a prefix as array
@@ -85,7 +80,6 @@ class TemplateLoader
     {
         return array_values(preg_grep('/^' . $prefix . '/', array_keys(self::$files)));
     }
-
 
     /**
      * Return a template path

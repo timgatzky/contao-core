@@ -12,7 +12,6 @@
 
 namespace Contao;
 
-
 /**
  * Creates, reads, writes and deletes folders
  *
@@ -49,7 +48,6 @@ class Folder extends \System
      * @var boolean
      */
     protected $blnSyncDb = false;
-
 
     /**
      * Check whether the folder exists
@@ -107,7 +105,6 @@ class Folder extends \System
             }
         }
     }
-
 
     /**
      * Return an object property

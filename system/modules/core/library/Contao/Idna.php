@@ -12,7 +12,6 @@
 
 namespace Contao;
 
-
 /**
  * An idna_encode adapter class
  *
@@ -45,7 +44,6 @@ class Idna
         return $objIdn->encode($strDomain);
     }
 
-
     /**
      * Decode an internationalized domain name
      *
@@ -58,7 +56,6 @@ class Idna
         $objIdn = new \idna_convert();
         return $objIdn->decode($strDomain);
     }
-
 
     /**
      * Encode the domain in an e-mail address
@@ -80,7 +77,6 @@ class Idna
         list($strLocal, $strHost) = explode('@', $strEmail);
         return $strLocal . '@' . static::encode($strHost);
     }
-
 
     /**
      * Encode the domain in an URL

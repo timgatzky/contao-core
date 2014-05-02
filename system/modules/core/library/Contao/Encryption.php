@@ -12,7 +12,6 @@
 
 namespace Contao;
 
-
 /**
  * Encrypts and decrypts data
  *
@@ -42,7 +41,6 @@ class Encryption
      * @var resource
      */
     protected static $resTd;
-
 
     /**
      * Encrypt a value
@@ -82,7 +80,6 @@ class Encryption
 
         return $strEncrypted;
     }
-
 
     /**
      * Decrypt a value
@@ -130,7 +127,6 @@ class Encryption
         return $strDecrypted;
     }
 
-
     /**
      * Initialize the encryption module
      *
@@ -150,7 +146,6 @@ class Encryption
             throw new \Exception('Encryption key not set');
         }
     }
-
 
     /**
      * Generate a password hash
@@ -174,7 +169,6 @@ class Encryption
         }
     }
 
-
     /**
      * Test whether a password hash has been generated with crypt()
      *
@@ -195,7 +189,6 @@ class Encryption
         }
     }
 
-
     /**
      * Initialize the encryption module
      *
@@ -206,14 +199,12 @@ class Encryption
         static::initialize();
     }
 
-
     /**
      * Prevent cloning of the object (Singleton)
      *
      * @deprecated Encryption is now a static class
      */
     final public function __clone() {}
-
 
     /**
      * Return the object instance (Singleton)

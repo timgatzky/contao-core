@@ -12,7 +12,6 @@
 
 namespace Contao\Database;
 
-
 /**
  * Create and execute queries
  *
@@ -63,7 +62,6 @@ abstract class Statement
      */
     protected static $arrCache = array();
 
-
     /**
      * Validate the connection resource and store the query string
      *
@@ -81,7 +79,6 @@ abstract class Statement
         $this->resConnection = $resConnection;
         $this->blnDisableAutocommit = $blnDisableAutocommit;
     }
-
 
     /**
      * Return an object property
@@ -120,7 +117,6 @@ abstract class Statement
         return null;
     }
 
-
     /**
      * Prepare a query string so the following functions can handle it
      *
@@ -158,7 +154,6 @@ abstract class Statement
         $this->strQuery = implode('', $arrChunks);
         return $this;
     }
-
 
     /**
      * Autogenerate the SET/VALUES subpart of a query from an associative array
@@ -201,7 +196,6 @@ abstract class Statement
         return $this;
     }
 
-
     /**
      * Handle limit and offset
      *
@@ -224,7 +218,6 @@ abstract class Statement
         return $this;
     }
 
-
     /**
      * Execute the query and return the result object
      *
@@ -241,7 +234,6 @@ abstract class Statement
         $this->replaceWildcards($arrParams);
         return $this->query();
     }
-
 
     /**
      * Directly send a query string to the database
@@ -281,7 +273,6 @@ abstract class Statement
         return $objResult;
     }
 
-
     /**
      * Replace the wildcards in the query string
      *
@@ -299,7 +290,6 @@ abstract class Statement
             throw new \Exception('Too few arguments to build the query string');
         }
     }
-
 
     /**
      * Escape the values and serialize objects and arrays
@@ -337,7 +327,6 @@ abstract class Statement
         return $arrValues;
     }
 
-
     /**
      * Debug a query
      *
@@ -371,7 +360,6 @@ abstract class Statement
         $GLOBALS['TL_DEBUG']['database_queries'][] = $arrData;
     }
 
-
     /**
      * Explain the current query
      *
@@ -382,7 +370,6 @@ abstract class Statement
         return $this->explain_query();
     }
 
-
     /**
      * Prepare a query string and return it
      *
@@ -391,7 +378,6 @@ abstract class Statement
      * @return string The modified query string
      */
     abstract protected function prepare_query($strQuery);
-
 
     /**
      * Escape a string
@@ -402,7 +388,6 @@ abstract class Statement
      */
     abstract protected function string_escape($strString);
 
-
     /**
      * Add limit and offset to the query string
      *
@@ -411,14 +396,12 @@ abstract class Statement
      */
     abstract protected function limit_query($intRows, $intOffset);
 
-
     /**
      * Execute the query
      *
      * @return resource The result resource
      */
     abstract protected function execute_query();
-
 
     /**
      * Return the last error message
@@ -427,14 +410,12 @@ abstract class Statement
      */
     abstract protected function get_error();
 
-
     /**
      * Return the last insert ID
      *
      * @return integer The last insert ID
      */
     abstract protected function affected_rows();
-
 
     /**
      * Return the last insert ID
@@ -443,14 +424,12 @@ abstract class Statement
      */
     abstract protected function insert_id();
 
-
     /**
      * Explain the current query
      *
      * @return array The information array
      */
     abstract protected function explain_query();
-
 
     /**
      * Create a Database\Result object
@@ -461,7 +440,6 @@ abstract class Statement
      * @return \Database\Result The result object
      */
     abstract protected function createResult($resResult, $strQuery);
-
 
     /**
      * Bypass the cache and always execute the query
@@ -474,7 +452,6 @@ abstract class Statement
     {
         return call_user_func_array(array($this, 'execute'), func_get_args());
     }
-
 
     /**
      * Always execute the query and add or replace an existing cache entry
