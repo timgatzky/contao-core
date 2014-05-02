@@ -38,160 +38,160 @@ namespace Contao;
 class Cache
 {
 
-	/**
-	 * Object instance (Singleton)
-	 * @var \Cache
-	 */
-	protected static $objInstance;
+    /**
+     * Object instance (Singleton)
+     * @var \Cache
+     */
+    protected static $objInstance;
 
-	/**
-	 * The cache data
-	 * @var array
-	 */
-	protected static $arrData = array();
-
-
-	/**
-	 * Check whether a key is set
-	 *
-	 * @param string $strKey The cache key
-	 *
-	 * @return boolean True if the key is set
-	 */
-	public static function has($strKey)
-	{
-		return isset(static::$arrData[$strKey]);
-	}
+    /**
+     * The cache data
+     * @var array
+     */
+    protected static $arrData = array();
 
 
-	/**
-	 * Return a cache entry
-	 *
-	 * @param string $strKey The cache key
-	 *
-	 * @return mixed The cached data
-	 */
-	public static function get($strKey)
-	{
-		return static::$arrData[$strKey];
-	}
+    /**
+     * Check whether a key is set
+     *
+     * @param string $strKey The cache key
+     *
+     * @return boolean True if the key is set
+     */
+    public static function has($strKey)
+    {
+        return isset(static::$arrData[$strKey]);
+    }
 
 
-	/**
-	 * Add a cache entry
-	 *
-	 * @param string $strKey   The cache key
-	 * @param mixed  $varValue The data to be cached
-	 */
-	public static function set($strKey, $varValue)
-	{
-		static::$arrData[$strKey] = $varValue;
-	}
+    /**
+     * Return a cache entry
+     *
+     * @param string $strKey The cache key
+     *
+     * @return mixed The cached data
+     */
+    public static function get($strKey)
+    {
+        return static::$arrData[$strKey];
+    }
 
 
-	/**
-	 * Remove a cache entry
-	 *
-	 * @param string $strKey The cache key
-	 */
-	public static function remove($strKey)
-	{
-		unset(static::$arrData[$strKey]);
-	}
+    /**
+     * Add a cache entry
+     *
+     * @param string $strKey   The cache key
+     * @param mixed  $varValue The data to be cached
+     */
+    public static function set($strKey, $varValue)
+    {
+        static::$arrData[$strKey] = $varValue;
+    }
 
 
-	/**
-	 * Prevent direct instantiation (Singleton)
-	 *
-	 * @deprecated Cache is now a static class
-	 */
-	protected function __construct() {}
+    /**
+     * Remove a cache entry
+     *
+     * @param string $strKey The cache key
+     */
+    public static function remove($strKey)
+    {
+        unset(static::$arrData[$strKey]);
+    }
 
 
-	/**
-	 * Prevent cloning of the object (Singleton)
-	 *
-	 * @deprecated Cache is now a static class
-	 */
-	final public function __clone() {}
+    /**
+     * Prevent direct instantiation (Singleton)
+     *
+     * @deprecated Cache is now a static class
+     */
+    protected function __construct() {}
 
 
-	/**
-	 * Check whether a key is set
-	 *
-	 * @param string $strKey The cache key
-	 *
-	 * @return boolean True if the key is set
-	 *
-	 * @deprecated Use Cache::has() instead
-	 */
-	public function __isset($strKey)
-	{
-		return static::has($strKey);
-	}
+    /**
+     * Prevent cloning of the object (Singleton)
+     *
+     * @deprecated Cache is now a static class
+     */
+    final public function __clone() {}
 
 
-	/**
-	 * Return a cache entry
-	 *
-	 * @param string $strKey The cache key
-	 *
-	 * @return mixed|null The cached data
-	 *
-	 * @deprecated Use Cache::get() instead
-	 */
-	public function __get($strKey)
-	{
-		if (static::has($strKey))
-		{
-			return static::get($strKey);
-		}
-
-		return null;
-	}
+    /**
+     * Check whether a key is set
+     *
+     * @param string $strKey The cache key
+     *
+     * @return boolean True if the key is set
+     *
+     * @deprecated Use Cache::has() instead
+     */
+    public function __isset($strKey)
+    {
+        return static::has($strKey);
+    }
 
 
-	/**
-	 * Add a cache entry
-	 *
-	 * @param string $strKey   The cache key
-	 * @param mixed  $varValue The data to be stored
-	 *
-	 * @deprecated Use Cache::set() instead
-	 */
-	public function __set($strKey, $varValue)
-	{
-		static::set($strKey, $varValue);
-	}
+    /**
+     * Return a cache entry
+     *
+     * @param string $strKey The cache key
+     *
+     * @return mixed|null The cached data
+     *
+     * @deprecated Use Cache::get() instead
+     */
+    public function __get($strKey)
+    {
+        if (static::has($strKey))
+        {
+            return static::get($strKey);
+        }
+
+        return null;
+    }
 
 
-	/**
-	 * Remove a cache entry
-	 *
-	 * @param string $strKey The cache key
-	 *
-	 * @deprecated Use Cache::remove() instead
-	 */
-	public function __unset($strKey)
-	{
-		static::remove($strKey);
-	}
+    /**
+     * Add a cache entry
+     *
+     * @param string $strKey   The cache key
+     * @param mixed  $varValue The data to be stored
+     *
+     * @deprecated Use Cache::set() instead
+     */
+    public function __set($strKey, $varValue)
+    {
+        static::set($strKey, $varValue);
+    }
 
 
-	/**
-	 * Instantiate the cache object (Factory)
-	 *
-	 * @return \Cache The object instance
-	 *
-	 * @deprecated Cache is now a static class
-	 */
-	public static function getInstance()
-	{
-		if (static::$objInstance === null)
-		{
-			static::$objInstance = new static();
-		}
+    /**
+     * Remove a cache entry
+     *
+     * @param string $strKey The cache key
+     *
+     * @deprecated Use Cache::remove() instead
+     */
+    public function __unset($strKey)
+    {
+        static::remove($strKey);
+    }
 
-		return static::$objInstance;
-	}
+
+    /**
+     * Instantiate the cache object (Factory)
+     *
+     * @return \Cache The object instance
+     *
+     * @deprecated Cache is now a static class
+     */
+    public static function getInstance()
+    {
+        if (static::$objInstance === null)
+        {
+            static::$objInstance = new static();
+        }
+
+        return static::$objInstance;
+    }
 }

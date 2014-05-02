@@ -26,59 +26,59 @@ namespace Contao\Dbafs;
 class Filter extends \RecursiveFilterIterator
 {
 
-	/**
-	 * Exempted folders
-	 * @var array
-	 */
-	protected $arrExempt = array();
+    /**
+     * Exempted folders
+     * @var array
+     */
+    protected $arrExempt = array();
 
-	/**
-	 * Ignored files
-	 * @var array
-	 */
-	protected $arrIgnore = array('.DS_Store', '.svn');
-
-
-	/**
-	 * Exempt folders from the synchronisation (see #4522)
-	 *
-	 * @param \RecursiveIterator $iterator The iterator object
-	 */
-	public function __construct(\RecursiveIterator $iterator)
-	{
-		if (\Config::get('fileSyncExclude') != '')
-		{
-			$this->arrExempt = array_map(function($e) {
-				return \Config::get('uploadPath') . '/' . $e;
-			}, trimsplit(',', \Config::get('fileSyncExclude')));
-		}
-
-		parent::__construct($iterator);
-	}
+    /**
+     * Ignored files
+     * @var array
+     */
+    protected $arrIgnore = array('.DS_Store', '.svn');
 
 
-	/**
-	 * Check whether the current element of the iterator is acceptable
-	 *
-	 * @return boolean True if the element is acceptable
-	 */
-	public function accept()
-	{
-		// The resource is to be ignored
-		if (in_array($this->current()->getFilename(), $this->arrIgnore))
-		{
-			return false;
-		}
+    /**
+     * Exempt folders from the synchronisation (see #4522)
+     *
+     * @param \RecursiveIterator $iterator The iterator object
+     */
+    public function __construct(\RecursiveIterator $iterator)
+    {
+        if (\Config::get('fileSyncExclude') != '')
+        {
+            $this->arrExempt = array_map(function($e) {
+                return \Config::get('uploadPath') . '/' . $e;
+            }, trimsplit(',', \Config::get('fileSyncExclude')));
+        }
 
-		$strRelpath = str_replace(TL_ROOT . '/', '', $this->current()->getPathname());
+        parent::__construct($iterator);
+    }
 
-		// The resource is an exempt folder
-		if (in_array($strRelpath, $this->arrExempt))
-		{
-			return false;
-		}
 
-		// The resource is accepted
-		return true;
-	}
+    /**
+     * Check whether the current element of the iterator is acceptable
+     *
+     * @return boolean True if the element is acceptable
+     */
+    public function accept()
+    {
+        // The resource is to be ignored
+        if (in_array($this->current()->getFilename(), $this->arrIgnore))
+        {
+            return false;
+        }
+
+        $strRelpath = str_replace(TL_ROOT . '/', '', $this->current()->getPathname());
+
+        // The resource is an exempt folder
+        if (in_array($strRelpath, $this->arrExempt))
+        {
+            return false;
+        }
+
+        // The resource is accepted
+        return true;
+    }
 }

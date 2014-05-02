@@ -23,318 +23,318 @@ namespace Contao\Database;
 class Mysqli extends \Database
 {
 
-	/**
-	 * List tables query
-	 * @var string
-	 */
-	protected $strListTables = "SHOW TABLES FROM `%s`";
+    /**
+     * List tables query
+     * @var string
+     */
+    protected $strListTables = "SHOW TABLES FROM `%s`";
 
 
-	/**
-	 * Connect to the database server and select the database
-	 *
-	 * @throws \Exception If the connection cannot be established
-	 */
-	protected function connect()
-	{
-		$host = $this->arrConfig['dbHost'];
+    /**
+     * Connect to the database server and select the database
+     *
+     * @throws \Exception If the connection cannot be established
+     */
+    protected function connect()
+    {
+        $host = $this->arrConfig['dbHost'];
 
-		if ($this->arrConfig['dbPconnect'])
-		{
-			$host = 'p:' . $host;
-		}
+        if ($this->arrConfig['dbPconnect'])
+        {
+            $host = 'p:' . $host;
+        }
 
-		$this->resConnection = new \mysqli($host, $this->arrConfig['dbUser'], $this->arrConfig['dbPass'], $this->arrConfig['dbDatabase'], $this->arrConfig['dbPort'], $this->arrConfig['dbSocket']);
+        $this->resConnection = new \mysqli($host, $this->arrConfig['dbUser'], $this->arrConfig['dbPass'], $this->arrConfig['dbDatabase'], $this->arrConfig['dbPort'], $this->arrConfig['dbSocket']);
 
-		if ($this->resConnection->connect_error)
-		{
-			throw new \Exception($this->resConnection->connect_error);
-		}
+        if ($this->resConnection->connect_error)
+        {
+            throw new \Exception($this->resConnection->connect_error);
+        }
 
-		$this->resConnection->set_charset($this->arrConfig['dbCharset']);
-	}
-
-
-	/**
-	 * Disconnect from the database
-	 */
-	protected function disconnect()
-	{
-		$this->resConnection->close();
-	}
+        $this->resConnection->set_charset($this->arrConfig['dbCharset']);
+    }
 
 
-	/**
-	 * Return the last error message
-	 *
-	 * @return string The error message
-	 */
-	protected function get_error()
-	{
-		return $this->resConnection->error;
-	}
+    /**
+     * Disconnect from the database
+     */
+    protected function disconnect()
+    {
+        $this->resConnection->close();
+    }
 
 
-	/**
-	 * Auto-generate a FIND_IN_SET() statement
-	 *
-	 * @param string  $strKey     The field name
-	 * @param mixed   $varSet     The set to find the key in
-	 * @param boolean $blnIsField If true, the set will not be quoted
-	 *
-	 * @return string The FIND_IN_SET() statement
-	 */
-	protected function find_in_set($strKey, $varSet, $blnIsField=false)
-	{
-		if ($blnIsField)
-		{
-			return "FIND_IN_SET(" . $strKey . ", " . $varSet . ")";
-		}
-		else
-		{
-			return "FIND_IN_SET(" . $strKey . ", '" . $this->resConnection->real_escape_string($varSet) . "')";
-		}
-	}
+    /**
+     * Return the last error message
+     *
+     * @return string The error message
+     */
+    protected function get_error()
+    {
+        return $this->resConnection->error;
+    }
 
 
-	/**
-	 * Return a standardized array with the field information
-	 *
-	 * * name:       field name (e.g. my_field)
-	 * * type:       field type (e.g. "int" or "number")
-	 * * length:     field length (e.g. 20)
-	 * * precision:  precision of a float number (e.g. 5)
-	 * * null:       NULL or NOT NULL
-	 * * default:    default value (e.g. "default_value")
-	 * * attributes: attributes (e.g. "unsigned")
-	 * * index:      PRIMARY, UNIQUE or INDEX
-	 * * extra:      extra information (e.g. auto_increment)
-	 *
-	 * @param string $strTable The table name
-	 *
-	 * @return array An array with the field information
-	 *
-	 * @todo Support all kind of keys (e.g. FULLTEXT or FOREIGN)
-	 */
-	protected function list_fields($strTable)
-	{
-		$arrReturn = array();
-		$objFields = $this->query("SELECT * FROM `INFORMATION_SCHEMA`.`COLUMNS` WHERE `TABLE_SCHEMA` LIKE '{$this->arrConfig['dbDatabase']}' AND `TABLE_NAME` LIKE '%$strTable'");
-
-		while ($objFields->next())
-		{
-			$arrTmp = array();
-			$arrChunks = preg_split('/(\([^\)]+\))/', $objFields->COLUMN_TYPE, -1, PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
-
-			$arrTmp['name'] = $objFields->COLUMN_NAME;
-			$arrTmp['type'] = $arrChunks[0];
-
-			if (!empty($arrChunks[1]))
-			{
-				$arrChunks[1] = str_replace(array('(', ')'), '', $arrChunks[1]);
-
-				// Handle enum fields (see #6387)
-				if ($arrChunks[0] == 'enum')
-				{
-					$arrTmp['length'] = $arrChunks[1];
-				}
-				else
-				{
-					$arrSubChunks = explode(',', $arrChunks[1]);
-					$arrTmp['length'] = trim($arrSubChunks[0]);
-
-					if (!empty($arrSubChunks[1]))
-					{
-						$arrTmp['precision'] = trim($arrSubChunks[1]);
-					}
-				}
-			}
-
-			if (!empty($arrChunks[2]))
-			{
-				$arrTmp['attributes'] = trim($arrChunks[2]);
-			}
-
-			if ($objFields->COLUMN_KEY != '')
-			{
-				switch ($objFields->COLUMN_KEY)
-				{
-					case 'PRI':
-						$arrTmp['index'] = 'PRIMARY';
-						break;
-
-					case 'UNI':
-						$arrTmp['index'] = 'UNIQUE';
-						break;
-
-					case 'MUL':
-						// Ignore
-						break;
-
-					default:
-						$arrTmp['index'] = 'KEY';
-						break;
-				}
-			}
-
-			// Do not modify the order!
-			$arrTmp['collation'] = $objFields->COLLATION_NAME;
-			$arrTmp['null'] = ($objFields->IS_NULLABLE == 'YES') ? 'NULL' : 'NOT NULL';
-			$arrTmp['default'] = $objFields->COLUMN_DEFAULT;
-			$arrTmp['extra'] = $objFields->EXTRA;
-
-			$arrReturn[] = $arrTmp;
-		}
-
-		$objIndex = $this->query("SHOW INDEXES FROM `$strTable`");
-
-		while ($objIndex->next())
-		{
-			$arrReturn[$objIndex->Key_name]['name'] = $objIndex->Key_name;
-			$arrReturn[$objIndex->Key_name]['type'] = 'index';
-			$arrReturn[$objIndex->Key_name]['index_fields'][] = $objIndex->Column_name;
-			$arrReturn[$objIndex->Key_name]['index'] = (($objIndex->Non_unique == 0) ? 'UNIQUE' : 'KEY');
-		}
-
-		return $arrReturn;
-	}
+    /**
+     * Auto-generate a FIND_IN_SET() statement
+     *
+     * @param string  $strKey     The field name
+     * @param mixed   $varSet     The set to find the key in
+     * @param boolean $blnIsField If true, the set will not be quoted
+     *
+     * @return string The FIND_IN_SET() statement
+     */
+    protected function find_in_set($strKey, $varSet, $blnIsField=false)
+    {
+        if ($blnIsField)
+        {
+            return "FIND_IN_SET(" . $strKey . ", " . $varSet . ")";
+        }
+        else
+        {
+            return "FIND_IN_SET(" . $strKey . ", '" . $this->resConnection->real_escape_string($varSet) . "')";
+        }
+    }
 
 
-	/**
-	 * Change the current database
-	 *
-	 * @param string $strDatabase The name of the target database
-	 *
-	 * @return boolean True if the database was changed successfully
-	 */
-	protected function set_database($strDatabase)
-	{
-		$this->resConnection->query("USE $strDatabase");
-	}
+    /**
+     * Return a standardized array with the field information
+     *
+     * * name:       field name (e.g. my_field)
+     * * type:       field type (e.g. "int" or "number")
+     * * length:     field length (e.g. 20)
+     * * precision:  precision of a float number (e.g. 5)
+     * * null:       NULL or NOT NULL
+     * * default:    default value (e.g. "default_value")
+     * * attributes: attributes (e.g. "unsigned")
+     * * index:      PRIMARY, UNIQUE or INDEX
+     * * extra:      extra information (e.g. auto_increment)
+     *
+     * @param string $strTable The table name
+     *
+     * @return array An array with the field information
+     *
+     * @todo Support all kind of keys (e.g. FULLTEXT or FOREIGN)
+     */
+    protected function list_fields($strTable)
+    {
+        $arrReturn = array();
+        $objFields = $this->query("SELECT * FROM `INFORMATION_SCHEMA`.`COLUMNS` WHERE `TABLE_SCHEMA` LIKE '{$this->arrConfig['dbDatabase']}' AND `TABLE_NAME` LIKE '%$strTable'");
+
+        while ($objFields->next())
+        {
+            $arrTmp = array();
+            $arrChunks = preg_split('/(\([^\)]+\))/', $objFields->COLUMN_TYPE, -1, PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
+
+            $arrTmp['name'] = $objFields->COLUMN_NAME;
+            $arrTmp['type'] = $arrChunks[0];
+
+            if (!empty($arrChunks[1]))
+            {
+                $arrChunks[1] = str_replace(array('(', ')'), '', $arrChunks[1]);
+
+                // Handle enum fields (see #6387)
+                if ($arrChunks[0] == 'enum')
+                {
+                    $arrTmp['length'] = $arrChunks[1];
+                }
+                else
+                {
+                    $arrSubChunks = explode(',', $arrChunks[1]);
+                    $arrTmp['length'] = trim($arrSubChunks[0]);
+
+                    if (!empty($arrSubChunks[1]))
+                    {
+                        $arrTmp['precision'] = trim($arrSubChunks[1]);
+                    }
+                }
+            }
+
+            if (!empty($arrChunks[2]))
+            {
+                $arrTmp['attributes'] = trim($arrChunks[2]);
+            }
+
+            if ($objFields->COLUMN_KEY != '')
+            {
+                switch ($objFields->COLUMN_KEY)
+                {
+                    case 'PRI':
+                        $arrTmp['index'] = 'PRIMARY';
+                        break;
+
+                    case 'UNI':
+                        $arrTmp['index'] = 'UNIQUE';
+                        break;
+
+                    case 'MUL':
+                        // Ignore
+                        break;
+
+                    default:
+                        $arrTmp['index'] = 'KEY';
+                        break;
+                }
+            }
+
+            // Do not modify the order!
+            $arrTmp['collation'] = $objFields->COLLATION_NAME;
+            $arrTmp['null'] = ($objFields->IS_NULLABLE == 'YES') ? 'NULL' : 'NOT NULL';
+            $arrTmp['default'] = $objFields->COLUMN_DEFAULT;
+            $arrTmp['extra'] = $objFields->EXTRA;
+
+            $arrReturn[] = $arrTmp;
+        }
+
+        $objIndex = $this->query("SHOW INDEXES FROM `$strTable`");
+
+        while ($objIndex->next())
+        {
+            $arrReturn[$objIndex->Key_name]['name'] = $objIndex->Key_name;
+            $arrReturn[$objIndex->Key_name]['type'] = 'index';
+            $arrReturn[$objIndex->Key_name]['index_fields'][] = $objIndex->Column_name;
+            $arrReturn[$objIndex->Key_name]['index'] = (($objIndex->Non_unique == 0) ? 'UNIQUE' : 'KEY');
+        }
+
+        return $arrReturn;
+    }
 
 
-	/**
-	 * Begin a transaction
-	 */
-	protected function begin_transaction()
-	{
-		$this->resConnection->query("SET AUTOCOMMIT=0");
-		$this->resConnection->query("BEGIN");
-	}
+    /**
+     * Change the current database
+     *
+     * @param string $strDatabase The name of the target database
+     *
+     * @return boolean True if the database was changed successfully
+     */
+    protected function set_database($strDatabase)
+    {
+        $this->resConnection->query("USE $strDatabase");
+    }
 
 
-	/**
-	 * Commit a transaction
-	 */
-	protected function commit_transaction()
-	{
-		$this->resConnection->query("COMMIT");
-		$this->resConnection->query("SET AUTOCOMMIT=1");
-	}
+    /**
+     * Begin a transaction
+     */
+    protected function begin_transaction()
+    {
+        $this->resConnection->query("SET AUTOCOMMIT=0");
+        $this->resConnection->query("BEGIN");
+    }
 
 
-	/**
-	 * Rollback a transaction
-	 */
-	protected function rollback_transaction()
-	{
-		$this->resConnection->query("ROLLBACK");
-		$this->resConnection->query("SET AUTOCOMMIT=1");
-	}
+    /**
+     * Commit a transaction
+     */
+    protected function commit_transaction()
+    {
+        $this->resConnection->query("COMMIT");
+        $this->resConnection->query("SET AUTOCOMMIT=1");
+    }
 
 
-	/**
-	 * Lock one or more tables
-	 *
-	 * @param array $arrTables An array of table names
-	 */
-	protected function lock_tables($arrTables)
-	{
-		$arrLocks = array();
-
-		foreach ($arrTables as $table=>$mode)
-		{
-			$arrLocks[] = $table .' '. $mode;
-		}
-
-		$this->resConnection->query("LOCK TABLES " . implode(', ', $arrLocks));
-	}
+    /**
+     * Rollback a transaction
+     */
+    protected function rollback_transaction()
+    {
+        $this->resConnection->query("ROLLBACK");
+        $this->resConnection->query("SET AUTOCOMMIT=1");
+    }
 
 
-	/**
-	 * Unlock all tables
-	 */
-	protected function unlock_tables()
-	{
-		$this->resConnection->query("UNLOCK TABLES");
-	}
+    /**
+     * Lock one or more tables
+     *
+     * @param array $arrTables An array of table names
+     */
+    protected function lock_tables($arrTables)
+    {
+        $arrLocks = array();
+
+        foreach ($arrTables as $table=>$mode)
+        {
+            $arrLocks[] = $table .' '. $mode;
+        }
+
+        $this->resConnection->query("LOCK TABLES " . implode(', ', $arrLocks));
+    }
 
 
-	/**
-	 * Return the table size in bytes
-	 *
-	 * @param string $strTable The table name
-	 *
-	 * @return integer The table size in bytes
-	 */
-	protected function get_size_of($strTable)
-	{
-		$objStatus = $this->resConnection->query("SHOW TABLE STATUS LIKE '" . $strTable . "'")
-										 ->fetch_object();
-
-		return ($objStatus->Data_length + $objStatus->Index_length);
-	}
+    /**
+     * Unlock all tables
+     */
+    protected function unlock_tables()
+    {
+        $this->resConnection->query("UNLOCK TABLES");
+    }
 
 
-	/**
-	 * Return the next autoincrement ID of a table
-	 *
-	 * @param string $strTable The table name
-	 *
-	 * @return integer The autoincrement ID
-	 */
-	protected function get_next_id($strTable)
-	{
-		$objStatus = $this->resConnection->query("SHOW TABLE STATUS LIKE '" . $strTable . "'")
-										 ->fetch_object();
+    /**
+     * Return the table size in bytes
+     *
+     * @param string $strTable The table name
+     *
+     * @return integer The table size in bytes
+     */
+    protected function get_size_of($strTable)
+    {
+        $objStatus = $this->resConnection->query("SHOW TABLE STATUS LIKE '" . $strTable . "'")
+                                         ->fetch_object();
 
-		return $objStatus->Auto_increment;
-	}
-
-
-	/**
-	 * Return a universal unique identifier
-	 *
-	 * @return string The UUID string
-	 */
-	protected function get_uuid()
-	{
-		static $ids;
-
-		if (empty($ids))
-		{
-			$res = $this->resConnection->query(implode(' UNION ALL ', array_fill(0, 10, "SELECT UNHEX(REPLACE(UUID(), '-', '')) AS uuid")));
-
-			while (($row = $res->fetch_object()) != false)
-			{
-				$ids[] = $row->uuid;
-			}
-		}
-
-		return array_pop($ids);
-	}
+        return ($objStatus->Data_length + $objStatus->Index_length);
+    }
 
 
-	/**
-	 * Create a Database\Statement object
-	 *
-	 * @param resource $resConnection        The connection ID
-	 * @param boolean  $blnDisableAutocommit If true, autocommitting will be disabled
-	 *
-	 * @return \Database\Mysqli\Statement The Database\Statement object
-	 */
-	protected function createStatement($resConnection, $blnDisableAutocommit)
-	{
-		return new \Database\Mysqli\Statement($resConnection, $blnDisableAutocommit);
-	}
+    /**
+     * Return the next autoincrement ID of a table
+     *
+     * @param string $strTable The table name
+     *
+     * @return integer The autoincrement ID
+     */
+    protected function get_next_id($strTable)
+    {
+        $objStatus = $this->resConnection->query("SHOW TABLE STATUS LIKE '" . $strTable . "'")
+                                         ->fetch_object();
+
+        return $objStatus->Auto_increment;
+    }
+
+
+    /**
+     * Return a universal unique identifier
+     *
+     * @return string The UUID string
+     */
+    protected function get_uuid()
+    {
+        static $ids;
+
+        if (empty($ids))
+        {
+            $res = $this->resConnection->query(implode(' UNION ALL ', array_fill(0, 10, "SELECT UNHEX(REPLACE(UUID(), '-', '')) AS uuid")));
+
+            while (($row = $res->fetch_object()) != false)
+            {
+                $ids[] = $row->uuid;
+            }
+        }
+
+        return array_pop($ids);
+    }
+
+
+    /**
+     * Create a Database\Statement object
+     *
+     * @param resource $resConnection        The connection ID
+     * @param boolean  $blnDisableAutocommit If true, autocommitting will be disabled
+     *
+     * @return \Database\Mysqli\Statement The Database\Statement object
+     */
+    protected function createStatement($resConnection, $blnDisableAutocommit)
+    {
+        return new \Database\Mysqli\Statement($resConnection, $blnDisableAutocommit);
+    }
 }

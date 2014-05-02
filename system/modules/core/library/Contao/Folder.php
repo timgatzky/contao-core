@@ -32,366 +32,366 @@ namespace Contao;
 class Folder extends \System
 {
 
-	/**
-	 * Folder name
-	 * @var string
-	 */
-	protected $strFolder;
+    /**
+     * Folder name
+     * @var string
+     */
+    protected $strFolder;
 
-	/**
-	 * Files model
-	 * @var \FilesModel
-	 */
-	protected $objModel;
+    /**
+     * Files model
+     * @var \FilesModel
+     */
+    protected $objModel;
 
-	/**
-	 * Synchronize the database
-	 * @var boolean
-	 */
-	protected $blnSyncDb = false;
-
-
-	/**
-	 * Check whether the folder exists
-	 *
-	 * @param string $strFolder The folder path
-	 *
-	 * @throws \Exception If $strFolder is not a folder
-	 */
-	public function __construct($strFolder)
-	{
-		// Handle open_basedir restrictions
-		if ($strFolder == '.')
-		{
-			$strFolder = '';
-		}
-
-		// Check whether it is a directory
-		if (is_file(TL_ROOT . '/' . $strFolder))
-		{
-			throw new \Exception(sprintf('File "%s" is not a directory', $strFolder));
-		}
-
-		$this->import('Files');
-		$this->strFolder = $strFolder;
-
-		// Check whether we need to sync the database
-		$this->blnSyncDb = (\Config::get('uploadPath') != 'templates' && strncmp($strFolder . '/', \Config::get('uploadPath') . '/', strlen(\Config::get('uploadPath')) + 1) === 0);
-
-		// Check the excluded folders
-		if ($this->blnSyncDb && \Config::get('fileSyncExclude') != '')
-		{
-			$arrExempt = array_map(function($e) {
-				return \Config::get('uploadPath') . '/' . $e;
-			}, trimsplit(',', \Config::get('fileSyncExclude')));
-
-			foreach ($arrExempt as $strExempt)
-			{
-				if (strncmp($strExempt . '/', $strFolder . '/', strlen($strExempt) + 1) === 0)
-				{
-					$this->blnSyncDb = false;
-					break;
-				}
-			}
-		}
-
-		// Create the folder if it does not exist
-		if (!is_dir(TL_ROOT . '/' . $this->strFolder))
-		{
-			$strPath = '';
-			$arrChunks = explode('/', $this->strFolder);
-
-			// Create the folder
-			foreach ($arrChunks as $strFolder)
-			{
-				$strPath .= ($strPath ? '/' : '') . $strFolder;
-				$this->Files->mkdir($strPath);
-			}
-
-			// Update the database
-			if ($this->blnSyncDb)
-			{
-				$this->objModel = \Dbafs::addResource($this->strFolder);
-			}
-		}
-	}
+    /**
+     * Synchronize the database
+     * @var boolean
+     */
+    protected $blnSyncDb = false;
 
 
-	/**
-	 * Return an object property
-	 *
-	 * Supported keys:
-	 *
-	 * * hash: the folder's MD5 hash
-	 * * path: the path to the folder
-	 * * size: the folder size
-	 *
-	 * @param string $strKey The property name
-	 *
-	 * @return mixed The property value
-	 */
-	public function __get($strKey)
-	{
-		switch ($strKey)
-		{
-			case 'hash':
-				return $this->getHash();
-				break;
+    /**
+     * Check whether the folder exists
+     *
+     * @param string $strFolder The folder path
+     *
+     * @throws \Exception If $strFolder is not a folder
+     */
+    public function __construct($strFolder)
+    {
+        // Handle open_basedir restrictions
+        if ($strFolder == '.')
+        {
+            $strFolder = '';
+        }
 
-			case 'name':
-			case 'basename':
-				return basename($this->strFolder);
-				break;
+        // Check whether it is a directory
+        if (is_file(TL_ROOT . '/' . $strFolder))
+        {
+            throw new \Exception(sprintf('File "%s" is not a directory', $strFolder));
+        }
 
-			case 'path':
-			case 'value':
-				return $this->strFolder;
-				break;
+        $this->import('Files');
+        $this->strFolder = $strFolder;
 
-			case 'size':
-				return $this->getSize();
-				break;
+        // Check whether we need to sync the database
+        $this->blnSyncDb = (\Config::get('uploadPath') != 'templates' && strncmp($strFolder . '/', \Config::get('uploadPath') . '/', strlen(\Config::get('uploadPath')) + 1) === 0);
 
-			default:
-				return parent::__get($strKey);
-				break;
-		}
-	}
+        // Check the excluded folders
+        if ($this->blnSyncDb && \Config::get('fileSyncExclude') != '')
+        {
+            $arrExempt = array_map(function($e) {
+                return \Config::get('uploadPath') . '/' . $e;
+            }, trimsplit(',', \Config::get('fileSyncExclude')));
 
+            foreach ($arrExempt as $strExempt)
+            {
+                if (strncmp($strExempt . '/', $strFolder . '/', strlen($strExempt) + 1) === 0)
+                {
+                    $this->blnSyncDb = false;
+                    break;
+                }
+            }
+        }
 
-	/**
-	 * Return true if the folder is empty
-	 *
-	 * @return boolean True if the folder is empty
-	 */
-	public function isEmpty()
-	{
-		return (count(scan(TL_ROOT . '/' . $this->strFolder, true)) < 1);
-	}
+        // Create the folder if it does not exist
+        if (!is_dir(TL_ROOT . '/' . $this->strFolder))
+        {
+            $strPath = '';
+            $arrChunks = explode('/', $this->strFolder);
 
+            // Create the folder
+            foreach ($arrChunks as $strFolder)
+            {
+                $strPath .= ($strPath ? '/' : '') . $strFolder;
+                $this->Files->mkdir($strPath);
+            }
 
-	/**
-	 * Purge the folder
-	 */
-	public function purge()
-	{
-		$this->Files->rrdir($this->strFolder, true);
-
-		// Update the database
-		if ($this->blnSyncDb)
-		{
-			$objFiles = \FilesModel::findMultipleByBasepath($this->strFolder . '/');
-
-			if ($objFiles !== null)
-			{
-				while ($objFiles->next())
-				{
-					$objFiles->delete();
-				}
-			}
-
-			\Dbafs::updateFolderHashes($this->strFolder);
-		}
-	}
+            // Update the database
+            if ($this->blnSyncDb)
+            {
+                $this->objModel = \Dbafs::addResource($this->strFolder);
+            }
+        }
+    }
 
 
-	/**
-	 * Purge the folder
-	 *
-	 * @deprecated Use $this->purge() instead
-	 */
-	public function clear()
-	{
-		$this->purge();
-	}
+    /**
+     * Return an object property
+     *
+     * Supported keys:
+     *
+     * * hash: the folder's MD5 hash
+     * * path: the path to the folder
+     * * size: the folder size
+     *
+     * @param string $strKey The property name
+     *
+     * @return mixed The property value
+     */
+    public function __get($strKey)
+    {
+        switch ($strKey)
+        {
+            case 'hash':
+                return $this->getHash();
+                break;
+
+            case 'name':
+            case 'basename':
+                return basename($this->strFolder);
+                break;
+
+            case 'path':
+            case 'value':
+                return $this->strFolder;
+                break;
+
+            case 'size':
+                return $this->getSize();
+                break;
+
+            default:
+                return parent::__get($strKey);
+                break;
+        }
+    }
 
 
-	/**
-	 * Delete the folder
-	 */
-	public function delete()
-	{
-		$this->Files->rrdir($this->strFolder);
-
-		// Update the database
-		if ($this->blnSyncDb)
-		{
-			\Dbafs::deleteResource($this->strFolder);
-		}
-	}
+    /**
+     * Return true if the folder is empty
+     *
+     * @return boolean True if the folder is empty
+     */
+    public function isEmpty()
+    {
+        return (count(scan(TL_ROOT . '/' . $this->strFolder, true)) < 1);
+    }
 
 
-	/**
-	 * Set the folder permissions
-	 *
-	 * @param string $intChmod The CHMOD settings
-	 *
-	 * @return boolean True if the operation was successful
-	 */
-	public function chmod($intChmod)
-	{
-		return $this->Files->chmod($this->strFolder, $intChmod);
-	}
+    /**
+     * Purge the folder
+     */
+    public function purge()
+    {
+        $this->Files->rrdir($this->strFolder, true);
+
+        // Update the database
+        if ($this->blnSyncDb)
+        {
+            $objFiles = \FilesModel::findMultipleByBasepath($this->strFolder . '/');
+
+            if ($objFiles !== null)
+            {
+                while ($objFiles->next())
+                {
+                    $objFiles->delete();
+                }
+            }
+
+            \Dbafs::updateFolderHashes($this->strFolder);
+        }
+    }
 
 
-	/**
-	 * Rename the folder
-	 *
-	 * @param string $strNewName The new path
-	 *
-	 * @return boolean True if the operation was successful
-	 */
-	public function renameTo($strNewName)
-	{
-		$strParent = dirname($strNewName);
-
-		// Create the parent folder if it does not exist
-		if (!is_dir(TL_ROOT . '/' . $strParent))
-		{
-			new \Folder($strParent);
-		}
-
-		$return = $this->Files->rename($this->strFolder, $strNewName);
-
-		// Update the database AFTER the folder has been renamed
-		if ($this->blnSyncDb)
-		{
-			$this->objModel = \Dbafs::moveResource($this->strFolder, $strNewName);
-		}
-
-		// Reset the object AFTER the database has been updated
-		if ($return != false)
-		{
-			$this->strFolder = $strNewName;
-		}
-
-		return $return;
-	}
+    /**
+     * Purge the folder
+     *
+     * @deprecated Use $this->purge() instead
+     */
+    public function clear()
+    {
+        $this->purge();
+    }
 
 
-	/**
-	 * Copy the folder
-	 *
-	 * @param string $strNewName The target path
-	 *
-	 * @return boolean True if the operation was successful
-	 */
-	public function copyTo($strNewName)
-	{
-		$strParent = dirname($strNewName);
+    /**
+     * Delete the folder
+     */
+    public function delete()
+    {
+        $this->Files->rrdir($this->strFolder);
 
-		// Create the parent folder if it does not exist
-		if (!is_dir(TL_ROOT . '/' . $strParent))
-		{
-			new \Folder($strParent);
-		}
-
-		$return = $this->Files->rcopy($this->strFolder, $strNewName);
-
-		// Update the database AFTER the folder has been renamed
-		if ($this->blnSyncDb)
-		{
-			$this->objModel = \Dbafs::copyResource($this->strFolder, $strNewName);
-		}
-
-		return $return;
-	}
+        // Update the database
+        if ($this->blnSyncDb)
+        {
+            \Dbafs::deleteResource($this->strFolder);
+        }
+    }
 
 
-	/**
-	 * Protect the folder by adding an .htaccess file
-	 */
-	public function protect()
-	{
-		if (!file_exists(TL_ROOT . '/' . $this->strFolder . '/.htaccess'))
-		{
-			\File::putContent($this->strFolder . '/.htaccess', "<IfModule !mod_authz_core.c>\n  Order deny,allow\n  Deny from all\n</IfModule>\n<IfModule mod_authz_core.c>\n  Require all denied\n</IfModule>");
-		}
-	}
+    /**
+     * Set the folder permissions
+     *
+     * @param string $intChmod The CHMOD settings
+     *
+     * @return boolean True if the operation was successful
+     */
+    public function chmod($intChmod)
+    {
+        return $this->Files->chmod($this->strFolder, $intChmod);
+    }
 
 
-	/**
-	 * Unprotect the folder by removing the .htaccess file
-	 */
-	public function unprotect()
-	{
-		if (file_exists(TL_ROOT . '/' . $this->strFolder . '/.htaccess'))
-		{
-			$objFile = new \File($this->strFolder . '/.htaccess', true);
-			$objFile->delete();
-		}
-	}
+    /**
+     * Rename the folder
+     *
+     * @param string $strNewName The new path
+     *
+     * @return boolean True if the operation was successful
+     */
+    public function renameTo($strNewName)
+    {
+        $strParent = dirname($strNewName);
+
+        // Create the parent folder if it does not exist
+        if (!is_dir(TL_ROOT . '/' . $strParent))
+        {
+            new \Folder($strParent);
+        }
+
+        $return = $this->Files->rename($this->strFolder, $strNewName);
+
+        // Update the database AFTER the folder has been renamed
+        if ($this->blnSyncDb)
+        {
+            $this->objModel = \Dbafs::moveResource($this->strFolder, $strNewName);
+        }
+
+        // Reset the object AFTER the database has been updated
+        if ($return != false)
+        {
+            $this->strFolder = $strNewName;
+        }
+
+        return $return;
+    }
 
 
-	/**
-	 * Return the files model
-	 *
-	 * @return \FilesModel The files model
-	 */
-	public function getModel()
-	{
-		return $this->objModel;
-	}
+    /**
+     * Copy the folder
+     *
+     * @param string $strNewName The target path
+     *
+     * @return boolean True if the operation was successful
+     */
+    public function copyTo($strNewName)
+    {
+        $strParent = dirname($strNewName);
+
+        // Create the parent folder if it does not exist
+        if (!is_dir(TL_ROOT . '/' . $strParent))
+        {
+            new \Folder($strParent);
+        }
+
+        $return = $this->Files->rcopy($this->strFolder, $strNewName);
+
+        // Update the database AFTER the folder has been renamed
+        if ($this->blnSyncDb)
+        {
+            $this->objModel = \Dbafs::copyResource($this->strFolder, $strNewName);
+        }
+
+        return $return;
+    }
 
 
-	/**
-	 * Return the MD5 hash of the folder
-	 *
-	 * @return string The MD5 has
-	 */
-	protected function getHash()
-	{
-		$arrFiles = array();
-
-		$it = new \RecursiveIteratorIterator(
-			new \RecursiveDirectoryIterator(
-				TL_ROOT . '/' . $this->strFolder,
-				\FilesystemIterator::UNIX_PATHS|\FilesystemIterator::FOLLOW_SYMLINKS|\FilesystemIterator::SKIP_DOTS
-			), \RecursiveIteratorIterator::SELF_FIRST
-		);
-
-		while ($it->valid())
-		{
-			if ($it->getFilename() != '.DS_Store')
-			{
-				$arrFiles[] = $it->getSubPathname();
-			}
-
-			$it->next();
-		}
-
-		return md5(implode('-', $arrFiles));
-	}
+    /**
+     * Protect the folder by adding an .htaccess file
+     */
+    public function protect()
+    {
+        if (!file_exists(TL_ROOT . '/' . $this->strFolder . '/.htaccess'))
+        {
+            \File::putContent($this->strFolder . '/.htaccess', "<IfModule !mod_authz_core.c>\n  Order deny,allow\n  Deny from all\n</IfModule>\n<IfModule mod_authz_core.c>\n  Require all denied\n</IfModule>");
+        }
+    }
 
 
-	/**
-	 * Return the size of the folder
-	 *
-	 * @return integer The folder size in bytes
-	 */
-	protected function getSize()
-	{
-		$intSize = 0;
+    /**
+     * Unprotect the folder by removing the .htaccess file
+     */
+    public function unprotect()
+    {
+        if (file_exists(TL_ROOT . '/' . $this->strFolder . '/.htaccess'))
+        {
+            $objFile = new \File($this->strFolder . '/.htaccess', true);
+            $objFile->delete();
+        }
+    }
 
-		foreach (scan(TL_ROOT . '/' . $this->strFolder, true) as $strFile)
-		{
-			if ($strFile == '.svn' || $strFile == '.DS_Store')
-			{
-				continue;
-			}
 
-			if (is_dir(TL_ROOT . '/' . $this->strFolder . '/' . $strFile))
-			{
-				$objFolder = new \Folder($this->strFolder . '/' . $strFile);
-				$intSize += $objFolder->size;
-			}
-			else
-			{
-				$objFile = new \File($this->strFolder . '/' . $strFile, true);
-				$intSize += $objFile->size;
-			}
-		}
+    /**
+     * Return the files model
+     *
+     * @return \FilesModel The files model
+     */
+    public function getModel()
+    {
+        return $this->objModel;
+    }
 
-		return $intSize;
-	}
+
+    /**
+     * Return the MD5 hash of the folder
+     *
+     * @return string The MD5 has
+     */
+    protected function getHash()
+    {
+        $arrFiles = array();
+
+        $it = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator(
+                TL_ROOT . '/' . $this->strFolder,
+                \FilesystemIterator::UNIX_PATHS|\FilesystemIterator::FOLLOW_SYMLINKS|\FilesystemIterator::SKIP_DOTS
+            ), \RecursiveIteratorIterator::SELF_FIRST
+        );
+
+        while ($it->valid())
+        {
+            if ($it->getFilename() != '.DS_Store')
+            {
+                $arrFiles[] = $it->getSubPathname();
+            }
+
+            $it->next();
+        }
+
+        return md5(implode('-', $arrFiles));
+    }
+
+
+    /**
+     * Return the size of the folder
+     *
+     * @return integer The folder size in bytes
+     */
+    protected function getSize()
+    {
+        $intSize = 0;
+
+        foreach (scan(TL_ROOT . '/' . $this->strFolder, true) as $strFile)
+        {
+            if ($strFile == '.svn' || $strFile == '.DS_Store')
+            {
+                continue;
+            }
+
+            if (is_dir(TL_ROOT . '/' . $this->strFolder . '/' . $strFile))
+            {
+                $objFolder = new \Folder($this->strFolder . '/' . $strFile);
+                $intSize += $objFolder->size;
+            }
+            else
+            {
+                $objFile = new \File($this->strFolder . '/' . $strFile, true);
+                $intSize += $objFile->size;
+            }
+        }
+
+        return $intSize;
+    }
 }

@@ -31,181 +31,181 @@ namespace Contao;
 class ModuleLoader
 {
 
-	/**
-	 * Active modules
-	 * @var array
-	 */
-	protected static $active;
+    /**
+     * Active modules
+     * @var array
+     */
+    protected static $active;
 
-	/**
-	 * Disabled modules
-	 * @var array
-	 */
-	protected static $disabled;
-
-
-	/**
-	 * Return the active modules as array
-	 *
-	 * @return array An array of active modules
-	 */
-	public static function getActive()
-	{
-		if (static::$active === null)
-		{
-			static::scanAndResolve();
-		}
-
-		return static::$active;
-	}
+    /**
+     * Disabled modules
+     * @var array
+     */
+    protected static $disabled;
 
 
-	/**
-	 * Return the disabled modules as array
-	 *
-	 * @return array An array of disabled modules
-	 */
-	public static function getDisabled()
-	{
-		if (static::$active === null)
-		{
-			static::scanAndResolve();
-		}
+    /**
+     * Return the active modules as array
+     *
+     * @return array An array of active modules
+     */
+    public static function getActive()
+    {
+        if (static::$active === null)
+        {
+            static::scanAndResolve();
+        }
 
-		return static::$disabled;
-	}
+        return static::$active;
+    }
 
 
-	/**
-	 * Scan the modules and resolve their dependencies
-	 *
-	 * @throws \UnresolvableDependenciesException If the dependencies cannot be resolved
-	 */
-	protected static function scanAndResolve()
-	{
-		$strCacheFile = 'system/cache/config/modules.php';
+    /**
+     * Return the disabled modules as array
+     *
+     * @return array An array of disabled modules
+     */
+    public static function getDisabled()
+    {
+        if (static::$active === null)
+        {
+            static::scanAndResolve();
+        }
 
-		// Try to load from cache
-		if (!\Config::get('bypassCache') && file_exists(TL_ROOT . '/' . $strCacheFile))
-		{
-			include TL_ROOT . '/' . $strCacheFile;
-		}
-		else
-		{
-			$load = array();
+        return static::$disabled;
+    }
 
-			static::$active = array();
-			static::$disabled = array();
 
-			// Ignore non-core modules if the system runs in safe mode
-			if (\Config::get('coreOnlyMode'))
-			{
-				$modules = array('core', 'calendar', 'comments', 'devtools', 'faq', 'listing', 'news', 'newsletter', 'repository');
-			}
-			else
-			{
-				// Sort the modules (see #6391)
-				$modules = scan(TL_ROOT . '/system/modules');
-				sort($modules);
+    /**
+     * Scan the modules and resolve their dependencies
+     *
+     * @throws \UnresolvableDependenciesException If the dependencies cannot be resolved
+     */
+    protected static function scanAndResolve()
+    {
+        $strCacheFile = 'system/cache/config/modules.php';
 
-				// Load the "core" module first
-				array_unshift($modules, 'core');
-				$modules = array_unique($modules);
-			}
+        // Try to load from cache
+        if (!\Config::get('bypassCache') && file_exists(TL_ROOT . '/' . $strCacheFile))
+        {
+            include TL_ROOT . '/' . $strCacheFile;
+        }
+        else
+        {
+            $load = array();
 
-			// Walk through the modules
-			foreach ($modules as $file)
-			{
-				// Ignore dot resources
-				if (strncmp($file, '.', 1) === 0)
-				{
-					continue;
-				}
+            static::$active = array();
+            static::$disabled = array();
 
-				// Ignore legacy modules
-				if (in_array($file, array('backend', 'frontend', 'rep_base', 'rep_client', 'registration', 'rss_reader', 'tpl_editor')))
-				{
-					continue;
-				}
+            // Ignore non-core modules if the system runs in safe mode
+            if (\Config::get('coreOnlyMode'))
+            {
+                $modules = array('core', 'calendar', 'comments', 'devtools', 'faq', 'listing', 'news', 'newsletter', 'repository');
+            }
+            else
+            {
+                // Sort the modules (see #6391)
+                $modules = scan(TL_ROOT . '/system/modules');
+                sort($modules);
 
-				$path = TL_ROOT . '/system/modules/' . $file;
+                // Load the "core" module first
+                array_unshift($modules, 'core');
+                $modules = array_unique($modules);
+            }
 
-				// Ignore files
-				if (!is_dir($path))
-				{
-					continue;
-				}
+            // Walk through the modules
+            foreach ($modules as $file)
+            {
+                // Ignore dot resources
+                if (strncmp($file, '.', 1) === 0)
+                {
+                    continue;
+                }
 
-				// Ignore disabled module
-				if (file_exists($path . '/.skip'))
-				{
-					static::$disabled[] = $file;
-					continue;
-				}
+                // Ignore legacy modules
+                if (in_array($file, array('backend', 'frontend', 'rep_base', 'rep_client', 'registration', 'rss_reader', 'tpl_editor')))
+                {
+                    continue;
+                }
 
-				$load[$file] = array();
+                $path = TL_ROOT . '/system/modules/' . $file;
 
-				// Read the autoload.ini if any
-				if (file_exists($path . '/config/autoload.ini'))
-				{
-					$config = parse_ini_file($path . '/config/autoload.ini', true);
-					$load[$file] = $config['requires'] ?: array();
+                // Ignore files
+                if (!is_dir($path))
+                {
+                    continue;
+                }
 
-					foreach ($load[$file] as $k=>$v)
-					{
-						// Optional requirements (see #6835)
-						if (strncmp($v, '*', 1) === 0)
-						{
-							$key = substr($v, 1);
+                // Ignore disabled module
+                if (file_exists($path . '/.skip'))
+                {
+                    static::$disabled[] = $file;
+                    continue;
+                }
 
-							if (!in_array($key, $modules))
-							{
-								unset($load[$file][$k]);
-							}
-							else
-							{
-								$load[$file][$k] = $key;
-							}
-						}
-					}
-				}
-			}
+                $load[$file] = array();
 
-			// Resolve the dependencies
-			while (!empty($load))
-			{
-				$failed = true;
+                // Read the autoload.ini if any
+                if (file_exists($path . '/config/autoload.ini'))
+                {
+                    $config = parse_ini_file($path . '/config/autoload.ini', true);
+                    $load[$file] = $config['requires'] ?: array();
 
-				foreach ($load as $name=>$requires)
-				{
-					if (empty($requires))
-					{
-						$resolved = true;
-					}
-					else
-					{
-						$resolved = count(array_diff($requires, static::$active)) === 0;
-					}
+                    foreach ($load[$file] as $k=>$v)
+                    {
+                        // Optional requirements (see #6835)
+                        if (strncmp($v, '*', 1) === 0)
+                        {
+                            $key = substr($v, 1);
 
-					if ($resolved === true)
-					{
-						unset($load[$name]);
-						static::$active[] = $name;
-						$failed = false;
-					}
-				}
+                            if (!in_array($key, $modules))
+                            {
+                                unset($load[$file][$k]);
+                            }
+                            else
+                            {
+                                $load[$file][$k] = $key;
+                            }
+                        }
+                    }
+                }
+            }
 
-				// The dependencies cannot be resolved
-				if ($failed === true)
-				{
-					ob_start();
-					dump($load);
-					$buffer = ob_get_contents();
-					ob_end_clean();
+            // Resolve the dependencies
+            while (!empty($load))
+            {
+                $failed = true;
 
-					throw new \UnresolvableDependenciesException("The module dependencies could not be resolved.\n$buffer");
-				}
-			}
-		}
-	}
+                foreach ($load as $name=>$requires)
+                {
+                    if (empty($requires))
+                    {
+                        $resolved = true;
+                    }
+                    else
+                    {
+                        $resolved = count(array_diff($requires, static::$active)) === 0;
+                    }
+
+                    if ($resolved === true)
+                    {
+                        unset($load[$name]);
+                        static::$active[] = $name;
+                        $failed = false;
+                    }
+                }
+
+                // The dependencies cannot be resolved
+                if ($failed === true)
+                {
+                    ob_start();
+                    dump($load);
+                    $buffer = ob_get_contents();
+                    ob_end_clean();
+
+                    throw new \UnresolvableDependenciesException("The module dependencies could not be resolved.\n$buffer");
+                }
+            }
+        }
+    }
 }

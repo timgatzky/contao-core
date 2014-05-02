@@ -40,245 +40,245 @@ namespace Contao;
 abstract class Files
 {
 
-	/**
-	 * Object instance (Singleton)
-	 * @var \Files
-	 */
-	protected static $objInstance;
+    /**
+     * Object instance (Singleton)
+     * @var \Files
+     */
+    protected static $objInstance;
 
 
-	/**
-	 * Prevent direct instantiation (Singleton)
-	 */
-	protected function __construct() {}
+    /**
+     * Prevent direct instantiation (Singleton)
+     */
+    protected function __construct() {}
 
 
-	/**
-	 * Prevent cloning of the object (Singleton)
-	 */
-	final public function __clone() {}
+    /**
+     * Prevent cloning of the object (Singleton)
+     */
+    final public function __clone() {}
 
 
-	/**
-	 * Instantiate the object (Factory)
-	 *
-	 * @return \Files The files object
-	 */
-	public static function getInstance()
-	{
-		if (self::$objInstance === null)
-		{
-			// Use FTP to modify files
-			if (\Config::get('useFTP'))
-			{
-				self::$objInstance = new \Files\Ftp();
-			}
+    /**
+     * Instantiate the object (Factory)
+     *
+     * @return \Files The files object
+     */
+    public static function getInstance()
+    {
+        if (self::$objInstance === null)
+        {
+            // Use FTP to modify files
+            if (\Config::get('useFTP'))
+            {
+                self::$objInstance = new \Files\Ftp();
+            }
 
-			// HOOK: use the smhextended module
-			elseif (\Config::get('useSmhExtended') && in_array('smhextended', \ModuleLoader::getActive()))
-			{
-				self::$objInstance = new \SMHExtended();
-			}
+            // HOOK: use the smhextended module
+            elseif (\Config::get('useSmhExtended') && in_array('smhextended', \ModuleLoader::getActive()))
+            {
+                self::$objInstance = new \SMHExtended();
+            }
 
-			// Use PHP to modify files
-			else
-			{
-				self::$objInstance = new \Files\Php();
-			}
-		}
+            // Use PHP to modify files
+            else
+            {
+                self::$objInstance = new \Files\Php();
+            }
+        }
 
-		return self::$objInstance;
-	}
-
-
-	/**
-	 * Create a directory
-	 *
-	 * @param string $strDirectory The directory name
-	 *
-	 * @return boolean True if the operation was successful
-	 */
-	abstract public function mkdir($strDirectory);
+        return self::$objInstance;
+    }
 
 
-	/**
-	 * Remove a directory
-	 *
-	 * @param string $strDirectory The directory name
-	 *
-	 * @return boolean True if the operation was successful
-	 */
-	abstract public function rmdir($strDirectory);
+    /**
+     * Create a directory
+     *
+     * @param string $strDirectory The directory name
+     *
+     * @return boolean True if the operation was successful
+     */
+    abstract public function mkdir($strDirectory);
 
 
-	/**
-	 * Recursively remove a directory
-	 *
-	 * @param string  $strFolder       The directory name
-	 * @param boolean $blnPreserveRoot If true, the root folder will not be removed
-	 */
-	public function rrdir($strFolder, $blnPreserveRoot=false)
-	{
-		$this->validate($strFolder);
-		$arrFiles = scan(TL_ROOT . '/' . $strFolder, true);
-
-		foreach ($arrFiles as $strFile)
-		{
-			if (is_dir(TL_ROOT . '/' . $strFolder . '/' . $strFile))
-			{
-				$this->rrdir($strFolder . '/' . $strFile);
-			}
-			else
-			{
-				$this->delete($strFolder . '/' . $strFile);
-			}
-		}
-
-		if (!$blnPreserveRoot)
-		{
-			$this->rmdir($strFolder);
-		}
-	}
+    /**
+     * Remove a directory
+     *
+     * @param string $strDirectory The directory name
+     *
+     * @return boolean True if the operation was successful
+     */
+    abstract public function rmdir($strDirectory);
 
 
-	/**
-	 * Open a file and return the handle
-	 *
-	 * @param string $strFile The file name
-	 * @param string $strMode The operation mode
-	 *
-	 * @return resource The file handle
-	 */
-	abstract public function fopen($strFile, $strMode);
+    /**
+     * Recursively remove a directory
+     *
+     * @param string  $strFolder       The directory name
+     * @param boolean $blnPreserveRoot If true, the root folder will not be removed
+     */
+    public function rrdir($strFolder, $blnPreserveRoot=false)
+    {
+        $this->validate($strFolder);
+        $arrFiles = scan(TL_ROOT . '/' . $strFolder, true);
+
+        foreach ($arrFiles as $strFile)
+        {
+            if (is_dir(TL_ROOT . '/' . $strFolder . '/' . $strFile))
+            {
+                $this->rrdir($strFolder . '/' . $strFile);
+            }
+            else
+            {
+                $this->delete($strFolder . '/' . $strFile);
+            }
+        }
+
+        if (!$blnPreserveRoot)
+        {
+            $this->rmdir($strFolder);
+        }
+    }
 
 
-	/**
-	 * Write content to a file
-	 *
-	 * @param resource $resFile    The file handle
-	 * @param string   $strContent The content to store in the file
-	 */
-	abstract public function fputs($resFile, $strContent);
+    /**
+     * Open a file and return the handle
+     *
+     * @param string $strFile The file name
+     * @param string $strMode The operation mode
+     *
+     * @return resource The file handle
+     */
+    abstract public function fopen($strFile, $strMode);
 
 
-	/**
-	 * Close a file handle
-	 *
-	 * @param resource $resFile The file handle
-	 *
-	 * @return boolean True if the operation was successful
-	 */
-	abstract public function fclose($resFile);
+    /**
+     * Write content to a file
+     *
+     * @param resource $resFile    The file handle
+     * @param string   $strContent The content to store in the file
+     */
+    abstract public function fputs($resFile, $strContent);
 
 
-	/**
-	 * Rename a file or folder
-	 *
-	 * @param string $strOldName The old name
-	 * @param string $strNewName The new name
-	 *
-	 * @return boolean True if the operation was successful
-	 */
-	abstract public function rename($strOldName, $strNewName);
+    /**
+     * Close a file handle
+     *
+     * @param resource $resFile The file handle
+     *
+     * @return boolean True if the operation was successful
+     */
+    abstract public function fclose($resFile);
 
 
-	/**
-	 * Copy a file or folder
-	 *
-	 * @param string $strSource      The source file or folder
-	 * @param string $strDestination The new file or folder path
-	 *
-	 * @return boolean True if the operation was successful
-	 */
-	abstract public function copy($strSource, $strDestination);
+    /**
+     * Rename a file or folder
+     *
+     * @param string $strOldName The old name
+     * @param string $strNewName The new name
+     *
+     * @return boolean True if the operation was successful
+     */
+    abstract public function rename($strOldName, $strNewName);
 
 
-	/**
-	 * Recursively copy a directory
-	 *
-	 * @param string $strSource      The source file or folder
-	 * @param string $strDestination The new file or folder path
-	 */
-	public function rcopy($strSource, $strDestination)
-	{
-		$this->validate($strSource, $strDestination);
-
-		$this->mkdir($strDestination);
-		$arrFiles = scan(TL_ROOT . '/' . $strSource, true);
-
-		foreach ($arrFiles as $strFile)
-		{
-			if (is_dir(TL_ROOT . '/' . $strSource . '/' . $strFile))
-			{
-				$this->rcopy($strSource . '/' . $strFile, $strDestination . '/' . $strFile);
-			}
-			else
-			{
-				$this->copy($strSource . '/' . $strFile, $strDestination . '/' . $strFile);
-			}
-		}
-	}
+    /**
+     * Copy a file or folder
+     *
+     * @param string $strSource      The source file or folder
+     * @param string $strDestination The new file or folder path
+     *
+     * @return boolean True if the operation was successful
+     */
+    abstract public function copy($strSource, $strDestination);
 
 
-	/**
-	 * Delete a file
-	 *
-	 * @param string $strFile The file name
-	 *
-	 * @return boolean True if the operation was successful
-	 */
-	abstract public function delete($strFile);
+    /**
+     * Recursively copy a directory
+     *
+     * @param string $strSource      The source file or folder
+     * @param string $strDestination The new file or folder path
+     */
+    public function rcopy($strSource, $strDestination)
+    {
+        $this->validate($strSource, $strDestination);
+
+        $this->mkdir($strDestination);
+        $arrFiles = scan(TL_ROOT . '/' . $strSource, true);
+
+        foreach ($arrFiles as $strFile)
+        {
+            if (is_dir(TL_ROOT . '/' . $strSource . '/' . $strFile))
+            {
+                $this->rcopy($strSource . '/' . $strFile, $strDestination . '/' . $strFile);
+            }
+            else
+            {
+                $this->copy($strSource . '/' . $strFile, $strDestination . '/' . $strFile);
+            }
+        }
+    }
 
 
-	/**
-	 * Change the file mode
-	 *
-	 * @param string $strFile The file name
-	 * @param mixed  $varMode The new file mode
-	 *
-	 * @return boolean True if the operation was successful
-	 */
-	abstract public function chmod($strFile, $varMode);
+    /**
+     * Delete a file
+     *
+     * @param string $strFile The file name
+     *
+     * @return boolean True if the operation was successful
+     */
+    abstract public function delete($strFile);
 
 
-	/**
-	 * Check whether a file is writeable
-	 *
-	 * @param string $strFile The file name
-	 *
-	 * @return boolean True if the file is writeable
-	 */
-	abstract public function is_writeable($strFile);
+    /**
+     * Change the file mode
+     *
+     * @param string $strFile The file name
+     * @param mixed  $varMode The new file mode
+     *
+     * @return boolean True if the operation was successful
+     */
+    abstract public function chmod($strFile, $varMode);
 
 
-	/**
-	 * Move an uploaded file to a folder
-	 *
-	 * @param string $strSource      The source file
-	 * @param string $strDestination The new file path
-	 *
-	 * @return boolean True if the operation was successful
-	 */
-	abstract public function move_uploaded_file($strSource, $strDestination);
+    /**
+     * Check whether a file is writeable
+     *
+     * @param string $strFile The file name
+     *
+     * @return boolean True if the file is writeable
+     */
+    abstract public function is_writeable($strFile);
 
 
-	/**
-	 * Validate a path (must not contain ../ fragments)
-	 *
-	 * @throws \Exception If the given paths are not valid
-	 */
-	protected function validate()
-	{
-		foreach (func_get_args() as $strPath)
-		{
-			if ($strPath == '') // see #5795
-			{
-				throw new \Exception('No file or folder name given');
-			}
-			elseif (strpos($strPath, '../') !== false)
-			{
-				throw new \Exception('Invalid file or folder name ' . $strPath);
-			}
-		}
-	}
+    /**
+     * Move an uploaded file to a folder
+     *
+     * @param string $strSource      The source file
+     * @param string $strDestination The new file path
+     *
+     * @return boolean True if the operation was successful
+     */
+    abstract public function move_uploaded_file($strSource, $strDestination);
+
+
+    /**
+     * Validate a path (must not contain ../ fragments)
+     *
+     * @throws \Exception If the given paths are not valid
+     */
+    protected function validate()
+    {
+        foreach (func_get_args() as $strPath)
+        {
+            if ($strPath == '') // see #5795
+            {
+                throw new \Exception('No file or folder name given');
+            }
+            elseif (strpos($strPath, '../') !== false)
+            {
+                throw new \Exception('Invalid file or folder name ' . $strPath);
+            }
+        }
+    }
 }

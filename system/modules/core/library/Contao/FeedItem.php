@@ -38,89 +38,89 @@ namespace Contao;
 class FeedItem
 {
 
-	/**
-	 * Data
-	 * @var array
-	 */
-	protected $arrData = array();
+    /**
+     * Data
+     * @var array
+     */
+    protected $arrData = array();
 
 
-	/**
-	 * Set the data from an array
-	 *
-	 * @param array $arrData An optional data array
-	 */
-	public function __construct($arrData=null)
-	{
-		if (is_array($arrData))
-		{
-			$this->arrData = $arrData;
-		}
-	}
+    /**
+     * Set the data from an array
+     *
+     * @param array $arrData An optional data array
+     */
+    public function __construct($arrData=null)
+    {
+        if (is_array($arrData))
+        {
+            $this->arrData = $arrData;
+        }
+    }
 
 
-	/**
-	 * Set an object property
-	 *
-	 * @param string $strKey   The property name
-	 * @param mixed  $varValue The property value
-	 */
-	public function __set($strKey, $varValue)
-	{
-		$this->arrData[$strKey] = str_replace(array('[-]', '&shy;', '[nbsp]', '&nbsp;'), array('', '', ' ', ' '), $varValue);
-	}
+    /**
+     * Set an object property
+     *
+     * @param string $strKey   The property name
+     * @param mixed  $varValue The property value
+     */
+    public function __set($strKey, $varValue)
+    {
+        $this->arrData[$strKey] = str_replace(array('[-]', '&shy;', '[nbsp]', '&nbsp;'), array('', '', ' ', ' '), $varValue);
+    }
 
 
-	/**
-	 * Return an object property
-	 *
-	 * @param string $strKey The property name
-	 *
-	 * @return mixed|null The property value
-	 */
-	public function __get($strKey)
-	{
-		if (isset($this->arrData[$strKey]))
-		{
-			return $this->arrData[$strKey];
-		}
+    /**
+     * Return an object property
+     *
+     * @param string $strKey The property name
+     *
+     * @return mixed|null The property value
+     */
+    public function __get($strKey)
+    {
+        if (isset($this->arrData[$strKey]))
+        {
+            return $this->arrData[$strKey];
+        }
 
-		return null;
-	}
-
-
-	/**
-	 * Check whether a property is set
-	 *
-	 * @param string $strKey The property name
-	 *
-	 * @return boolean True if the property is set
-	 */
-	public function __isset($strKey)
-	{
-		return isset($this->arrData[$strKey]);
-	}
+        return null;
+    }
 
 
-	/**
-	 * Add an enclosure
-	 *
-	 * @param string $strFile The file path
-	 */
-	public function addEnclosure($strFile)
-	{
-		if ($strFile == '' || !file_exists(TL_ROOT . '/' . $strFile))
-		{
-			return;
-		}
+    /**
+     * Check whether a property is set
+     *
+     * @param string $strKey The property name
+     *
+     * @return boolean True if the property is set
+     */
+    public function __isset($strKey)
+    {
+        return isset($this->arrData[$strKey]);
+    }
 
-		$objFile = new \File($strFile, true);
 
-		$this->arrData['enclosure'][] = array
-		(
-			'url' => \Environment::get('base') . \System::urlEncode($strFile),
-			'length' => $objFile->size,
-			'type' => $objFile->mime
-		);
-	}
+    /**
+     * Add an enclosure
+     *
+     * @param string $strFile The file path
+     */
+    public function addEnclosure($strFile)
+    {
+        if ($strFile == '' || !file_exists(TL_ROOT . '/' . $strFile))
+        {
+            return;
+        }
+
+        $objFile = new \File($strFile, true);
+
+        $this->arrData['enclosure'][] = array
+        (
+            'url' => \Environment::get('base') . \System::urlEncode($strFile),
+            'length' => $objFile->size,
+            'type' => $objFile->mime
+        );
+    }
 }
