@@ -225,10 +225,9 @@ abstract class Controller extends \System
             }
 
             return $return;
-        }
 
         // Other modules
-        else {
+        } else {
             if (is_object($intId)) {
                 $objRow = $intId;
             } else {
@@ -531,10 +530,9 @@ abstract class Controller extends \System
                     $blnReturn = false;
                 }
             }
-        }
 
         // Show to guests only
-        elseif ($objElement->guests && FE_USER_LOGGED_IN) {
+        } elseif ($objElement->guests && FE_USER_LOGGED_IN) {
             $blnReturn = false;
         }
 
@@ -734,17 +732,15 @@ abstract class Controller extends \System
                         }
 
                         $strName = $strTitle;
-                    }
 
                     // External links
-                    elseif (strncmp($elements[1], 'http://', 7) === 0 || strncmp($elements[1], 'https://', 8) === 0) {
+                    } elseif (strncmp($elements[1], 'http://', 7) === 0 || strncmp($elements[1], 'https://', 8) === 0) {
                         $strUrl = $elements[1];
                         $strTitle = $elements[1];
                         $strName = str_replace(array('http://', 'https://'), '', $elements[1]);
-                    }
 
-                    // Regular link
-                    else {
+                    // Regular page
+                    } else {
 
                         // User login page
                         if ($elements[1] == 'login') {
@@ -2185,10 +2181,9 @@ abstract class Controller extends \System
                     $objTemplate->attributes = ($objPage->outputFormat == 'xhtml') ? ' onclick="return !window.open(this.href)"' : ' target="_blank"';
                 }
             }
-        }
 
         // Fullsize view
-        elseif ($arrItem['fullsize'] && TL_MODE == 'FE') {
+        } elseif ($arrItem['fullsize'] && TL_MODE == 'FE') {
             $objTemplate->$strHrefKey = TL_FILES_URL . \System::urlEncode($arrItem['singleSRC']);
             $objTemplate->attributes = ($objPage->outputFormat == 'xhtml') ? ' rel="' . $strLightboxId . '"' : ' data-lightbox="' . substr($strLightboxId, 9, -1) . '"';
         }

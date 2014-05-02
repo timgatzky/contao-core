@@ -173,10 +173,9 @@ class Search
                         ->execute($objIndex->id);
 
             $intInsertId = $objIndex->id;
-        }
 
         // Add a new entry
-        else {
+        } else {
 
             // Check for a duplicate record with the same checksum
             $objDuplicates = $objDatabase->prepare("SELECT id, url FROM tl_search WHERE pid=? AND checksum=?")
@@ -193,10 +192,9 @@ class Search
                 }
 
                 return false;
-            }
 
             // Insert the new record if there is no duplicate
-            else {
+            } else {
                 $objInsertStmt = $objDatabase->prepare("INSERT INTO tl_search %s")
                                              ->set($arrSet)
                                              ->execute();

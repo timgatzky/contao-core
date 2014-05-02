@@ -354,26 +354,23 @@ abstract class User extends \System
             \Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['accountLocked'], ceil((($this->locked + \Config::get('lockPeriod')) - $time) / 60)));
 
             return false;
-        }
 
         // Check whether the account is disabled
-        elseif ($this->disable) {
+        } elseif ($this->disable) {
             \Message::addError($GLOBALS['TL_LANG']['ERR']['invalidLogin']);
             $this->log('The account has been disabled', __METHOD__, TL_ACCESS);
 
             return false;
-        }
 
         // Check wether login is allowed (front end only)
-        elseif ($this instanceof \FrontendUser && !$this->login) {
+        } elseif ($this instanceof \FrontendUser && !$this->login) {
             \Message::addError($GLOBALS['TL_LANG']['ERR']['invalidLogin']);
             $this->log('User "' . $this->username . '" is not allowed to log in', __METHOD__, TL_ACCESS);
 
             return false;
-        }
 
         // Check whether account is not active yet or anymore
-        elseif ($this->start != '' || $this->stop != '') {
+        } elseif ($this->start != '' || $this->stop != '') {
             if ($this->start != '' && $this->start > $time) {
                 \Message::addError($GLOBALS['TL_LANG']['ERR']['invalidLogin']);
                 $this->log('The account was not active yet (activation date: ' . \Date::parse(\Config::get('dateFormat'), $this->start) . ')', __METHOD__, TL_ACCESS);

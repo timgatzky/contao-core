@@ -371,10 +371,9 @@ abstract class Model
 
             $this->postSave(self::UPDATE);
             $this->arrModified = array(); // reset after postSave()
-        }
 
         // The model is not yet in the registry
-        else {
+        } else {
             $arrSet = $this->row();
 
             // Remove fields that do not exist in the DB
@@ -506,12 +505,10 @@ abstract class Model
             if ($strField == 'tl_files.uuid') {
                 $objModel = $strClass::findMultipleByUuids($arrValues, $arrOptions);
             } else {
-                $arrOptions = array_merge
-                (
+                $arrOptions = array_merge(
                     array(
                         'order' => \Database::getInstance()->findInSet($strField, $arrValues)
                     ),
-
                     $arrOptions
                 );
 
@@ -579,15 +576,13 @@ abstract class Model
             }
         }
 
-        $arrOptions = array_merge
-        (
+        $arrOptions = array_merge(
             array(
                 'limit'  => 1,
                 'column' => static::$strPk,
                 'value'  => $varValue,
                 'return' => 'Model'
             ),
-
             $arrOptions
         );
 
@@ -615,15 +610,13 @@ abstract class Model
 
         $t = static::$strTable;
 
-        $arrOptions = array_merge
-        (
+        $arrOptions = array_merge(
             array(
                 'limit'  => 1,
                 'column' => array("($t.id=? OR $t.alias=?)"),
                 'value'  => array((is_numeric($varId) ? $varId : 0), $varId),
                 'return' => 'Model'
             ),
-
             $arrOptions
         );
 
@@ -664,15 +657,13 @@ abstract class Model
         if (!empty($arrUnregistered)) {
             $t = static::$strTable;
 
-            $arrOptions = array_merge
-            (
+            $arrOptions = array_merge(
                 array(
                     'column' => array("$t.id IN(" . implode(',', array_map('intval', $arrUnregistered)) . ")"),
                     'value'  => null,
                     'order'  => \Database::getInstance()->findInSet("$t.id", $arrIds),
                     'return' => 'Collection'
                 ),
-
                 $arrOptions
             );
 
@@ -715,15 +706,13 @@ abstract class Model
             }
         }
 
-        $arrOptions = array_merge
-        (
+        $arrOptions = array_merge(
             array(
                 'limit'  => 1,
                 'column' => $strColumn,
                 'value'  => $varValue,
                 'return' => 'Model'
             ),
-
             $arrOptions
         );
 
@@ -741,14 +730,12 @@ abstract class Model
      */
     public static function findBy($strColumn, $varValue, array $arrOptions = array())
     {
-        $arrOptions = array_merge
-        (
+        $arrOptions = array_merge(
             array(
                 'column' => $strColumn,
                 'value'  => $varValue,
                 'return' => 'Collection'
             ),
-
             $arrOptions
         );
 
@@ -764,12 +751,10 @@ abstract class Model
      */
     public static function findAll(array $arrOptions = array())
     {
-        $arrOptions = array_merge
-        (
+        $arrOptions = array_merge(
             array(
                 'return' => 'Collection'
             ),
-
             $arrOptions
         );
 

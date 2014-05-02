@@ -183,10 +183,9 @@ abstract class Statement
                 implode(', ', array_keys($arrParams)),
                 str_replace('%', '%%', implode(', ', array_values($arrParams)))
             );
-        }
 
         // UPDATE
-        elseif (strncasecmp($this->strQuery, 'UPDATE', 6) === 0) {
+        } elseif (strncasecmp($this->strQuery, 'UPDATE', 6) === 0) {
             $arrSet = array();
 
             foreach ($arrParams as $k => $v) {

@@ -107,7 +107,8 @@ class Dbafs
                         TL_ROOT . '/' . $strResource,
                         \FilesystemIterator::UNIX_PATHS | \FilesystemIterator::FOLLOW_SYMLINKS | \FilesystemIterator::SKIP_DOTS
                     )
-                ), \RecursiveIteratorIterator::SELF_FIRST
+                ),
+                \RecursiveIteratorIterator::SELF_FIRST
             );
 
             // Add the relative path
@@ -411,7 +412,8 @@ class Dbafs
                     TL_ROOT . '/' . \Config::get('uploadPath'),
                     \FilesystemIterator::UNIX_PATHS | \FilesystemIterator::FOLLOW_SYMLINKS | \FilesystemIterator::SKIP_DOTS
                 )
-            ), \RecursiveIteratorIterator::SELF_FIRST
+            ),
+            \RecursiveIteratorIterator::SELF_FIRST
         );
 
         $strLog = 'system/tmp/' . md5(uniqid(mt_rand(), true));

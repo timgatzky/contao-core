@@ -242,10 +242,9 @@ abstract class System
             // Fall back to "de" if "de_DE" does not exist
             if ($strShortLang != $strLanguage && static::isInstalledLanguage($strShortLang)) {
                 $strLanguage = $strShortLang;
-            }
 
             // Fall back to English (see #6581)
-            else {
+            } else {
                 $strLanguage = 'en';
             }
         }
@@ -512,9 +511,9 @@ abstract class System
         // IPv6
         if (strpos($strIp, ':') !== false) {
             return substr_replace($strIp, ':0000', strrpos($strIp, ':'));
-        }
+
         // IPv4
-        else {
+        } else {
             return substr_replace($strIp, '.0', strrpos($strIp, '.'));
         }
     }
@@ -540,7 +539,9 @@ abstract class System
             array(
                 " if (!defined('TL_ROOT')) die('You cannot access this file directly!');",
                 " if (!defined('TL_ROOT')) die('You can not access this file directly!');"
-            ), '', $strCode
+            ),
+            '',
+            $strCode
         );
 
         // Closing tag

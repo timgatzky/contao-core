@@ -746,10 +746,9 @@ class Updater extends \Controller
 
                 $objDatabase->prepare("UPDATE $table SET $field=? WHERE id=?")
                             ->execute($objFile->uuid, $objRow->id);
-            }
 
             // Path to UUID
-            else {
+            } else {
                 $objFile = \FilesModel::findByPath($objHelper->value);
 
                 $objDatabase->prepare("UPDATE $table SET $field=? WHERE id=?")
@@ -800,10 +799,9 @@ class Updater extends \Controller
                 if ($objHelper->isNumeric) {
                     $objFile = \FilesModel::findByPk($objHelper->value[$k]);
                     $arrValues[$k] = $objFile->uuid;
-                }
 
                 // Path to UUID
-                else {
+                } else {
                     $objFile = \FilesModel::findByPath($objHelper->value[$k]);
                     $arrValues[$k] = $objFile->uuid;
                 }
@@ -855,7 +853,8 @@ class Updater extends \Controller
             $return->value = array_map(
                 function ($var) {
                     return rtrim($var, "\x00");
-                }, $value
+                },
+                $value
             );
             $return->isUuid = (strlen($value[0]) == 16 && !is_numeric($return->value[0]) && strncmp($return->value[0], \Config::get('uploadPath') . '/', strlen(\Config::get('uploadPath')) + 1) !== 0);
             $return->isNumeric = (is_numeric($return->value[0]) && $return->value[0] > 0);

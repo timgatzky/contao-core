@@ -1075,9 +1075,9 @@ abstract class Widget extends \Template\Base
                     if ($strInput == $v['value']) {
                         $blnFound = true;
                     }
-                }
+
                 // Multi-dimensional array
-                else {
+                } else {
                     foreach ($v as $vv) {
                         if ($strInput == $vv['value']) {
                             $blnFound = true;
@@ -1146,10 +1146,9 @@ abstract class Widget extends \Template\Base
             $arrData['options'] = static::importStatic($arrCallback[0])->$arrCallback[1]($objDca);
         } elseif (is_callable($arrData['options_callback'])) {
             $arrData['options'] = $arrData['options_callback']($objDca);
-        }
 
         // Foreign key
-        elseif (isset($arrData['foreignKey'])) {
+        } elseif (isset($arrData['foreignKey'])) {
             $arrKey = explode('.', $arrData['foreignKey'], 2);
             $objOptions = \Database::getInstance()->query("SELECT id, " . $arrKey[1] . " AS value FROM " . $arrKey[0] . " WHERE tstamp>0 ORDER BY value");
             $arrData['options'] = array();

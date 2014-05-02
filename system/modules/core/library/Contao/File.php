@@ -108,7 +108,8 @@ class File extends \System
             $arrExempt = array_map(
                 function ($e) {
                     return \Config::get('uploadPath') . '/' . $e;
-                }, trimsplit(',', \Config::get('fileSyncExclude'))
+                },
+                trimsplit(',', \Config::get('fileSyncExclude'))
             );
 
             foreach ($arrExempt as $strExempt) {
@@ -612,7 +613,8 @@ class File extends \System
     {
         // Make sure no output buffer is active
         // @see http://ch2.php.net/manual/en/function.fpassthru.php#74080
-        while (@ob_end_clean());
+        while (@ob_end_clean()) {
+        }
 
         // Prevent session locking (see #2804)
         session_write_close();

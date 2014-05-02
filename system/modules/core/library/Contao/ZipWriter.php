@@ -260,8 +260,7 @@ class ZipWriter
     {
         $arrTime = $intTime ? getdate($intTime) : getdate();
 
-        $hexTime = dechex
-        (
+        $hexTime = dechex(
             (($arrTime['year'] - 1980) << 25) |
             ($arrTime['mon'] << 21) |
             ($arrTime['mday'] << 16) |

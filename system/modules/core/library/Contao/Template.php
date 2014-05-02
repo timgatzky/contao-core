@@ -297,8 +297,9 @@ abstract class Template extends \Template\Base
                         . "window.addEvent('resize',function() {"
                             . "$$('#contao-debug>*').setStyle('width',window.getSize().x);"
                         . "});"
-                    . "})(document.id);"
-                , ($this->strFormat == 'xhtml')) . "\n\n";
+                    . "})(document.id);",
+                    ($this->strFormat == 'xhtml')
+                ) . "\n\n";
 
             $this->strBuffer = str_replace('</body>', $strDebug . '</body>', $this->strBuffer);
         }

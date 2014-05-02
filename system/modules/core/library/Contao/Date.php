@@ -225,7 +225,8 @@ class Date
         }
 
         return preg_replace_callback(
-            '/[a-zA-Z]/', function ($matches) {
+            '/[a-zA-Z]/',
+            function ($matches) {
 
                 // Thanks to Christian Labuda
                 $arrRegexp = array(
@@ -246,8 +247,8 @@ class Date
                 );
 
                 return isset($arrRegexp[$matches[0]]) ? $arrRegexp[$matches[0]] : $matches[0];
-            }
-            , preg_quote($strFormat)
+            },
+            preg_quote($strFormat)
         );
     }
 
@@ -552,8 +553,7 @@ class Date
      */
     public static function parse($strFormat, $intTstamp = null)
     {
-        $strModified = str_replace
-        (
+        $strModified = str_replace(
             array('l', 'D', 'F', 'M'),
             array('w::1', 'w::2', 'n::3', 'n::4'),
             $strFormat

@@ -443,5 +443,4 @@ abstract class Result
      * Free the result
      */
     abstract public function free();
-
 }

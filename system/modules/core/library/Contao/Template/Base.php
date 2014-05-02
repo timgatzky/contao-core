@@ -133,10 +133,9 @@ abstract class Base extends \Controller
             // Register the block name
             if (!isset($this->arrBlocks[$name])) {
                 $this->arrBlocks[$name] = '[[TL_PARENT]]';
-            }
 
             // Combine the contents of the child blocks
-            elseif (is_array($this->arrBlocks[$name])) {
+            } elseif (is_array($this->arrBlocks[$name])) {
                 $callback = function ($current, $parent) {
                     return str_replace('[[TL_PARENT]]', $parent, $current);
                 };
@@ -151,18 +150,16 @@ abstract class Base extends \Controller
                 if (strpos($this->arrBlocks[$name], '[[TL_PARENT]]') !== false) {
                     list($content) = explode('[[TL_PARENT]]', $this->arrBlocks[$name], 2);
                     echo $content;
-                }
 
                 // Output the current block and start a new output buffer to remove the following blocks
-                else {
+                } else {
                     echo $this->arrBlocks[$name];
                     ob_start();
                 }
             }
-        }
 
         // Child template
-        else {
+        } else {
 
             // Clean the output buffer
             ob_end_clean();
@@ -202,17 +199,15 @@ abstract class Base extends \Controller
                 if (strpos($this->arrBlocks[$name], '[[TL_PARENT]]') !== false) {
                     list(, $content) = explode('[[TL_PARENT]]', $this->arrBlocks[$name], 2);
                     echo $content;
-                }
 
                 // Remove the overwritten content
-                else {
+                } else {
                     ob_end_clean();
                 }
             }
-        }
 
         // Child template
-        else {
+        } else {
 
             // Capture the block content
             $this->arrBlocks[$name][] = ob_get_contents();

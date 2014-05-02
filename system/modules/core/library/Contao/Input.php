@@ -608,8 +608,7 @@ class Input
             return $varValue;
         }
 
-        $varValue = str_replace
-        (
+        $varValue = str_replace(
             array('[&amp;]', '&amp;', '[&lt;]', '&lt;', '[&gt;]', '&gt;', '[&nbsp;]', '&nbsp;', '[&shy;]', '&shy;'),
             array('[&]', '[&]', '[lt]', '[lt]', '[gt]', '[gt]', '[nbsp]', '[nbsp]', '[-]', '[-]'),
             $varValue

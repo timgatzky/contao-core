@@ -527,8 +527,7 @@ class ZipReader
      */
     protected function decToUnix($intTime, $intDate)
     {
-        return mktime
-        (
+        return mktime(
             ($intTime & 0xf800) >> 11,
             ($intTime & 0x07e0) >> 5,
             ($intTime & 0x001f) << 1,

@@ -79,7 +79,8 @@ class Folder extends \System
             $arrExempt = array_map(
                 function ($e) {
                     return \Config::get('uploadPath') . '/' . $e;
-                }, trimsplit(',', \Config::get('fileSyncExclude'))
+                },
+                trimsplit(',', \Config::get('fileSyncExclude'))
             );
 
             foreach ($arrExempt as $strExempt) {
@@ -326,7 +327,8 @@ class Folder extends \System
             new \RecursiveDirectoryIterator(
                 TL_ROOT . '/' . $this->strFolder,
                 \FilesystemIterator::UNIX_PATHS | \FilesystemIterator::FOLLOW_SYMLINKS | \FilesystemIterator::SKIP_DOTS
-            ), \RecursiveIteratorIterator::SELF_FIRST
+            ),
+            \RecursiveIteratorIterator::SELF_FIRST
         );
 
         while ($it->valid()) {

@@ -268,16 +268,14 @@ class Image
             }
 
             $strNewImage = imagecreatetruecolor($width, $height);
-        }
 
         // Calculate the height if only the width is given
-        elseif ($intWidth) {
+        } elseif ($intWidth) {
             $intHeight = max(round($objFile->height * $width / $objFile->width), 1);
             $strNewImage = imagecreatetruecolor($intWidth, $intHeight);
-        }
 
         // Calculate the width if only the height is given
-        elseif ($intHeight) {
+        } elseif ($intHeight) {
             $intWidth = max(round($objFile->width * $height / $objFile->height), 1);
             $strNewImage = imagecreatetruecolor($intWidth, $intHeight);
         }

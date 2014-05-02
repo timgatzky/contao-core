@@ -75,10 +75,9 @@ class Ftp extends \Files
         // Try to connect
         if (($resConnection = $ftp_connect(\Config::get('ftpHost'), \Config::get('ftpPort'), 5)) == false) {
             throw new \Exception('Could not connect to the FTP server');
-        }
 
         // Try to login
-        elseif (ftp_login($resConnection, \Config::get('ftpUser'), \Config::get('ftpPass')) == false) {
+        } elseif (ftp_login($resConnection, \Config::get('ftpUser'), \Config::get('ftpPass')) == false) {
             throw new \Exception('Authentication failed');
         }
 
