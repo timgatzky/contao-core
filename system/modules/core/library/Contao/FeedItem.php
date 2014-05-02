@@ -48,7 +48,7 @@ class FeedItem
      *
      * @param array $arrData An optional data array
      */
-    public function __construct($arrData=null)
+    public function __construct($arrData = null)
     {
         if (is_array($arrData)) {
             $this->arrData = $arrData;

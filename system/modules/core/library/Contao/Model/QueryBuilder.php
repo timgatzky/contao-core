@@ -43,7 +43,7 @@ class QueryBuilder
             $arrFields = array($arrOptions['table'] . ".*");
             $intCount = 0;
 
-            foreach ($objBase->getRelations() as $strKey=>$arrConfig) {
+            foreach ($objBase->getRelations() as $strKey => $arrConfig) {
 
                 // Automatically join the single-relation records
                 if ($arrConfig['load'] == 'eager' || $arrOptions['eager']) {

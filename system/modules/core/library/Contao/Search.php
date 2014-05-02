@@ -255,7 +255,7 @@ class Search
                     ->execute($intInsertId);
 
         // Create new index
-        foreach ($arrIndex as $k=>$v) {
+        foreach ($arrIndex as $k => $v) {
             $objDatabase->prepare("INSERT INTO tl_search_index (pid, word, relevance, language) VALUES (?, ?, ?, ?)")
                         ->execute($intInsertId, $k, $v, $arrData['language']);
         }
@@ -277,7 +277,7 @@ class Search
      *
      * @throws \Exception If the cleaned keyword string is empty
      */
-    public static function searchFor($strKeywords, $blnOrSearch=false, $arrPid=array(), $intRows=0, $intOffset=0, $blnFuzzy=false)
+    public static function searchFor($strKeywords, $blnOrSearch = false, $arrPid = array(), $intRows = 0, $intOffset = 0, $blnFuzzy = false)
     {
         // Clean the keywords
         $strKeywords = utf8_strtolower($strKeywords);

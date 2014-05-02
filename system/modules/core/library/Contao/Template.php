@@ -56,7 +56,7 @@ abstract class Template extends \Template\Base
      * @param string $strTemplate    The template name
      * @param string $strContentType The content type (defaults to "text/html")
      */
-    public function __construct($strTemplate='', $strContentType='text/html')
+    public function __construct($strTemplate = '', $strContentType = 'text/html')
     {
         parent::__construct();
 
@@ -247,7 +247,7 @@ abstract class Template extends \Template\Base
 
             // Count the totals (see #3884)
             if (is_array($GLOBALS['TL_DEBUG']['database_queries'])) {
-                foreach ($GLOBALS['TL_DEBUG']['database_queries'] as $k=>$v) {
+                foreach ($GLOBALS['TL_DEBUG']['database_queries'] as $k => $v) {
                     $intReturned += $v['return_count'];
                     $intAffected += $v['affected_count'];
                     unset($GLOBALS['TL_DEBUG']['database_queries'][$k]['return_count']);
@@ -373,7 +373,7 @@ abstract class Template extends \Template\Base
      *
      * @return string The markup string
      */
-    public static function generateStyleTag($href, $media, $xhtml=false)
+    public static function generateStyleTag($href, $media, $xhtml = false)
     {
         return '<link' . ($xhtml ? ' type="text/css"' : '') . ' rel="stylesheet" href="' . $href . '"' . (($media != '' && $media != 'all') ? ' media="' . $media . '"' : '') . ($xhtml ? ' />' : '>');
     }
@@ -386,7 +386,7 @@ abstract class Template extends \Template\Base
      *
      * @return string The markup string
      */
-    public static function generateInlineStyle($script, $xhtml=false)
+    public static function generateInlineStyle($script, $xhtml = false)
     {
         if ($xhtml) {
             return '<style type="text/css">' . "\n/* <![CDATA[ */\n" . $script . "\n/* ]]> */\n" . '</style>';
@@ -403,7 +403,7 @@ abstract class Template extends \Template\Base
      *
      * @return string The markup string
      */
-    public static function generateScriptTag($src, $xhtml=false)
+    public static function generateScriptTag($src, $xhtml = false)
     {
         return '<script' . ($xhtml ? ' type="text/javascript"' : '') . ' src="' . $src . '"></script>';
     }
@@ -416,7 +416,7 @@ abstract class Template extends \Template\Base
      *
      * @return string The markup string
      */
-    public static function generateInlineScript($script, $xhtml=false)
+    public static function generateInlineScript($script, $xhtml = false)
     {
         if ($xhtml) {
             return '<script type="text/javascript">' . "\n/* <![CDATA[ */\n" . $script . "\n/* ]]> */\n" . '</script>';
@@ -435,7 +435,7 @@ abstract class Template extends \Template\Base
      *
      * @return string The markup string
      */
-    public static function generateFeedTag($href, $format, $title, $xhtml=false)
+    public static function generateFeedTag($href, $format, $title, $xhtml = false)
     {
         return '<link type="application/' . $format . '+xml" rel="alternate" href="' . $href . '" title="' . specialchars($title) . '"' . ($xhtml ? ' />' : '>');
     }

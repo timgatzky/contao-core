@@ -46,7 +46,7 @@ class String
      *
      * @return string The shortened string
      */
-    public static function substr($strString, $intNumberOfChars, $strEllipsis=' …')
+    public static function substr($strString, $intNumberOfChars, $strEllipsis = ' …')
     {
         $strString = preg_replace('/[\t\n\r]+/', ' ', $strString);
         $strString = strip_tags($strString);
@@ -115,7 +115,7 @@ class String
         // Seperate tags and text
         $arrChunks = preg_split('/(<[^>]+>)/', $strString, -1, PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
 
-        for ($i=0, $c=count($arrChunks); $i<$c; $i++) {
+        for ($i = 0, $c = count($arrChunks); $i<$c; $i++) {
 
             // Buffer tags to include them later
             if (preg_match('/<([^>]+)>/', $arrChunks[$i])) {
@@ -159,7 +159,7 @@ class String
                     if (!empty($arrChunks[$i]) || $i<$c) {
                         $arrOpenTags = array_values($arrOpenTags);
 
-                        for ($j=count($arrOpenTags)-1; $j>=0; $j--) {
+                        for ($j = count($arrOpenTags)-1; $j >= 0; $j--) {
                             if ($strTagName == '/' . $arrOpenTags[$j]) {
                                 unset($arrOpenTags[$j]);
                                 break;
@@ -199,7 +199,7 @@ class String
      *
      * @return string The decoded string
      */
-    public static function decodeEntities($strString, $strQuoteStyle=ENT_COMPAT, $strCharset=null)
+    public static function decodeEntities($strString, $strQuoteStyle = ENT_COMPAT, $strCharset = null)
     {
         if ($strString == '') {
             return '';
@@ -236,7 +236,7 @@ class String
      *
      * @return string The cleaned string
      */
-    public static function censor($strString, $varWords, $strReplace='')
+    public static function censor($strString, $varWords, $strReplace = '')
     {
         foreach ((array) $varWords as $strWord) {
             $strString = preg_replace('/\b(' . str_replace('\*', '\w*?', preg_quote($strWord, '/')) . ')\b/i', $strReplace, $strString);
@@ -260,7 +260,7 @@ class String
         foreach ((array) $arrEmails[0] as $strEmail) {
             $strEncoded = '';
 
-            for ($i=0; $i<strlen($strEmail); ++$i) {
+            for ($i = 0; $i<strlen($strEmail); ++$i) {
                 $blnHex = rand(0, 1);
 
                 if ($blnHex) {
@@ -303,7 +303,7 @@ class String
      *
      * @return string The wrapped string
      */
-    public static function wordWrap($strString, $strLength=75, $strBreak="\n")
+    public static function wordWrap($strString, $strLength = 75, $strBreak = "\n")
     {
         return wordwrap($strString, $strLength, $strBreak);
     }
@@ -318,7 +318,7 @@ class String
      *
      * @return string The highlighted string
      */
-    public static function highlight($strString, $strPhrase, $strOpeningTag='<strong>', $strClosingTag='</strong>')
+    public static function highlight($strString, $strPhrase, $strOpeningTag = '<strong>', $strClosingTag = '</strong>')
     {
         if ($strString == '' || $strPhrase == '') {
             return $strString;
@@ -335,11 +335,11 @@ class String
      *
      * @return array The string chunks
      */
-    public static function splitCsv($strString, $strDelimiter=',')
+    public static function splitCsv($strString, $strDelimiter = ',')
     {
         $arrValues = preg_split('/'.$strDelimiter.'(?=(?:[^"]*"[^"]*")*(?![^"]*"))/', $strString);
 
-        foreach ($arrValues as $k=>$v) {
+        foreach ($arrValues as $k => $v) {
             $arrValues[$k] = trim($v, ' "');
         }
 
@@ -496,7 +496,7 @@ class String
         $return = '';
         $paths = preg_split('/(src="([^"]+)")/i', $data, -1, PREG_SPLIT_DELIM_CAPTURE);
 
-        for ($i=0, $c=count($paths); $i<$c; $i=$i+3) {
+        for ($i = 0, $c = count($paths); $i<$c; $i = $i+3) {
             $return .= $paths[$i];
 
             if (!isset($paths[$i+1])) {
@@ -527,7 +527,7 @@ class String
         $return = '';
         $paths = preg_split('/(src="\{\{file::([^"\}]+)\}\}")/i', $data, -1, PREG_SPLIT_DELIM_CAPTURE);
 
-        for ($i=0, $c=count($paths); $i<$c; $i=$i+3) {
+        for ($i = 0, $c = count($paths); $i<$c; $i = $i+3) {
             $return .= $paths[$i];
 
             if (!isset($paths[$i+1])) {

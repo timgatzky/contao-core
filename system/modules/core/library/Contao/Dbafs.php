@@ -40,7 +40,7 @@ class Dbafs
      * @throws \Exception                If a parent ID entry is missing
      * @throws \InvalidArgumentException If the resource is outside the upload folder
      */
-    public static function addResource($strResource, $blnUpdateFolders=true)
+    public static function addResource($strResource, $blnUpdateFolders = true)
     {
         $strUploadPath = \Config::get('uploadPath') . '/';
 
@@ -573,7 +573,7 @@ class Dbafs
 
             // Update the PID of the child records
             if (!empty($arrPidUpdate)) {
-                foreach ($arrPidUpdate as $from=>$to) {
+                foreach ($arrPidUpdate as $from => $to) {
                     $objChildren = \FilesModel::findByPid($from);
 
                     if ($objChildren !== null) {

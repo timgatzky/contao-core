@@ -99,7 +99,7 @@ class ClassLoader
      */
     public static function addClasses($classes)
     {
-        foreach ($classes as $class=>$file) {
+        foreach ($classes as $class => $file) {
             self::addClass($class, $file);
         }
     }

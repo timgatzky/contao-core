@@ -105,7 +105,7 @@ abstract class System
      * @param string  $strKey   An optional key to store the object under
      * @param boolean $blnForce If true, existing objects will be overridden
      */
-    protected function import($strClass, $strKey=null, $blnForce=false)
+    protected function import($strClass, $strKey = null, $blnForce = false)
     {
         $strKey = $strKey ?: $strClass;
 
@@ -123,7 +123,7 @@ abstract class System
      *
      * @return object The imported object
      */
-    public static function importStatic($strClass, $strKey=null, $blnForce=false)
+    public static function importStatic($strClass, $strKey = null, $blnForce = false)
     {
         $strKey = $strKey ?: $strClass;
 
@@ -172,7 +172,7 @@ abstract class System
      *
      * @return string The referer URL
      */
-    public static function getReferer($blnEncodeAmpersands=false, $strTable=null)
+    public static function getReferer($blnEncodeAmpersands = false, $strTable = null)
     {
         $ref = \Input::get('ref');
         $key = \Input::get('popup') ? 'popupReferer' : 'referer';
@@ -217,7 +217,7 @@ abstract class System
      * @param boolean $strLanguage An optional language code
      * @param boolean $blnNoCache  If true, the cache will be bypassed
      */
-    public static function loadLanguageFile($strName, $strLanguage=null, $blnNoCache=false)
+    public static function loadLanguageFile($strName, $strLanguage = null, $blnNoCache = false)
     {
         if ($strLanguage === null) {
             $strLanguage = str_replace('-', '_', $GLOBALS['TL_LANGUAGE']);
@@ -324,7 +324,7 @@ abstract class System
         static::loadLanguageFile('countries');
         include TL_ROOT . '/system/config/countries.php';
 
-        foreach ($countries as $strKey=>$strName) {
+        foreach ($countries as $strKey => $strName) {
             $arrAux[$strKey] = isset($GLOBALS['TL_LANG']['CNT'][$strKey]) ? utf8_romanize($GLOBALS['TL_LANG']['CNT'][$strKey]) : $strName;
         }
 
@@ -351,7 +351,7 @@ abstract class System
      *
      * @return array An array of languages
      */
-    public static function getLanguages($blnInstalledOnly=false)
+    public static function getLanguages($blnInstalledOnly = false)
     {
         $return = array();
         $languages = array();
@@ -361,7 +361,7 @@ abstract class System
         static::loadLanguageFile('languages');
         include TL_ROOT . '/system/config/languages.php';
 
-        foreach ($languages as $strKey=>$strName) {
+        foreach ($languages as $strKey => $strName) {
             $arrAux[$strKey] = isset($GLOBALS['TL_LANG']['LNG'][$strKey]) ? utf8_romanize($GLOBALS['TL_LANG']['LNG'][$strKey]) : $strName;
         }
 
@@ -402,7 +402,7 @@ abstract class System
 
         require TL_ROOT . '/system/config/timezones.php';
 
-        foreach ($timezones as $strGroup=>$arrTimezones) {
+        foreach ($timezones as $strGroup => $arrTimezones) {
             foreach ($arrTimezones as $strTimezone) {
                 $arrReturn[$strGroup][] = $strTimezone;
             }
@@ -434,7 +434,7 @@ abstract class System
      * @param boolean $blnSecure   If true, the secure flag will be set
      * @param boolean $blnHttpOnly If true, the http-only flag will be set
      */
-    public static function setCookie($strName, $varValue, $intExpires, $strPath=null, $strDomain=null, $blnSecure=false, $blnHttpOnly=false)
+    public static function setCookie($strName, $varValue, $intExpires, $strPath = null, $strDomain = null, $blnSecure = false, $blnHttpOnly = false)
     {
         if ($strPath == '') {
             $strPath = TL_PATH ?: '/'; // see #4390
@@ -468,9 +468,9 @@ abstract class System
      *
      * @return string The human readable size
      */
-    public static function getReadableSize($intSize, $intDecimals=1)
+    public static function getReadableSize($intSize, $intDecimals = 1)
     {
-        for ($i=0; $intSize>=1024; $i++) {
+        for ($i = 0; $intSize >= 1024; $i++) {
             $intSize /= 1024;
         }
 
@@ -485,7 +485,7 @@ abstract class System
      *
      * @return mixed The formatted number
      */
-    public static function getFormattedNumber($varNumber, $intDecimals=2)
+    public static function getFormattedNumber($varNumber, $intDecimals = 2)
     {
         return number_format(round($varNumber, $intDecimals), $intDecimals, $GLOBALS['TL_LANG']['MSC']['decimalSeparator'], $GLOBALS['TL_LANG']['MSC']['thousandsSeparator']);
     }
@@ -677,7 +677,7 @@ abstract class System
      *
      * @deprecated Use Date::parse() instead
      */
-    public static function parseDate($strFormat, $intTstamp=null)
+    public static function parseDate($strFormat, $intTstamp = null)
     {
         return \Date::parse($strFormat, $intTstamp);
     }
@@ -714,7 +714,7 @@ abstract class System
      *
      * @deprecated Use Controller::redirect() instead
      */
-    public static function redirect($strLocation, $intStatus=303)
+    public static function redirect($strLocation, $intStatus = 303)
     {
         \Controller::redirect($strLocation, $intStatus);
     }
@@ -802,7 +802,7 @@ abstract class System
      *
      * @deprecated Use Message::generate() instead
      */
-    protected function getMessages($blnDcLayout=false, $blnNoWrapper=false)
+    protected function getMessages($blnDcLayout = false, $blnNoWrapper = false)
     {
         return \Message::generate($blnDcLayout, $blnNoWrapper);
     }
@@ -922,7 +922,7 @@ abstract class System
      *
      * @deprecated Use Environment::get('indexFreeRequest') instead
      */
-    public static function getIndexFreeRequest($blnAmpersand=true)
+    public static function getIndexFreeRequest($blnAmpersand = true)
     {
         return ampersand(\Environment::get('indexFreeRequest'), $blnAmpersand);
     }

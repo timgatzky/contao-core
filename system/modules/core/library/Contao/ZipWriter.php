@@ -126,7 +126,7 @@ class ZipWriter
      *
      * @throws \Exception If $strFile does not exist
      */
-    public function addFile($strFile, $strName=null)
+    public function addFile($strFile, $strName = null)
     {
         if (!file_exists(TL_ROOT . '/' . $strFile)) {
             throw new \Exception("File $strFile does not exist");
@@ -147,7 +147,7 @@ class ZipWriter
      * @param string  $strName The file path
      * @param integer $intTime An optional modification timestamp
      */
-    public function addString($strData, $strName, $intTime=0)
+    public function addString($strData, $strName, $intTime = 0)
     {
         ++$this->intCount;
         $strName = str_replace('\\', '/', $strName);
@@ -256,7 +256,7 @@ class ZipWriter
      *
      * @return integer The hexadecimal value
      */
-    protected function unixToHex($intTime=0)
+    protected function unixToHex($intTime = 0)
     {
         $arrTime = $intTime ? getdate($intTime) : getdate();
 

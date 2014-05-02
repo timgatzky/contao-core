@@ -91,7 +91,7 @@ class Mysql extends \Database
      *
      * @return string The FIND_IN_SET() statement
      */
-    protected function find_in_set($strKey, $varSet, $blnIsField=false)
+    protected function find_in_set($strKey, $varSet, $blnIsField = false)
     {
         if ($blnIsField) {
             return "FIND_IN_SET(" . $strKey . ", " . $varSet . ")";
@@ -241,7 +241,7 @@ class Mysql extends \Database
     {
         $arrLocks = array();
 
-        foreach ($arrTables as $table=>$mode) {
+        foreach ($arrTables as $table => $mode) {
             $arrLocks[] = $table .' '. $mode;
         }
 

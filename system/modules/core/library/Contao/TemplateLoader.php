@@ -54,7 +54,7 @@ class TemplateLoader
      */
     public static function addFiles($files)
     {
-        foreach ($files as $name=>$file) {
+        foreach ($files as $name => $file) {
             self::addFile($name, $file);
         }
     }
@@ -92,7 +92,7 @@ class TemplateLoader
      *
      * @throws \Exception If $template does not exist
      */
-    public static function getPath($template, $format, $custom='templates')
+    public static function getPath($template, $format, $custom = 'templates')
     {
         $file = $template .  '.' . $format;
 

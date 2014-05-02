@@ -82,7 +82,7 @@ class File extends \System
      *
      * @throws \Exception If $strFile is a directory
      */
-    public function __construct($strFile, $blnDoNotCreate=false)
+    public function __construct($strFile, $blnDoNotCreate = false)
     {
         // Handle open_basedir restrictions
         if ($strFile == '.') {
@@ -367,7 +367,7 @@ class File extends \System
      *
      * @return boolean True if the operation was successful
      */
-    public function append($varData, $strLine="\n")
+    public function append($varData, $strLine = "\n")
     {
         return $this->fputs($varData . $strLine, 'ab');
     }
@@ -381,7 +381,7 @@ class File extends \System
      *
      * @return boolean True if the operation was successful
      */
-    public function prepend($varData, $strLine="\n")
+    public function prepend($varData, $strLine = "\n")
     {
         return $this->fputs($varData . $strLine . $this->getContent(), 'wb');
     }
@@ -584,7 +584,7 @@ class File extends \System
      *
      * @return boolean True if the image could be resized successfully
      */
-    public function resizeTo($width, $height, $mode='')
+    public function resizeTo($width, $height, $mode = '')
     {
         if (!$this->isGdImage) {
             return false;
@@ -606,7 +606,7 @@ class File extends \System
      *
      * @param string $filename An optional filename
      */
-    public function sendToBrowser($filename=null)
+    public function sendToBrowser($filename = null)
     {
         // Make sure no output buffer is active
         // @see http://ch2.php.net/manual/en/function.fpassthru.php#74080

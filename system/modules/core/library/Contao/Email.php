@@ -370,7 +370,7 @@ class Email
      * @param string $strFile The file path
      * @param string $strMime The MIME type (defaults to "application/octet-stream")
      */
-    public function attachFile($strFile, $strMime='application/octet-stream')
+    public function attachFile($strFile, $strMime = 'application/octet-stream')
     {
         $this->objMessage->attach(\Swift_Attachment::fromPath($strFile, $strMime)->setFilename(basename($strFile)));
     }
@@ -382,7 +382,7 @@ class Email
      * @param string $strFilename The file name
      * @param string $strMime     The MIME type (defaults to "application/octet-stream")
      */
-    public function attachFileFromString($strContent, $strFilename, $strMime='application/octet-stream')
+    public function attachFileFromString($strContent, $strFilename, $strMime = 'application/octet-stream')
     {
         $this->objMessage->attach(\Swift_Attachment::newInstance($strContent, $strFilename, $strMime));
     }
@@ -432,7 +432,7 @@ class Email
 
                 // Check for internal images
                 if (!empty($arrMatches) && isset($arrMatches[0])) {
-                    for ($i=0, $c=count($arrMatches[0]); $i<$c; $i++) {
+                    for ($i = 0, $c = count($arrMatches[0]); $i<$c; $i++) {
                         $url = $arrMatches[3][$i];
 
                         // Try to remove the base URL

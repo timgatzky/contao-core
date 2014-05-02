@@ -222,7 +222,7 @@ class ZipReader
      */
     public function getFile($strName)
     {
-        foreach ($this->arrFiles as $k=>$v) {
+        foreach ($this->arrFiles as $k => $v) {
             if ($strName == $v['file_name']) {
                 $this->intIndex = $k;
 
@@ -454,7 +454,7 @@ class ZipReader
         $arrHeader['zipfile_comment']        = $arrHeader['zipfile_comment_length'][1] ? @fread($this->resFile, $arrHeader['zipfile_comment_length'][1]) : '';
 
         // Eliminate nested arrays
-        foreach ($arrHeader as $k=>$v) {
+        foreach ($arrHeader as $k => $v) {
             $arrHeader[$k] = is_array($v) ? $v[1] : $v;
         }
 
@@ -495,7 +495,7 @@ class ZipReader
             }
 
             // Eliminate nested arrays
-            foreach ($arrFile as $k=>$v) {
+            foreach ($arrFile as $k => $v) {
                 $arrFile[$k] = is_array($v) ? $v[1] : $v;
             }
 

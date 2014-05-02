@@ -46,7 +46,7 @@ abstract class Controller extends \System
      *
      * @throws \Exception If $strFormat is unknown
      */
-    public static function getTemplate($strTemplate, $strFormat='html5')
+    public static function getTemplate($strTemplate, $strFormat = 'html5')
     {
         $arrAllowed = trimsplit(',', \Config::get('templateFiles'));
         array_push($arrAllowed, 'html5'); // see #3398
@@ -143,7 +143,7 @@ abstract class Controller extends \System
      *
      * @return string The module HTML markup
      */
-    public static function getFrontendModule($intId, $strColumn='main')
+    public static function getFrontendModule($intId, $strColumn = 'main')
     {
         if (!is_object($intId) && !strlen($intId)) {
             return '';
@@ -283,7 +283,7 @@ abstract class Controller extends \System
      *
      * @return string|boolean The article HTML markup or false
      */
-    public static function getArticle($varId, $blnMultiMode=false, $blnIsInsertTag=false, $strColumn='main')
+    public static function getArticle($varId, $blnMultiMode = false, $blnIsInsertTag = false, $strColumn = 'main')
     {
         global $objPage;
 
@@ -352,7 +352,7 @@ abstract class Controller extends \System
      *
      * @return string The content element HTML markup
      */
-    public static function getContentElement($intId, $strColumn='main')
+    public static function getContentElement($intId, $strColumn = 'main')
     {
         if (is_object($intId)) {
             $objRow = $intId;
@@ -414,7 +414,7 @@ abstract class Controller extends \System
      *
      * @return string The form HTML markup
      */
-    public static function getForm($varId, $strColumn='main')
+    public static function getForm($varId, $strColumn = 'main')
     {
         if (is_object($varId)) {
             $objRow = $varId;
@@ -556,7 +556,7 @@ abstract class Controller extends \System
      *
      * @return string The text with the replaced tags
      */
-    protected function replaceInsertTags($strBuffer, $blnCache=true)
+    protected function replaceInsertTags($strBuffer, $blnCache = true)
     {
         global $objPage;
 
@@ -570,7 +570,7 @@ abstract class Controller extends \System
         $strBuffer = '';
         static $arrCache = array();
 
-        for ($_rit=0, $_cnt=count($tags); $_rit<$_cnt; $_rit+=3) {
+        for ($_rit = 0, $_cnt = count($tags); $_rit<$_cnt; $_rit += 3) {
             $strBuffer .= $tags[$_rit];
             $strTag = $tags[$_rit+1];
 
@@ -1131,7 +1131,7 @@ abstract class Controller extends \System
                 // Conditional tags (if)
                 case 'iflng':
                     if ($elements[1] != '' && $elements[1] != $objPage->language) {
-                        for (; $_rit<$_cnt; $_rit+=3) {
+                        for (; $_rit<$_cnt; $_rit += 3) {
                             if ($tags[$_rit+1] == 'iflng' || $tags[$_rit+1] == 'iflng::' . $objPage->language) {
                                 break;
                             }
@@ -1146,7 +1146,7 @@ abstract class Controller extends \System
                         $langs = trimsplit(',', $elements[1]);
 
                         if (in_array($objPage->language, $langs)) {
-                            for (; $_rit<$_cnt; $_rit+=3) {
+                            for (; $_rit<$_cnt; $_rit += 3) {
                                 if ($tags[$_rit+1] == 'ifnlng') {
                                     break;
                                 }
@@ -1663,7 +1663,7 @@ abstract class Controller extends \System
      *
      * @return string The CSS markup
      */
-    public static function generateMargin($arrValues, $strType='margin')
+    public static function generateMargin($arrValues, $strType = 'margin')
     {
         // Initialize an empty array (see #5217)
         if (!is_array($arrValues)) {
@@ -1691,7 +1691,7 @@ abstract class Controller extends \System
         $return = array();
         $arrDir = array('top'=>$top, 'right'=>$right, 'bottom'=>$bottom, 'left'=>$left);
 
-        foreach ($arrDir as $k=>$v) {
+        foreach ($arrDir as $k => $v) {
             if ($v != '') {
                 $return[] = $strType . '-' . $k . ':' . $v . $arrValues['unit'] . ';';
             }
@@ -1709,7 +1709,7 @@ abstract class Controller extends \System
      *
      * @return string The new URL
      */
-    public static function addToUrl($strRequest, $blnAddRef=true, $arrUnset=array())
+    public static function addToUrl($strRequest, $blnAddRef = true, $arrUnset = array())
     {
         $strRequest = preg_replace('/^&(amp;)?/i', '', $strRequest);
 
@@ -1720,7 +1720,7 @@ abstract class Controller extends \System
         $queries = preg_split('/&(amp;)?/i', \Environment::get('queryString'));
 
         // Overwrite existing parameters
-        foreach ($queries as $k=>$v) {
+        foreach ($queries as $k => $v) {
             list($key) = explode('=', $v);
 
             if (in_array($key, $arrUnset) || preg_match('/(^|&(amp;)?)' . preg_quote($key, '/') . '=/i', $strRequest)) {
@@ -1766,7 +1766,7 @@ abstract class Controller extends \System
      * @param string  $strLocation The target URL
      * @param integer $intStatus   The HTTP status code (defaults to 303)
      */
-    public static function redirect($strLocation, $intStatus=303)
+    public static function redirect($strLocation, $intStatus = 303)
     {
         if (headers_sent()) {
             exit;
@@ -1820,7 +1820,7 @@ abstract class Controller extends \System
      *
      * @return string An URL that can be used in the front end
      */
-    public static function generateFrontendUrl(array $arrRow, $strParams=null, $strForceLang=null, $blnAbsolute=false)
+    public static function generateFrontendUrl(array $arrRow, $strParams = null, $strForceLang = null, $blnAbsolute = false)
     {
         if (!\Config::get('disableAlias')) {
             $strLanguage = '';
@@ -1848,7 +1848,7 @@ abstract class Controller extends \System
             if ($strParams != '') {
                 $arrChunks = explode('/', preg_replace('@^/@', '', $strParams));
 
-                for ($i=0, $c=count($arrChunks); $i<$c; $i=($i+2)) {
+                for ($i = 0, $c = count($arrChunks); $i<$c; $i = ($i+2)) {
                     $strRequest .= sprintf('&%s=%s', $arrChunks[$i], $arrChunks[($i+1)]);
                 }
             }
@@ -1882,7 +1882,7 @@ abstract class Controller extends \System
      *
      * @return string The text with the replaced URLs
      */
-    public static function convertRelativeUrls($strContent, $strBase='', $blnHrefOnly=false)
+    public static function convertRelativeUrls($strContent, $strBase = '', $blnHrefOnly = false)
     {
         if ($strBase == '') {
             $strBase = \Environment::get('base');
@@ -1892,7 +1892,7 @@ abstract class Controller extends \System
         $arrUrls = preg_split('/(('.$search.')="([^"]+)")/i', $strContent, -1, PREG_SPLIT_DELIM_CAPTURE);
         $strContent = '';
 
-        for ($i=0, $c=count($arrUrls); $i<$c; $i=$i+4) {
+        for ($i = 0, $c = count($arrUrls); $i<$c; $i = $i+4) {
             $strContent .= $arrUrls[$i];
 
             if (!isset($arrUrls[$i+2])) {
@@ -1963,7 +1963,7 @@ abstract class Controller extends \System
      * @param string  $strTable   The table name
      * @param boolean $blnNoCache If true, the cache will be bypassed
      */
-    public static function loadDataContainer($strTable, $blnNoCache=false)
+    public static function loadDataContainer($strTable, $blnNoCache = false)
     {
         $loader = new \DcaLoader($strTable);
         $loader->load($blnNoCache);
@@ -1978,7 +1978,7 @@ abstract class Controller extends \System
      *
      * @return string The URL of the target page
      */
-    protected function redirectToFrontendPage($intPage, $varArticle=null, $blnReturn=false)
+    protected function redirectToFrontendPage($intPage, $varArticle = null, $blnReturn = false)
     {
         if (($intPage = intval($intPage)) <= 0) {
             return '';
@@ -2080,7 +2080,7 @@ abstract class Controller extends \System
      *
      * @return array The page IDs array without the nested IDs
      */
-    protected function eliminateNestedPages($arrPages, $strTable=null, $blnSorting=false)
+    protected function eliminateNestedPages($arrPages, $strTable = null, $blnSorting = false)
     {
         if (!is_array($arrPages) || empty($arrPages)) {
             return array();
@@ -2106,7 +2106,7 @@ abstract class Controller extends \System
      * @param integer $intMaxWidth   An optional maximum width of the image
      * @param string  $strLightboxId An optional lightbox ID
      */
-    public static function addImageToTemplate($objTemplate, $arrItem, $intMaxWidth=null, $strLightboxId=null)
+    public static function addImageToTemplate($objTemplate, $arrItem, $intMaxWidth = null, $strLightboxId = null)
     {
         global $objPage;
 
@@ -2214,7 +2214,7 @@ abstract class Controller extends \System
      * @param array  $arrItem     The element or module as array
      * @param string $strKey      The name of the enclosures field in $arrItem
      */
-    public static function addEnclosuresToTemplate($objTemplate, $arrItem, $strKey='enclosure')
+    public static function addEnclosuresToTemplate($objTemplate, $arrItem, $strKey = 'enclosure')
     {
         $arrEnclosures = deserialize($arrItem[$strKey]);
 
@@ -2290,7 +2290,7 @@ abstract class Controller extends \System
      *
      * @param object $objPage An optional page object
      */
-    public static function setStaticUrls($objPage=null)
+    public static function setStaticUrls($objPage = null)
     {
         if (defined('TL_FILES_URL')) {
             return;
@@ -2306,7 +2306,7 @@ abstract class Controller extends \System
             'staticPlugins' => 'TL_ASSETS_URL'
         );
 
-        foreach ($arrConstants as $strKey=>$strConstant) {
+        foreach ($arrConstants as $strKey => $strConstant) {
             $url = ($objPage !== null) ? $objPage->$strKey : \Config::get($strKey);
 
             if ($url == '' || \Config::get('debugMode')) {
@@ -2438,7 +2438,7 @@ abstract class Controller extends \System
      *
      * @deprecated Use Automator::purgeXmlFiles() instead
      */
-    protected function removeOldFeeds($blnReturn=false)
+    protected function removeOldFeeds($blnReturn = false)
     {
         $this->import('Automator');
         $this->Automator->purgeXmlFiles($blnReturn);
@@ -2484,7 +2484,7 @@ abstract class Controller extends \System
      *
      * @deprecated Use Image::resize() instead
      */
-    protected function resizeImage($image, $width, $height, $mode='')
+    protected function resizeImage($image, $width, $height, $mode = '')
     {
         return \Image::resize($image, $width, $height, $mode);
     }
@@ -2503,7 +2503,7 @@ abstract class Controller extends \System
      *
      * @deprecated Use Image::get() instead
      */
-    protected function getImage($image, $width, $height, $mode='', $target=null, $force=false)
+    protected function getImage($image, $width, $height, $mode = '', $target = null, $force = false)
     {
         return \Image::get($image, $width, $height, $mode, $target, $force);
     }
@@ -2519,7 +2519,7 @@ abstract class Controller extends \System
      *
      * @deprecated Use Image::getHtml() instead
      */
-    public static function generateImage($src, $alt='', $attributes='')
+    public static function generateImage($src, $alt = '', $attributes = '')
     {
         return \Image::getHtml($src, $alt, $attributes);
     }
@@ -2576,7 +2576,7 @@ abstract class Controller extends \System
      *
      * @deprecated Use Widget::getAttributesFromDca() instead
      */
-    protected function prepareForWidget($arrData, $strName, $varValue=null, $strField='', $strTable='')
+    protected function prepareForWidget($arrData, $strName, $varValue = null, $strField = '', $strTable = '')
     {
         return \Widget::getAttributesFromDca($arrData, $strName, $varValue, $strField, $strTable);
     }
@@ -2596,7 +2596,7 @@ abstract class Controller extends \System
      *
      * @deprecated Use Database::getChildRecords() instead
      */
-    protected function getChildRecords($arrParentIds, $strTable, $blnSorting=false, $arrReturn=array(), $strWhere='')
+    protected function getChildRecords($arrParentIds, $strTable, $blnSorting = false, $arrReturn = array(), $strWhere = '')
     {
         return $this->Database->getChildRecords($arrParentIds, $strTable, $blnSorting, $arrReturn, $strWhere);
     }

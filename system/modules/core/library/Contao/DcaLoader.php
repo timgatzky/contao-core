@@ -59,7 +59,7 @@ class DcaLoader extends \Controller
      *
      * @param boolean $blnNoCache If true, the cache will be bypassed
      */
-    public function load($blnNoCache=false)
+    public function load($blnNoCache = false)
     {
         // Return if the data has been loaded already
         if (isset($GLOBALS['loadDataContainer'][$this->strTable]) && !$blnNoCache) {

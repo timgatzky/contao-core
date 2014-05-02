@@ -148,7 +148,7 @@ class Updater extends \Controller
 
             $themes = array();
 
-            foreach ($modules as $k=>$v) {
+            foreach ($modules as $k => $v) {
                 if ($v == 'css' || $v == 'modules ' || $v == 'layout') {
                     $themes[] = $v;
                     unset($modules[$k]);
@@ -530,7 +530,7 @@ class Updater extends \Controller
      * @param string  $strPath The target folder
      * @param integer $pid     The parent ID
      */
-    public function scanUploadFolder($strPath=null, $pid=null)
+    public function scanUploadFolder($strPath = null, $pid = null)
     {
         if ($strPath === null) {
             $strPath = \Config::get('uploadPath');
@@ -592,7 +592,7 @@ class Updater extends \Controller
 
         // Insert the meta data AFTER the file entries have been created
         if (!empty($arrMeta)) {
-            foreach ($arrMeta as $file=>$meta) {
+            foreach ($arrMeta as $file => $meta) {
                 if (isset($arrMapper[$file])) {
                     $this->Database->prepare("UPDATE tl_files SET meta=? WHERE uuid=?")
                                    ->execute(serialize($meta), $arrMapper[$file]);
@@ -649,7 +649,7 @@ class Updater extends \Controller
 
             // Make sure there are fields (see #6437)
             if (is_array($GLOBALS['TL_DCA'][$strTable]['fields'])) {
-                foreach ($GLOBALS['TL_DCA'][$strTable]['fields'] as $strField=>$arrField) {
+                foreach ($GLOBALS['TL_DCA'][$strTable]['fields'] as $strField => $arrField) {
 
                     // FIXME: support other field types
                     if ($arrField['inputType'] == 'fileTree') {
@@ -778,7 +778,7 @@ class Updater extends \Controller
                 continue;
             }
 
-            foreach ($arrValues as $k=>$v) {
+            foreach ($arrValues as $k => $v) {
 
                 // Numeric ID to UUID
                 if ($objHelper->isNumeric) {

@@ -254,7 +254,7 @@ abstract class Result
      *
      * @return array An array with the column information
      */
-    public function fetchField($intOffset=0)
+    public function fetchField($intOffset = 0)
     {
         $arrFields = $this->fetch_field($intOffset);
 
@@ -369,7 +369,7 @@ abstract class Result
      *
      * @return array The row as array
      */
-    public function row($blnEnumerated=false)
+    public function row($blnEnumerated = false)
     {
         if (empty($this->arrCache)) {
             $this->next();

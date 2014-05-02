@@ -60,7 +60,7 @@ class Image
      *
      * @return boolean True if the image could be resized successfully
      */
-    public static function resize($image, $width, $height, $mode='')
+    public static function resize($image, $width, $height, $mode = '')
     {
         return static::get($image, $width, $height, $mode, $image, true) ? true : false;
     }
@@ -77,7 +77,7 @@ class Image
      *
      * @return string|null The path of the resized image or null
      */
-    public static function get($image, $width, $height, $mode='', $target=null, $force=false)
+    public static function get($image, $width, $height, $mode = '', $target = null, $force = false)
     {
         if ($image == '') {
             return null;
@@ -405,7 +405,7 @@ class Image
      *
      * @return string The image HTML tag
      */
-    public static function getHtml($src, $alt='', $attributes='')
+    public static function getHtml($src, $alt = '', $attributes = '')
     {
         $static = TL_FILES_URL;
         $src = rawurldecode($src);

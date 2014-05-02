@@ -115,7 +115,7 @@ class Message
      *
      * @return string The messages HTML markup
      */
-    public static function generate($blnDcLayout=false, $blnNoWrapper=false)
+    public static function generate($blnDcLayout = false, $blnNoWrapper = false)
     {
         $strMessages = '';
 

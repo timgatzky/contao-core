@@ -58,7 +58,7 @@ class Installer extends \Controller
             'DROP'          => $GLOBALS['TL_LANG']['tl_install']['DROP']
         );
 
-        foreach ($arrOperations as $command=>$label) {
+        foreach ($arrOperations as $command => $label) {
             if (is_array($sql_command[$command])) {
 
                 // Headline
@@ -112,10 +112,10 @@ class Installer extends \Controller
 
         // Manually merge the legacy definitions (see #4766)
         if (!empty($sql_legacy)) {
-            foreach ($sql_legacy as $table=>$categories) {
-                foreach ($categories as $category=>$fields) {
+            foreach ($sql_legacy as $table => $categories) {
+                foreach ($categories as $category => $fields) {
                     if (is_array($fields)) {
-                        foreach ($fields as $name=>$sql) {
+                        foreach ($fields as $name => $sql) {
                             $sql_target[$table][$category][$name] = $sql;
                         }
                     } else {
@@ -132,14 +132,14 @@ class Installer extends \Controller
         }
 
         // Add or change fields
-        foreach ($sql_target as $k=>$v) {
+        foreach ($sql_target as $k => $v) {
             if (in_array($k, $create)) {
                 continue;
             }
 
             // Fields
             if (is_array($v['TABLE_FIELDS'])) {
-                foreach ($v['TABLE_FIELDS'] as $kk=>$vv) {
+                foreach ($v['TABLE_FIELDS'] as $kk => $vv) {
                     if (!isset($sql_current[$k]['TABLE_FIELDS'][$kk])) {
                         $return['ALTER_ADD'][] = 'ALTER TABLE `'.$k.'` ADD '.$vv.';';
                     } elseif ($sql_current[$k]['TABLE_FIELDS'][$kk] != $vv) {
@@ -150,7 +150,7 @@ class Installer extends \Controller
 
             // Create definitions
             if (is_array($v['TABLE_CREATE_DEFINITIONS'])) {
-                foreach ($v['TABLE_CREATE_DEFINITIONS'] as $kk=>$vv) {
+                foreach ($v['TABLE_CREATE_DEFINITIONS'] as $kk => $vv) {
                     if (!isset($sql_current[$k]['TABLE_CREATE_DEFINITIONS'][$kk])) {
                         $return['ALTER_ADD'][] = 'ALTER TABLE `'.$k.'` ADD '.$vv.';';
                     } elseif ($sql_current[$k]['TABLE_CREATE_DEFINITIONS'][$kk] != str_replace('FULLTEXT ', '', $vv)) {
@@ -161,14 +161,14 @@ class Installer extends \Controller
 
             // Move auto_increment fields to the end of the array
             if (is_array($return['ALTER_ADD'])) {
-                foreach (preg_grep('/auto_increment/i', $return['ALTER_ADD']) as $kk=>$vv) {
+                foreach (preg_grep('/auto_increment/i', $return['ALTER_ADD']) as $kk => $vv) {
                     unset($return['ALTER_ADD'][$kk]);
                     $return['ALTER_ADD'][$kk] = $vv;
                 }
             }
 
             if (is_array($return['ALTER_CHANGE'])) {
-                foreach (preg_grep('/auto_increment/i', $return['ALTER_CHANGE']) as $kk=>$vv) {
+                foreach (preg_grep('/auto_increment/i', $return['ALTER_CHANGE']) as $kk => $vv) {
                     unset($return['ALTER_CHANGE'][$kk]);
                     $return['ALTER_CHANGE'][$kk] = $vv;
                 }
@@ -182,12 +182,12 @@ class Installer extends \Controller
         }
 
         // Drop fields
-        foreach ($sql_current as $k=>$v) {
+        foreach ($sql_current as $k => $v) {
             if (!in_array($k, $drop)) {
 
                 // Create definitions
                 if (is_array($v['TABLE_CREATE_DEFINITIONS'])) {
-                    foreach ($v['TABLE_CREATE_DEFINITIONS'] as $kk=>$vv) {
+                    foreach ($v['TABLE_CREATE_DEFINITIONS'] as $kk => $vv) {
                         if (!isset($sql_target[$k]['TABLE_CREATE_DEFINITIONS'][$kk])) {
                             $return['ALTER_DROP'][] = 'ALTER TABLE `'.$k.'` DROP INDEX `'.$kk.'`;';
                         }
@@ -196,7 +196,7 @@ class Installer extends \Controller
 
                 // Fields
                 if (is_array($v['TABLE_FIELDS'])) {
-                    foreach ($v['TABLE_FIELDS'] as $kk=>$vv) {
+                    foreach ($v['TABLE_FIELDS'] as $kk => $vv) {
                         if (!isset($sql_target[$k]['TABLE_FIELDS'][$kk])) {
                             $return['ALTER_DROP'][] = 'ALTER TABLE `'.$k.'` DROP `'.$kk.'`;';
                         }
@@ -299,7 +299,7 @@ class Installer extends \Controller
 
             $data = file($strFile);
 
-            foreach ($data as $k=>$v) {
+            foreach ($data as $k => $v) {
                 $key_name = array();
                 $subpatterns = array();
 

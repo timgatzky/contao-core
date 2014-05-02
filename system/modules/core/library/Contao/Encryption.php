@@ -50,11 +50,11 @@ class Encryption
      *
      * @return string The encrypted value
      */
-    public static function encrypt($varValue, $strKey=null)
+    public static function encrypt($varValue, $strKey = null)
     {
         // Recursively encrypt arrays
         if (is_array($varValue)) {
-            foreach ($varValue as $k=>$v) {
+            foreach ($varValue as $k => $v) {
                 $varValue[$k] = static::encrypt($v);
             }
 
@@ -89,11 +89,11 @@ class Encryption
      *
      * @return string The decrypted value
      */
-    public static function decrypt($varValue, $strKey=null)
+    public static function decrypt($varValue, $strKey = null)
     {
         // Recursively decrypt arrays
         if (is_array($varValue)) {
-            foreach ($varValue as $k=>$v) {
+            foreach ($varValue as $k => $v) {
                 $varValue[$k] = static::decrypt($v);
             }
 

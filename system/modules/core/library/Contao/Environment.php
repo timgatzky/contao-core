@@ -134,7 +134,7 @@ class Environment
         $arrSnSegments = explode('/', strrev($scriptName));
         $arrSfnSegments = explode('/', strrev($scriptFilename));
 
-        foreach ($arrSfnSegments as $k=>$v) {
+        foreach ($arrSfnSegments as $k => $v) {
             if ($arrSnSegments[$k] != $v) {
                 $arrUriSegments[] = $v;
             }
@@ -450,7 +450,7 @@ class Environment
         $engine = '';
 
         // Operating system
-        foreach (\Config::get('os') as $k=>$v) {
+        foreach (\Config::get('os') as $k => $v) {
             if (stripos($ua, $k) !== false) {
                 $os = $v['os'];
                 $mobile = $v['mobile'];
@@ -466,7 +466,7 @@ class Environment
         $return->os = $os;
 
         // Browser and version
-        foreach (\Config::get('browser') as $k=>$v) {
+        foreach (\Config::get('browser') as $k => $v) {
             if (stripos($ua, $k) !== false) {
                 $browser = $v['browser'];
                 $shorty  = $v['shorty'];

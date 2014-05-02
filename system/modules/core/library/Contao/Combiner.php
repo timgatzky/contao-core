@@ -91,7 +91,7 @@ class Combiner extends \System
      *
      * @throws \Exception If $strFile is invalid
      */
-    public function add($strFile, $strVersion=null, $strMedia='all')
+    public function add($strFile, $strVersion = null, $strMedia = 'all')
     {
         $strType = strrchr($strFile, '.');
 
@@ -155,7 +155,7 @@ class Combiner extends \System
      * @param string $strVersion An optional version number
      * @param string $strMedia   The media type of the file (.css only)
      */
-    public function addMultiple(array $arrFiles, $strVersion=null, $strMedia='screen')
+    public function addMultiple(array $arrFiles, $strVersion = null, $strMedia = 'screen')
     {
         foreach ($arrFiles as $strFile) {
             $this->add($strFile, $strVersion, $strMedia);
@@ -179,7 +179,7 @@ class Combiner extends \System
      *
      * @return string The path to the combined file
      */
-    public function getCombinedFile($strUrl=null)
+    public function getCombinedFile($strUrl = null)
     {
         if ($strUrl === null) {
             $strUrl = TL_ASSETS_URL;
@@ -317,7 +317,7 @@ class Combiner extends \System
         $chunks = preg_split('/url\(["\']??(.+)["\']??\)/U', $content, -1, PREG_SPLIT_DELIM_CAPTURE);
 
         // Check the URLs
-        for ($i=0, $c=count($chunks); $i<$c; $i=$i+2) {
+        for ($i = 0, $c = count($chunks); $i<$c; $i = $i+2) {
             $strBuffer .= $chunks[$i];
 
             if (!isset($chunks[$i+1])) {

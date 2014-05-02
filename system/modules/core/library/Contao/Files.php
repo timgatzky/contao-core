@@ -107,7 +107,7 @@ abstract class Files
      * @param string  $strFolder       The directory name
      * @param boolean $blnPreserveRoot If true, the root folder will not be removed
      */
-    public function rrdir($strFolder, $blnPreserveRoot=false)
+    public function rrdir($strFolder, $blnPreserveRoot = false)
     {
         $this->validate($strFolder);
         $arrFiles = scan(TL_ROOT . '/' . $strFolder, true);

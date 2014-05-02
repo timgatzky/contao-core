@@ -59,7 +59,7 @@ class Date
      * @param integer $strDate   An optional date string
      * @param string  $strFormat An optional format string
      */
-    public function __construct($strDate=null, $strFormat=null)
+    public function __construct($strDate = null, $strFormat = null)
     {
         $this->strDate = ($strDate !== null) ? $strDate : time();
         $this->strFormat = ($strFormat !== null) ? $strFormat : static::getNumericDateFormat();
@@ -182,7 +182,7 @@ class Date
      *
      * @return integer The Unix timestamp
      */
-    public function getWeekBegin($intStartDay=0)
+    public function getWeekBegin($intStartDay = 0)
     {
         $intOffset = date('w', $this->strDate) - $intStartDay;
 
@@ -200,7 +200,7 @@ class Date
      *
      * @return integer The Unix timestamp
      */
-    public function getWeekEnd($intStartDay=0)
+    public function getWeekEnd($intStartDay = 0)
     {
         return strtotime('+1 week', $this->getWeekBegin($intStartDay)) - 1;
     }
@@ -214,7 +214,7 @@ class Date
      *
      * @throws \Exception If $strFormat is invalid
      */
-    public static function getRegexp($strFormat=null)
+    public static function getRegexp($strFormat = null)
     {
         if ($strFormat === null) {
             $strFormat = static::getNumericDateFormat();
@@ -258,7 +258,7 @@ class Date
      *
      * @throws \Exception If $strFormat is invalid
      */
-    public static function getInputFormat($strFormat=null)
+    public static function getInputFormat($strFormat = null)
     {
         if ($strFormat === null) {
             $strFormat = static::getNumericDateFormat();
@@ -424,7 +424,7 @@ class Date
     {
         $chunks = str_split($strFormat);
 
-        foreach ($chunks as $k=>$v) {
+        foreach ($chunks as $k => $v) {
             switch ($v) {
                 case 'D': $chunks[$k] = 'a'; break;
                 case 'j': $chunks[$k] = 'e'; break;
@@ -520,7 +520,7 @@ class Date
      *
      * @return string The textual representation of the date
      */
-    public static function parse($strFormat, $intTstamp=null)
+    public static function parse($strFormat, $intTstamp = null)
     {
         $strModified = str_replace
         (

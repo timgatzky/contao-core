@@ -80,7 +80,7 @@ class Input
      *
      * @return mixed The cleaned variable value
      */
-    public static function get($strKey, $blnDecodeEntities=false, $blnKeepUnused=false)
+    public static function get($strKey, $blnDecodeEntities = false, $blnKeepUnused = false)
     {
         if (!isset($_GET[$strKey])) {
             return null;
@@ -119,7 +119,7 @@ class Input
      *
      * @return mixed The cleaned variable value
      */
-    public static function post($strKey, $blnDecodeEntities=false)
+    public static function post($strKey, $blnDecodeEntities = false)
     {
         $strCacheKey = $blnDecodeEntities ? 'postDecoded' : 'postEncoded';
 
@@ -153,7 +153,7 @@ class Input
      *
      * @return mixed The cleaned variable value
      */
-    public static function postHtml($strKey, $blnDecodeEntities=false)
+    public static function postHtml($strKey, $blnDecodeEntities = false)
     {
         $strCacheKey = $blnDecodeEntities ? 'postHtmlDecoded' : 'postHtmlEncoded';
 
@@ -215,7 +215,7 @@ class Input
      *
      * @return mixed The cleaned variable value
      */
-    public static function cookie($strKey, $blnDecodeEntities=false)
+    public static function cookie($strKey, $blnDecodeEntities = false)
     {
         if (!isset($_COOKIE[$strKey])) {
             return null;
@@ -248,7 +248,7 @@ class Input
      * @param mixed   $varValue     The variable value
      * @param boolean $blnAddUnused If true, the value usage will be checked
      */
-    public static function setGet($strKey, $varValue, $blnAddUnused=false)
+    public static function setGet($strKey, $varValue, $blnAddUnused = false)
     {
         $strKey = static::cleanKey($strKey);
 
@@ -361,7 +361,7 @@ class Input
         if (is_array($varValue)) {
             $return = array();
 
-            foreach ($varValue as $k=>$v) {
+            foreach ($varValue as $k => $v) {
                 $k = static::cleanKey($k);
 
                 if (is_array($v)) {
@@ -397,7 +397,7 @@ class Input
 
         // Recursively clean arrays
         if (is_array($varValue)) {
-            foreach ($varValue as $k=>$v) {
+            foreach ($varValue as $k => $v) {
                 $varValue[$k] = static::stripSlashes($v);
             }
 
@@ -415,7 +415,7 @@ class Input
      *
      * @return mixed The cleaned string or array
      */
-    public static function stripTags($varValue, $strAllowedTags='')
+    public static function stripTags($varValue, $strAllowedTags = '')
     {
         if ($varValue === null || $varValue == '') {
             return $varValue;
@@ -423,7 +423,7 @@ class Input
 
         // Recursively clean arrays
         if (is_array($varValue)) {
-            foreach ($varValue as $k=>$v) {
+            foreach ($varValue as $k => $v) {
                 $varValue[$k] = static::stripTags($v, $strAllowedTags);
             }
 
@@ -450,7 +450,7 @@ class Input
      *
      * @return mixed The cleaned string or array
      */
-    public static function xssClean($varValue, $blnStrictMode=false)
+    public static function xssClean($varValue, $blnStrictMode = false)
     {
         if ($varValue === null || $varValue == '') {
             return $varValue;
@@ -458,7 +458,7 @@ class Input
 
         // Recursively clean arrays
         if (is_array($varValue)) {
-            foreach ($varValue as $k=>$v) {
+            foreach ($varValue as $k => $v) {
                 $varValue[$k] = static::xssClean($v);
             }
 
@@ -572,7 +572,7 @@ class Input
 
         // Recursively clean arrays
         if (is_array($varValue)) {
-            foreach ($varValue as $k=>$v) {
+            foreach ($varValue as $k => $v) {
                 $varValue[$k] = static::decodeEntities($v);
             }
 
@@ -601,7 +601,7 @@ class Input
 
         // Recursively clean arrays
         if (is_array($varValue)) {
-            foreach ($varValue as $k=>$v) {
+            foreach ($varValue as $k => $v) {
                 $varValue[$k] = static::preserveBasicEntities($v);
             }
 
@@ -633,7 +633,7 @@ class Input
 
         // Recursively clean arrays
         if (is_array($varValue)) {
-            foreach ($varValue as $k=>$v) {
+            foreach ($varValue as $k => $v) {
                 $varValue[$k] = static::encodeSpecialChars($v);
             }
 

@@ -229,7 +229,7 @@ abstract class Base extends \Controller
      * @param string $name The template name
      * @param array  $data An optional data array
      */
-    public function insert($name, array $data=null)
+    public function insert($name, array $data = null)
     {
         $tpl = new static($name);
 

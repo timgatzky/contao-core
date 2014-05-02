@@ -135,7 +135,7 @@ class ModuleLoader
                     $config = parse_ini_file($path . '/config/autoload.ini', true);
                     $load[$file] = $config['requires'] ?: array();
 
-                    foreach ($load[$file] as $k=>$v) {
+                    foreach ($load[$file] as $k => $v) {
 
                         // Optional requirements (see #6835)
                         if (strncmp($v, '*', 1) === 0) {
@@ -155,7 +155,7 @@ class ModuleLoader
             while (!empty($load)) {
                 $failed = true;
 
-                foreach ($load as $name=>$requires) {
+                foreach ($load as $name => $requires) {
                     if (empty($requires)) {
                         $resolved = true;
                     } else {

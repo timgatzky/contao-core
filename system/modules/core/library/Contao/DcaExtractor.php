@@ -209,12 +209,12 @@ class DcaExtractor extends \Controller
         $return = array();
 
         // Fields
-        foreach ($this->arrFields as $k=>$v) {
+        foreach ($this->arrFields as $k => $v) {
             $return['TABLE_FIELDS'][$k] = '`' . $k . '` ' . $v;
         }
 
         // Keys
-        foreach ($this->arrKeys as $k=>$v) {
+        foreach ($this->arrKeys as $k => $v) {
 
             // Handle multi-column indexes (see #5556)
             if (strpos($k, ',') !== false) {
@@ -239,7 +239,7 @@ class DcaExtractor extends \Controller
         $return['TABLE_OPTIONS'] = '';
 
         // Options
-        foreach ($this->arrMeta as $k=>$v) {
+        foreach ($this->arrMeta as $k => $v) {
             if ($k == 'engine') {
                 $return['TABLE_OPTIONS'] .= ' ENGINE=' . $v;
             } elseif ($k == 'charset') {
@@ -270,7 +270,7 @@ class DcaExtractor extends \Controller
 
         // Check whether there are fields (see #4826)
         if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'])) {
-            foreach ($GLOBALS['TL_DCA'][$this->strTable]['fields'] as $field=>$config) {
+            foreach ($GLOBALS['TL_DCA'][$this->strTable]['fields'] as $field => $config) {
 
                 // Check whether all fields have an SQL definition
                 if (!isset($config['sql']) && isset($config['inputType'])) {
@@ -312,7 +312,7 @@ class DcaExtractor extends \Controller
 
             // Fields
             if (isset($arrTable['TABLE_FIELDS'])) {
-                foreach ($arrTable['TABLE_FIELDS'] as $k=>$v) {
+                foreach ($arrTable['TABLE_FIELDS'] as $k => $v) {
                     $fields[$k]['sql'] = str_replace('`' . $k . '` ', '', $v);
                 }
             }
@@ -350,7 +350,7 @@ class DcaExtractor extends \Controller
         if (!empty($fields)) {
             $this->arrFields = array();
 
-            foreach ($fields as $field=>$config) {
+            foreach ($fields as $field => $config) {
                 if (isset($config['sql'])) {
                     $this->arrFields[$field] = $config['sql'];
                 }
@@ -361,7 +361,7 @@ class DcaExtractor extends \Controller
         if (!empty($sql['keys']) && is_array($sql['keys'])) {
             $this->arrKeys = array();
 
-            foreach ($sql['keys'] as $field=>$type) {
+            foreach ($sql['keys'] as $field => $type) {
                 $this->arrKeys[$field] = $type;
             }
         }
@@ -370,10 +370,10 @@ class DcaExtractor extends \Controller
         if (!empty($arrRelations)) {
             $this->arrRelations = array();
 
-            foreach ($arrRelations as $field=>$config) {
+            foreach ($arrRelations as $field => $config) {
                 $this->arrRelations[$field] = array();
 
-                foreach ($config as $k=>$v) {
+                foreach ($config as $k => $v) {
                     $this->arrRelations[$field][$k] = $v;
                 }
             }

@@ -262,7 +262,7 @@ class Automator extends \System
      *
      * @return array An array of old XML files
      */
-    public function purgeXmlFiles($blnReturn=false)
+    public function purgeXmlFiles($blnReturn = false)
     {
         $arrFeeds = array();
         $objDatabase = \Database::getInstance();
@@ -306,7 +306,7 @@ class Automator extends \System
      *
      * @param integer $intId The root page ID
      */
-    public function generateSitemap($intId=0)
+    public function generateSitemap($intId = 0)
     {
         $time = time();
         $objDatabase = \Database::getInstance();
@@ -409,7 +409,7 @@ class Automator extends \System
             }
 
             // Rotate the files (e.g. error.log.4 becomes error.log.5)
-            for ($i=8; $i>0; $i--) {
+            for ($i = 8; $i>0; $i--) {
                 $strGzName = 'system/logs/' . $strFile . '.' . $i;
 
                 if (file_exists(TL_ROOT . '/' . $strGzName)) {
@@ -684,7 +684,7 @@ class Automator extends \System
         }
 
         // Create one file per table
-        foreach ($arrExtracts as $strTable=>$objExtract) {
+        foreach ($arrExtracts as $strTable => $objExtract) {
 
             // Create the file
             $objFile = new \File('system/cache/sql/' . $strTable . '.php', true);
@@ -702,7 +702,7 @@ class Automator extends \System
             $arrFields = $objExtract->getFields();
             $objFile->append("\$this->arrFields = array\n(");
 
-            foreach ($arrFields as $field=>$sql) {
+            foreach ($arrFields as $field => $sql) {
                 $sql = str_replace('"', '\"', $sql);
                 $objFile->append("\t'$field' => \"$sql\",");
             }
@@ -713,7 +713,7 @@ class Automator extends \System
             $arrKeys = $objExtract->getKeys();
             $objFile->append("\$this->arrKeys = array\n(");
 
-            foreach ($arrKeys as $field=>$type) {
+            foreach ($arrKeys as $field => $type) {
                 $objFile->append("\t'$field' => '$type',");
             }
 
@@ -723,10 +723,10 @@ class Automator extends \System
             $arrRelations = $objExtract->getRelations();
             $objFile->append("\$this->arrRelations = array\n(");
 
-            foreach ($arrRelations as $field=>$config) {
+            foreach ($arrRelations as $field => $config) {
                 $objFile->append("\t'$field' => array\n\t(");
 
-                foreach ($config as $k=>$v) {
+                foreach ($config as $k => $v) {
                     $objFile->append("\t\t'$k' => '$v',");
                 }
 

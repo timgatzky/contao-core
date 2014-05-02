@@ -101,7 +101,7 @@ abstract class Model
      *
      * @param \Database\Result $objResult An optional database result
      */
-    public function __construct(\Database\Result $objResult=null)
+    public function __construct(\Database\Result $objResult = null)
     {
         $this->arrModified = array();
 
@@ -113,7 +113,7 @@ abstract class Model
             $arrData = $objResult->row();
 
             // Look for joined fields
-            foreach ($arrData as $k=>$v) {
+            foreach ($arrData as $k => $v) {
                 if (strpos($k, '__') !== false) {
                     list($key, $field) = explode('__', $k, 2);
 
@@ -127,7 +127,7 @@ abstract class Model
             }
 
             // Create the related models
-            foreach ($arrRelated as $key=>$row) {
+            foreach ($arrRelated as $key => $row) {
                 $table = $this->arrRelations[$key]['table'];
                 $strClass = static::getClassFromTable($table);
                 $intPk = $strClass::getPk();
@@ -258,7 +258,7 @@ abstract class Model
      */
     public function setRow(array $arrData)
     {
-        foreach ($arrData as $k=>$v) {
+        foreach ($arrData as $k => $v) {
             if (strpos($k, '__') !== false) {
                 unset($arrData[$k]);
             }
@@ -278,7 +278,7 @@ abstract class Model
      */
     public function mergeRow(array $arrData)
     {
-        foreach ($arrData as $k=>$v) {
+        foreach ($arrData as $k => $v) {
             if (strpos($k, '__') !== false) {
                 continue;
             }
@@ -342,7 +342,7 @@ abstract class Model
             $arrRow = $this->row();
 
             // Only update modified fields
-            foreach ($this->arrModified as $k=>$v) {
+            foreach ($this->arrModified as $k => $v) {
 
                 // Only set fields that exist in the DB
                 if (in_array($k, $arrFields)) {
@@ -378,7 +378,7 @@ abstract class Model
             $arrSet = $this->row();
 
             // Remove fields that do not exist in the DB
-            foreach ($arrSet as $k=>$v) {
+            foreach ($arrSet as $k => $v) {
                 if (!in_array($k, $arrFields)) {
                     unset($arrSet[$k]);
                 }
@@ -474,7 +474,7 @@ abstract class Model
      *
      * @throws \Exception If $strKey is not a related field
      */
-    public function getRelated($strKey, array $arrOptions=array())
+    public function getRelated($strKey, array $arrOptions = array())
     {
         // The related model has been loaded before
         if (array_key_exists($strKey, $this->arrRelated)) {
@@ -568,7 +568,7 @@ abstract class Model
      *
      * @return \Model|null The model or null if the result is empty
      */
-    public static function findByPk($varValue, array $arrOptions=array())
+    public static function findByPk($varValue, array $arrOptions = array())
     {
         // Try to load from the registry
         if (empty($arrOptions)) {
@@ -602,7 +602,7 @@ abstract class Model
      *
      * @return \Model|null The model or null if the result is empty
      */
-    public static function findByIdOrAlias($varId, array $arrOptions=array())
+    public static function findByIdOrAlias($varId, array $arrOptions = array())
     {
         // Try to load from the registry
         if (is_numeric($varId) && empty($arrOptions)) {
@@ -638,7 +638,7 @@ abstract class Model
      *
      * @return \Model\Collection|null A collection of models or null if there are no records
      */
-    public static function findMultipleByIds($arrIds, array $arrOptions=array())
+    public static function findMultipleByIds($arrIds, array $arrOptions = array())
     {
         if (empty($arrIds) || !is_array($arrIds)) {
             return null;
@@ -698,7 +698,7 @@ abstract class Model
      *
      * @return \Model|null The model or null if the result is empty
      */
-    public static function findOneBy($strColumn, $varValue, array $arrOptions=array())
+    public static function findOneBy($strColumn, $varValue, array $arrOptions = array())
     {
         $intId = is_array($varValue) ? $varValue[0] : $varValue;
 
@@ -739,7 +739,7 @@ abstract class Model
      *
      * @return \Model\Collection|null The model collection or null if the result is empty
      */
-    public static function findBy($strColumn, $varValue, array $arrOptions=array())
+    public static function findBy($strColumn, $varValue, array $arrOptions = array())
     {
         $arrOptions = array_merge
         (
@@ -762,7 +762,7 @@ abstract class Model
      *
      * @return \Model\Collection|null The model collection or null if the result is empty
      */
-    public static function findAll(array $arrOptions=array())
+    public static function findAll(array $arrOptions = array())
     {
         $arrOptions = array_merge
         (
@@ -903,7 +903,7 @@ abstract class Model
      *
      * @return integer The number of matching rows
      */
-    public static function countBy($strColumn=null, $varValue=null)
+    public static function countBy($strColumn = null, $varValue = null)
     {
         if (static::$strTable == '') {
             return 0;

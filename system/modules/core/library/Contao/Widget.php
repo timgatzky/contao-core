@@ -125,7 +125,7 @@ abstract class Widget extends \Template\Base
      *
      * @param array $arrAttributes An optional attributes array
      */
-    public function __construct($arrAttributes=null)
+    public function __construct($arrAttributes = null)
     {
         parent::__construct();
 
@@ -456,7 +456,7 @@ abstract class Widget extends \Template\Base
      *
      * @return string The corresponding error message
      */
-    public function getErrorAsString($intIndex=0)
+    public function getErrorAsString($intIndex = 0)
     {
         return $this->arrErrors[$intIndex];
     }
@@ -469,7 +469,7 @@ abstract class Widget extends \Template\Base
      *
      * @return string The error messages string
      */
-    public function getErrorsAsString($strSeparator=null)
+    public function getErrorsAsString($strSeparator = null)
     {
         if ($strSeparator === null) {
             $strSeparator = '<br' . $this->strTagEnding . "\n";
@@ -486,7 +486,7 @@ abstract class Widget extends \Template\Base
      *
      * @return string The HTML markup of the corresponding error message
      */
-    public function getErrorAsHTML($intIndex=0)
+    public function getErrorAsHTML($intIndex = 0)
     {
         return $this->hasErrors() ? sprintf('<p class="%s">%s</p>', ((TL_MODE == 'BE') ? 'tl_error tl_tip' : 'error'), $this->arrErrors[$intIndex]) : '';
     }
@@ -510,7 +510,7 @@ abstract class Widget extends \Template\Base
      *
      * @return string The template markup
      */
-    public function parse($arrAttributes=null)
+    public function parse($arrAttributes = null)
     {
         if ($this->strTemplate == '') {
             return '';
@@ -573,7 +573,7 @@ abstract class Widget extends \Template\Base
      *
      * @return string The form field markup
      */
-    public function generateWithError($blnSwitchOrder=false)
+    public function generateWithError($blnSwitchOrder = false)
     {
         $strWidget = $this->generate();
         $strError = $this->getErrorAsHTML();
@@ -615,7 +615,7 @@ abstract class Widget extends \Template\Base
         $strAttributes = '';
 
         // Add the remaining attributes
-        foreach ($this->arrAttributes as $k=>$v) {
+        foreach ($this->arrAttributes as $k => $v) {
             if ($k == 'disabled' || $k == 'readonly' || $k == 'required' || $k == 'autofocus' || $k == 'multiple') {
                 if (TL_MODE == 'FE') { // see #3878
                     $strAttributes .= $blnIsXhtml ? ' ' . $k . '="' . $v . '"' : ' ' . $k;
@@ -712,7 +712,7 @@ abstract class Widget extends \Template\Base
     protected function validator($varInput)
     {
         if (is_array($varInput)) {
-            foreach ($varInput as $k=>$v) {
+            foreach ($varInput as $k => $v) {
                 $varInput[$k] = $this->validator($v);
             }
 
@@ -957,7 +957,7 @@ abstract class Widget extends \Template\Base
             return;
         }
 
-        foreach ($arrAttributes as $k=>$v) {
+        foreach ($arrAttributes as $k => $v) {
             $this->$k = $v;
         }
     }
@@ -1103,7 +1103,7 @@ abstract class Widget extends \Template\Base
      *
      * @return array An attributes array that can be passed to a widget
      */
-    public static function getAttributesFromDca($arrData, $strName, $varValue=null, $strField='', $strTable='', $objDca=null)
+    public static function getAttributesFromDca($arrData, $strName, $varValue = null, $strField = '', $strTable = '', $objDca = null)
     {
         $arrAttributes = $arrData['eval'];
 
@@ -1175,7 +1175,7 @@ abstract class Widget extends \Template\Base
                 $arrAttributes['options'][] = array('value'=>'', 'label'=>$strLabel);
             }
 
-            foreach ($arrData['options'] as $k=>$v) {
+            foreach ($arrData['options'] as $k => $v) {
                 if (!is_array($v)) {
                     $arrAttributes['options'][] = array('value'=>($blnIsAssociative ? $k : $v), 'label'=>($blnUseReference ? ((($ref = (is_array($arrData['reference'][$v]) ? $arrData['reference'][$v][0] : $arrData['reference'][$v])) != false) ? $ref : $v) : $v));
                     continue;
@@ -1184,7 +1184,7 @@ abstract class Widget extends \Template\Base
                 $key = $blnUseReference ? ((($ref = (is_array($arrData['reference'][$k]) ? $arrData['reference'][$k][0] : $arrData['reference'][$k])) != false) ? $ref : $k) : $k;
                 $blnIsAssoc = array_is_assoc($v);
 
-                foreach ($v as $kk=>$vv) {
+                foreach ($v as $kk => $vv) {
                     $arrAttributes['options'][$key][] = array('value'=>($blnIsAssoc ? $kk : $vv), 'label'=>($blnUseReference ? ((($ref = (is_array($arrData['reference'][$vv]) ? $arrData['reference'][$vv][0] : $arrData['reference'][$vv])) != false) ? $ref : $vv) : $vv));
                 }
             }

@@ -266,7 +266,7 @@ class Request
      * @param string $strData   Optional request data
      * @param string $strMethod An optional request method
      */
-    public function send($strUrl, $strData=null, $strMethod=null)
+    public function send($strUrl, $strData = null, $strMethod = null)
     {
         if ($strData !== null) {
             $this->strData = $strData;
@@ -325,7 +325,7 @@ class Request
             $default['Authorization'] = 'Authorization: Basic ' . base64_encode($this->strUsername . ':' . $this->strPassword);
         }
 
-        foreach ($this->arrHeaders as $header=>$value) {
+        foreach ($this->arrHeaders as $header => $value) {
             $default[$header] = $header . ': ' . $value;
         }
 

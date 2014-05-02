@@ -138,7 +138,7 @@ class Pagination
      * @param \Template $objTemplate      The template object
      * @param boolean   $blnForceParam    Force the URL parameter
      */
-    public function __construct($intRows, $intPerPage, $intNumberOfLinks=7, $strParameter='page', \Template $objTemplate=null, $blnForceParam=false)
+    public function __construct($intRows, $intPerPage, $intNumberOfLinks = 7, $strParameter = 'page', \Template $objTemplate = null, $blnForceParam = false)
     {
         $this->intPage = 1;
         $this->intRows = (int) $intRows;
@@ -214,7 +214,7 @@ class Pagination
      *
      * @return string The pagination menu as HTML string
      */
-    public function generate($strSeparator=' ')
+    public function generate($strSeparator = ' ')
     {
         if ($this->intRowsPerPage < 1) {
             return '';
@@ -291,7 +291,7 @@ class Pagination
      *
      * @return string The page links as HTML string
      */
-    public function getItemsAsString($strSeparator=' ')
+    public function getItemsAsString($strSeparator = ' ')
     {
         $arrLinks = array();
 
@@ -320,7 +320,7 @@ class Pagination
             $intLastLink = $this->intTotalPages;
         }
 
-        for ($i=$intFirstLink; $i<=$intLastLink; $i++) {
+        for ($i = $intFirstLink; $i <= $intLastLink; $i++) {
             if ($i == $this->intPage) {
                 $arrLinks[] = sprintf('<li><span class="current">%s</span></li>', $i);
                 continue;

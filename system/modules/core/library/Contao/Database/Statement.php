@@ -70,7 +70,7 @@ abstract class Statement
      *
      * @throws \Exception If $resConnection is not a valid resource
      */
-    public function __construct($resConnection, $blnDisableAutocommit=false)
+    public function __construct($resConnection, $blnDisableAutocommit = false)
     {
         if (!is_resource($resConnection) && !is_object($resConnection)) {
             throw new \Exception('Invalid connection resource');
@@ -143,7 +143,7 @@ abstract class Statement
         // Replace wildcards
         $arrChunks = preg_split("/('[^']*')/", $this->strQuery, -1, PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
 
-        foreach ($arrChunks as $k=>$v) {
+        foreach ($arrChunks as $k => $v) {
             if (substr($v, 0, 1) == "'") {
                 continue;
             }
@@ -186,7 +186,7 @@ abstract class Statement
         elseif (strncasecmp($this->strQuery, 'UPDATE', 6) === 0) {
             $arrSet = array();
 
-            foreach ($arrParams as $k=>$v) {
+            foreach ($arrParams as $k => $v) {
                 $arrSet[] = $k . '=' . $v;
             }
 
@@ -206,7 +206,7 @@ abstract class Statement
      *
      * @return \Database\Statement The statement object
      */
-    public function limit($intRows, $intOffset=0)
+    public function limit($intRows, $intOffset = 0)
     {
         if ($intRows <= 0) {
             $intRows = 30;
@@ -248,7 +248,7 @@ abstract class Statement
      *
      * @throws \Exception If the query cannot be executed
      */
-    public function query($strQuery='')
+    public function query($strQuery = '')
     {
         if (!empty($strQuery)) {
             $this->strQuery = trim($strQuery);
@@ -305,7 +305,7 @@ abstract class Statement
      */
     protected function escapeParams($arrValues)
     {
-        foreach ($arrValues as $k=>$v) {
+        foreach ($arrValues as $k => $v) {
             switch (gettype($v)) {
                 case 'string':
                     $arrValues[$k] = $this->string_escape($v);
@@ -337,7 +337,7 @@ abstract class Statement
      *
      * @param \Database\Result $objResult An optional result object
      */
-    protected function debugQuery($objResult=null)
+    protected function debugQuery($objResult = null)
     {
         if (!\Config::get('debugMode')) {
             return;

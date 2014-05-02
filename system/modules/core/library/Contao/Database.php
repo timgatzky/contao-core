@@ -121,7 +121,7 @@ abstract class Database
      *
      * @return \Database The Database object
      */
-    public static function getInstance(array $arrCustom=null)
+    public static function getInstance(array $arrCustom = null)
     {
         $arrConfig = array(
             'dbDriver'   => \Config::get('dbDriver'),
@@ -196,7 +196,7 @@ abstract class Database
      *
      * @return string The FIND_IN_SET() statement
      */
-    public function findInSet($strKey, $varSet, $blnIsField=false)
+    public function findInSet($strKey, $varSet, $blnIsField = false)
     {
         if (is_array($varSet)) {
             $varSet = implode(',', $varSet);
@@ -213,7 +213,7 @@ abstract class Database
      *
      * @return array An array of table names
      */
-    public function listTables($strDatabase=null, $blnNoCache=false)
+    public function listTables($strDatabase = null, $blnNoCache = false)
     {
         if ($strDatabase === null) {
             $strDatabase = $this->arrConfig['dbDatabase'];
@@ -244,7 +244,7 @@ abstract class Database
      *
      * @return boolean True if the table exists
      */
-    public function tableExists($strTable, $strDatabase=null, $blnNoCache=false)
+    public function tableExists($strTable, $strDatabase = null, $blnNoCache = false)
     {
         if ($strTable == '') {
             return false;
@@ -261,7 +261,7 @@ abstract class Database
      *
      * @return array An array of column names
      */
-    public function listFields($strTable, $blnNoCache=false)
+    public function listFields($strTable, $blnNoCache = false)
     {
         if (!$blnNoCache && isset($this->arrCache[$strTable])) {
             return $this->arrCache[$strTable];
@@ -281,7 +281,7 @@ abstract class Database
      *
      * @return boolean True if the field exists
      */
-    public function fieldExists($strField, $strTable, $blnNoCache=false)
+    public function fieldExists($strField, $strTable, $blnNoCache = false)
     {
         if ($strField == '' || $strTable == '') {
             return false;
@@ -305,7 +305,7 @@ abstract class Database
      *
      * @return boolean True if the index exists
      */
-    public function indexExists($strName, $strTable, $blnNoCache=false)
+    public function indexExists($strName, $strTable, $blnNoCache = false)
     {
         if ($strName == '' || $strTable == '') {
             return false;
@@ -328,7 +328,7 @@ abstract class Database
      *
      * @return array An array of field names
      */
-    public function getFieldNames($strTable, $blnNoCache=false)
+    public function getFieldNames($strTable, $blnNoCache = false)
     {
         $arrNames = array();
         $arrFields = $this->listFields($strTable, $blnNoCache);
@@ -350,7 +350,7 @@ abstract class Database
      *
      * @return boolean True if the field value is unique
      */
-    public function isUniqueValue($strTable, $strField, $varValue, $intId=null)
+    public function isUniqueValue($strTable, $strField, $varValue, $intId = null)
     {
         $strQuery = "SELECT * FROM $strTable WHERE $strField=?";
 
@@ -378,7 +378,7 @@ abstract class Database
      *
      * @return array An array of child record IDs
      */
-    public function getChildRecords($arrParentIds, $strTable, $blnSorting=false, $arrReturn=array(), $strWhere='')
+    public function getChildRecords($arrParentIds, $strTable, $blnSorting = false, $arrReturn = array(), $strWhere = '')
     {
         if (!is_array($arrParentIds)) {
             $arrParentIds = array($arrParentIds);
@@ -553,7 +553,7 @@ abstract class Database
      *
      * @return string The FIND_IN_SET() statement
      */
-    abstract protected function find_in_set($strKey, $varSet, $blnIsField=false);
+    abstract protected function find_in_set($strKey, $varSet, $blnIsField = false);
 
     /**
      * Return a standardized array with the field information
