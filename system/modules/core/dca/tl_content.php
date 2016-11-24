@@ -472,6 +472,14 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			(
 				array('tl_content', 'pagePicker')
 			),
+			'save_callback'	=> array
+			(
+				array('tl_content', 'storeFileInsertTag')
+			),
+			'load_callback'	=> array
+			(
+				array('tl_content', 'getPathFromInsertTag')
+			),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'target' => array
@@ -1792,5 +1800,40 @@ class tl_content extends Backend
 					   ->execute($intId);
 
 		$objVersions->create();
+	}
+	
+	
+	/**
+	 * Convert a file path to the file inserttag before saving to the database
+	 * @param string
+	 * @return string
+	 */
+	public function storeFileInsertTag($varValue, DataContainer $objDC)
+	{
+		if(!is_file(TL_ROOT.'/'.$varValue))
+		{
+			return $varValue;
+		}
+		
+		// add file resource
+		$objFile = \FilesModel::findOneByHash( \Dbafs::addResource($varValue)->hash );
+		
+		return '{{file::'.\StringUtil::binToUuid($objFile->uuid).'}}';
+	}
+	
+	
+	/**
+	 * Convert a file inserttag back to the real pack
+	 * @param mixed
+	 * @return string
+	 */
+	public function getPathFromInsertTag($varValue, DataContainer $objDC)
+	{
+		$arrElements = explode('::', str_replace(array('{{','}}'),'',$varValue));
+		if($arrElements[0] != 'file')
+		{
+			return $varValue;
+		}
+		return \FilesModel::findByUuid($arrElements[1])->path ?: '';
 	}
 }
